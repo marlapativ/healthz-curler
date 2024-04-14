@@ -1,3 +1,4 @@
+import env from '../../utils/env.utils'
 import { InMemoryDataSource } from './inmemory.datasource'
 import { RedisDataSource } from './redis.datasource'
 
@@ -7,17 +8,21 @@ export interface IDataSource {
   get: <T>(key: string) => Promise<Result<T, Error>>
 }
 
+let dataSource: IDataSource
 const dataSourceFactory = {
-  create: (type?: string): IDataSource => {
-    switch (type) {
-      case 'inmemory':
-        return new InMemoryDataSource()
+  get: (): IDataSource => {
+    if (dataSource) return dataSource
+
+    const dataSourceType = env.getOrDefault('DATA_SOURCE', 'inmemory')
+    switch (dataSourceType) {
       case 'redis':
-        const redisDb = new RedisDataSource()
-        return redisDb
+        dataSource = new RedisDataSource()
+        break
+      case 'inmemory':
       default:
         return new InMemoryDataSource()
     }
+    return dataSource
   }
 }
 

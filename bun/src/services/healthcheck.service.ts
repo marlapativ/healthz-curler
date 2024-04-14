@@ -8,6 +8,6 @@ class HealthCheckService implements IHealthCheckService {
   }
 }
 
-const dataSource = dataSourceFactory.create()
+const dataSource = dataSourceFactory.get()
 const healthCheckService: IHealthCheckService = new HealthCheckService(dataSource)
 export default healthCheckService
