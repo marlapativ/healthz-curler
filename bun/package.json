@@ -1,14 +1,21 @@
 {
   "name": "healthz-curler",
-  "module": "src/index.ts",
+  "module": "src/server.ts",
   "type": "module",
   "scripts": {
-    "start": "bun run src/index.ts"
+    "dev": "bun run src/server.ts"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/lodash": "^4.17.0",
+    "@types/redis": "4.0.11"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "winston": "3.13.0",
+    "redis": "^4.6.13",
+    "lodash": "^4.17.21"
   }
 }
