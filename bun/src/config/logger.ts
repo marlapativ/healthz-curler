@@ -20,8 +20,9 @@ const logFileName = env.getOrDefault('LOG_FILE_NAME', 'server.log')
 const defaultLogLevel = env.getOrDefault('LOG_LEVEL', 'info')
 
 const transports = [
-  new winston.transports.Console(),
-  new winston.transports.File({ filename: `${logFolder}/${logFileName}`, level: defaultLogLevel })
+  new winston.transports.Console()
+  // TODO: Uncomment to write to file
+  // new winston.transports.File({ filename: `${logFolder}/${logFileName}`, level: defaultLogLevel })
 ]
 
 const logger = winston.createLogger({

@@ -1,4 +1,4 @@
-import { dataSourceFactory, IDataSource } from './data/datasource'
+import { dataSourceFactory, IDataSource } from '../data/datasource'
 export interface IHealthCheckService {}
 
 class HealthCheckService implements IHealthCheckService {

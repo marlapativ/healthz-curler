@@ -1,19 +1,17 @@
 import logger from './config/logger'
 import { dataSourceFactory } from './services/data/datasource'
 import env from './utils/env.utils'
+import { Elysia } from 'elysia'
 
-const bunServer = () => {
+const executeServer = () => {
   const port = env.getOrDefault('PORT', '4201')
+  const server = new Elysia()
 
-  const server = Bun.serve({
-    port,
-    fetch(req) {
-      console.log(req.url)
-      return new Response('Bun!')
-    }
+  server.get('/', () => 'Hello Elysia')
+  server.listen(3000, () => {
+    logger.info(`Server running on port ${port}`)
   })
 
-  logger.info(`Server running on port ${port}`)
   return server
 }
 
@@ -22,7 +20,7 @@ const server = await dataSourceFactory
   .init()
   .then(() => {
     logger.info('Data source initialized')
-    return bunServer()
+    return executeServer()
   })
 
 export default server
