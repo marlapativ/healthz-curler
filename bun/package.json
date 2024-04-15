@@ -1,9 +1,8 @@
 {
   "name": "healthz-curler",
-  "module": "src/server.ts",
   "type": "module",
   "scripts": {
-    "dev": "bun run --watch src/server.ts"
+    "dev": "bun --watch run src/server.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
@@ -15,9 +14,11 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@elysiajs/cors": "^1.0.2",
+    "@elysiajs/swagger": "^1.0.3",
     "elysia": "^1.0.13",
-    "winston": "^3.13.0",
+    "lodash": "^4.17.21",
     "redis": "^4.6.13",
-    "lodash": "^4.17.21"
+    "winston": "^3.13.0"
   }
 }
