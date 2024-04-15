@@ -7,9 +7,12 @@ export class InMemoryDataSource implements IDataSource {
   constructor() {
     this.data = new Map()
   }
+  has(key: string): Promise<Result<boolean, Error>> {
+    return Promise.resolve(Ok(this.data.has(key)))
+  }
 
-  async init(): Promise<void> {
-    return Promise.resolve()
+  async init(): Promise<IDataSource> {
+    return this
   }
 
   async getAll<T>(keyPrefix: string): Promise<Result<T[], Error>> {

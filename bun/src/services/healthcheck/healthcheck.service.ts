@@ -1,28 +1,5 @@
 import { dataSourceFactory, IDataSource } from '../data/datasource'
-
-export enum HealthCheckStatus {
-  HEALTHY = 'healthy',
-  UNHEALTHY = 'unhealthy',
-  DEGRADED = 'degraded'
-}
-
-export enum HealthCheckExecutor {
-  DEFAULT = 'default',
-  CURL = 'curl'
-}
-
-export type HealthCheck = {
-  id: string
-  name: string
-  url: string
-  status: HealthCheckStatus
-  auth?: {
-    username: string
-    password: string
-    apiKey: string
-  }
-  executor?: HealthCheckExecutor
-}
+import { HealthCheck } from './healthcheck'
 
 export interface IHealthCheckService {
   getAll(): Promise<Result<Array<HealthCheck>, Error>>
@@ -39,6 +16,16 @@ class HealthCheckService implements IHealthCheckService {
 
   async getAll(): Promise<Result<Array<HealthCheck>, Error>> {
     const result = await this.dataSourceService.getAll<HealthCheck>(`${this.keyPrefix}*`)
+    return result
+  }
+
+  async get(id: string): Promise<Result<HealthCheck, Error>> {
+    const result = await this.dataSourceService.get<HealthCheck>(`${this.keyPrefix}:${id}`)
+    return result
+  }
+
+  async create(healthCheck: HealthCheck): Promise<Result<HealthCheck, Error>> {
+    const result = await this.dataSourceService.set<HealthCheck>(`${this.keyPrefix}:${healthCheck.id}`, healthCheck)
     return result
   }
 }

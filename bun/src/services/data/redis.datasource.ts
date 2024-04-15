@@ -22,8 +22,14 @@ export class RedisDataSource implements IDataSource {
     })
   }
 
-  async init(): Promise<void> {
+  async init(): Promise<IDataSource> {
     this._redis.connect()
+    return this
+  }
+
+  async has(key: string): Promise<Result<boolean, Error>> {
+    const exists = await this._redis.exists(key)
+    return Ok(exists === 1)
   }
 
   async getAll<T>(keyPrefix: string): Promise<Result<Array<T>, Error>> {
