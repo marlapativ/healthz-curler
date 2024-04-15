@@ -1,3 +1,4 @@
+import logger from '../../config/logger'
 import env from '../../utils/env.util'
 import { InMemoryDataSource } from './inmemory.datasource'
 import { RedisDataSource } from './redis.datasource'
@@ -15,8 +16,8 @@ let dataSource: IDataSource
 const dataSourceFactory = {
   get: (): IDataSource => {
     if (dataSource) return dataSource
-
     const dataSourceType = env.getOrDefault('DATA_SOURCE', 'inmemory')
+    logger.info(`Creating new data source. Type: ${dataSourceType}`)
     switch (dataSourceType) {
       case 'redis':
         dataSource = new RedisDataSource()

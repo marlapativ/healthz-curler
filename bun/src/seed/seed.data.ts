@@ -13,15 +13,20 @@ export const healthChecksSeedData: HealthCheck[] = [
 ]
 
 const seedData: Record<string, Array<Model>> = {
-  healthCheck: healthChecksSeedData
+  healthcheck: healthChecksSeedData
 }
 
 export const seedDatabase = async (db: IDataSource) => {
   try {
     for (const [collection, data] of Object.entries(seedData)) {
       for (const item of data) {
-        const exists = await db.has(item.id)
-        if (!exists) await db.set(item.id, `${collection}:${item.id}`)
+        const key = `${collection}:${item.id}`
+        const exists = await db.has(key)
+        if (!exists.ok) throw exists.error
+        if (!exists.value) {
+          const result = await db.set(key, item)
+          if (!result.ok) throw result.error
+        }
       }
       return true
     }

@@ -17,7 +17,7 @@ export class InMemoryDataSource implements IDataSource {
 
   async getAll<T>(keyPrefix: string): Promise<Result<T[], Error>> {
     keyPrefix = keyPrefix.endsWith('*') ? keyPrefix.substring(0, keyPrefix.length - 1) : keyPrefix
-    const result = Object.entries(this.data)
+    const result = [...this.data.entries()]
       .filter(([key]) => key.startsWith(keyPrefix))
       .map(([, value]) => _.cloneDeep<T>(value))
     return Ok(result)
