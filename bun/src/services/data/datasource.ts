@@ -1,14 +1,16 @@
-import env from '../../utils/env.utils'
+import env from '../../utils/env.util'
 import { InMemoryDataSource } from './inmemory.datasource'
 import { RedisDataSource } from './redis.datasource'
 
 export interface IDataSource {
   init: () => Promise<void>
-  set: <T>(key: string, data: T) => Promise<Result<T, Error>>
   get: <T>(key: string) => Promise<Result<T, Error>>
+  set: <T>(key: string, data: T) => Promise<Result<T, Error>>
+  getAll: <T>(keyPrefix: string) => Promise<Result<Array<T>, Error>>
 }
 
 let dataSource: IDataSource
+
 const dataSourceFactory = {
   get: (): IDataSource => {
     if (dataSource) return dataSource
@@ -20,7 +22,7 @@ const dataSourceFactory = {
         break
       case 'inmemory':
       default:
-        return new InMemoryDataSource()
+        dataSource = new InMemoryDataSource()
     }
     return dataSource
   }

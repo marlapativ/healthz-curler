@@ -14,10 +14,6 @@ declare global {
   }
 
   type Result<T, E extends Error> = ResultOk<T> | ResultError<E>
-
-  const Ok = <T>(data: T): Result<T, never> => {
-    return { ok: true, value: data }
-  }
 }
 
 export {}

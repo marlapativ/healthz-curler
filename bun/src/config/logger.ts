@@ -1,5 +1,5 @@
 import winston from 'winston'
-import env from '../utils/env.utils'
+import env from '../utils/env.util'
 
 const { combine, timestamp, printf, align } = winston.format
 const logLevels = {
