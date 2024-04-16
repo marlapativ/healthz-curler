@@ -1,6 +1,5 @@
-import { Ok } from '../../utils/result.util'
-import { dataSourceFactory, IDataSource } from '../data/datasource'
-import { healthCheckProcessorFactory, IHealthCheckProcessor } from '../processor/healthcheck.processor'
+import { IDataSource, dataSourceFactory } from '../data/datasource'
+import { HealthCheckProcessor, IHealthCheckProcessor } from '../processor/healthcheck.processor'
 import { HealthCheck } from './healthcheck'
 
 export interface IHealthCheckService {
@@ -16,9 +15,9 @@ export class HealthCheckService implements IHealthCheckService {
   keyPrefix: string
   healthCheckProcessor: IHealthCheckProcessor
 
-  constructor(dataSourceService: IDataSource, healthCheckProcessor: IHealthCheckProcessor) {
+  constructor(dataSource: IDataSource, healthCheckProcessor: IHealthCheckProcessor) {
     this.keyPrefix = 'healthcheck'
-    this.dataSource = dataSourceService
+    this.dataSource = dataSource
     this.healthCheckProcessor = healthCheckProcessor
   }
 
@@ -38,7 +37,7 @@ export class HealthCheckService implements IHealthCheckService {
 
   async create(healthCheck: HealthCheck): Promise<Result<HealthCheck, Error>> {
     const validationResult = this.validate(healthCheck)
-    if (!validationResult.ok) return validationResult
+    if (validationResult.length > 0) return new HttpStatusError(400, validationResult)
 
     const uuid = crypto.randomUUID()
     const result = await this.dataSource.set<HealthCheck>(`${this.getKey(uuid)}`, healthCheck)
@@ -48,7 +47,7 @@ export class HealthCheckService implements IHealthCheckService {
   async update(id: string, healthCheck: HealthCheck): Promise<Result<HealthCheck, Error>> {
     healthCheck.id = id
     const validationResult = this.validate(healthCheck, false)
-    if (!validationResult.ok) return validationResult
+    if (validationResult.length > 0) return new HttpStatusError(400, validationResult)
 
     const exists = await this.dataSource.has(healthCheck.id)
     if (!exists.ok) return new Error('Error retrieving healthcheck')
@@ -67,20 +66,17 @@ export class HealthCheckService implements IHealthCheckService {
     return data
   }
 
-  validate(healthCheck: HealthCheck, isCreate: boolean = true): Result<HealthCheck, Error> {
-    if (!healthCheck) return new Error('HealthCheck is required')
+  validate(healthCheck: HealthCheck, isCreate: boolean = true): string[] {
+    const validationResults = []
+    if (!healthCheck) return ['HealthCheck is required']
     if (isCreate) {
-      if (healthCheck.id) return new Error('HealthCheck id cannot be passed')
+      if (healthCheck.id) validationResults.push('HealthCheck id cannot be passed')
     } else {
-      if (!healthCheck.id) return new Error('HealthCheck id is required')
+      if (!healthCheck.id) validationResults.push('HealthCheck id is required')
     }
-    if (!healthCheck.name) return new Error('HealthCheck name is required')
-    if (!healthCheck.url) return new Error('HealthCheck url is required')
-    return Ok(healthCheck)
+    if (!healthCheck.name) validationResults.push('HealthCheck name is required')
+    if (!healthCheck.url) validationResults.push('HealthCheck url is required')
+    if (!healthCheck.interval) validationResults.push('HealthCheck interval is required')
+    return validationResults
   }
 }
-
-const dataSource = dataSourceFactory.get()
-const healthCheckProcessor = healthCheckProcessorFactory.get(dataSource)
-const healthCheckService: IHealthCheckService = new HealthCheckService(dataSource, healthCheckProcessor)
-export default healthCheckService

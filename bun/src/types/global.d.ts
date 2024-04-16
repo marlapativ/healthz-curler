@@ -1,7 +1,5 @@
 declare global {
-  interface Error extends ResultError<Error> {
-    test: string
-  }
+  interface Error extends ResultError<Error> {}
 
   type ResultOk<T> = {
     ok: true
@@ -14,6 +12,16 @@ declare global {
   }
 
   type Result<T, E extends Error> = ResultOk<T> | ResultError<E>
+
+  class HttpStatusError extends Error {
+    statusCode: number
+    message: string | string[]
+    constructor(public statusCode: number, public message: string | string[]) {
+      super(typeof message === 'string' ? message : message[0])
+      this.statusCode = status
+      this.message = message
+    }
+  }
 }
 
 export {}

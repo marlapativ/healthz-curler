@@ -1,7 +1,7 @@
 import Elysia, { error } from 'elysia'
-import healthCheckService from '../services/healthcheck/healthcheck.service'
 import { HealthCheck } from '../services/healthcheck/healthcheck'
 import { Ok } from '../utils/result.util'
+import { healthCheckService } from '../container'
 
 type HealthCheckRequest = {
   params: {

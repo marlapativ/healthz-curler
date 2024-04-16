@@ -1,13 +1,18 @@
-import { Container } from 'inversify'
+import { IDataSource, dataSourceFactory } from './services/data/datasource'
 import { HealthCheckService, IHealthCheckService } from './services/healthcheck/healthcheck.service'
-import { INotificationService, NotificationService } from './services/realtime/notification.service'
 import { HealthCheckProcessor, IHealthCheckProcessor } from './services/processor/healthcheck.processor'
-import { IDataSource } from './services/data/datasource'
-import { InMemoryDataSource } from './services/data/inmemory.datasource'
+import { ConsoleNotificationExecutor } from './services/realtime/executor/console.executor'
+import { INotificationExecutor } from './services/realtime/executor/notification.executor'
+import { SocketNotificationExecutor } from './services/realtime/executor/socket.executor'
+import { INotificationProcessor, NotificationProcessor } from './services/realtime/notification.processor'
 
-const container = new Container()
+const notificationExecutors: INotificationExecutor[] = [
+  new ConsoleNotificationExecutor(),
+  new SocketNotificationExecutor()
+]
+const dataSource: IDataSource = dataSourceFactory.get()
+const notificationProcessor: INotificationProcessor = new NotificationProcessor(notificationExecutors)
+const healthCheckProcessor: IHealthCheckProcessor = new HealthCheckProcessor(dataSource, notificationProcessor)
+const healthCheckService: IHealthCheckService = new HealthCheckService(dataSource, healthCheckProcessor)
 
-container.bind<IDataSource>(InMemoryDataSource).toSelf().inSingletonScope()
-container.bind<IHealthCheckProcessor>(HealthCheckProcessor).toSelf().inSingletonScope()
-container.bind<IHealthCheckService>(HealthCheckService).toSelf().inSingletonScope()
-container.bind<INotificationService>(NotificationService).toSelf().inSingletonScope()
+export { healthCheckService }
