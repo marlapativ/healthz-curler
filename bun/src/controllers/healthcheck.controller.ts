@@ -1,14 +1,13 @@
 import Elysia, { error } from 'elysia'
 import healthCheckService from '../services/healthcheck/healthcheck.service'
+import { HealthCheck } from '../services/healthcheck/healthcheck'
+import { Ok } from '../utils/result.util'
 
 type HealthCheckRequest = {
   params: {
     id?: string
   }
-}
-
-const create = () => {
-  return 'Create Hello World'
+  body: HealthCheck
 }
 
 const getAll = async () => {
@@ -17,16 +16,42 @@ const getAll = async () => {
   return error(400, result.error)
 }
 
-const getById = ({ params: { id } }: HealthCheckRequest) => {
-  return `Hello World ${id}`
+const getById = async ({ params: { id } }: HealthCheckRequest) => {
+  const validationResult = validateRequest(id)
+  if (!validationResult.ok) return error(400, validationResult.error)
+
+  const result = await healthCheckService.get(id!)
+  if (result.ok) return result.value
+  return error(400, result.error)
 }
 
-const updateById = ({ params: { id } }: HealthCheckRequest) => {
-  return `Update Hello World ${id}`
+const create = async ({ body }: HealthCheckRequest) => {
+  const result = await healthCheckService.create(body)
+  if (result.ok) return result.value
+  return error(400, result.error)
 }
 
-const deleteById = ({ params: { id } }: HealthCheckRequest) => {
-  return `Delete Hello World - ${id}`
+const updateById = async ({ params: { id }, body }: HealthCheckRequest) => {
+  const validationResult = validateRequest(id)
+  if (!validationResult.ok) return error(400, validationResult.error)
+
+  const result = await healthCheckService.update(id!, body)
+  if (result.ok) return result.value
+  return error(400, result.error)
+}
+
+const deleteById = async ({ params: { id } }: HealthCheckRequest) => {
+  const validationResult = validateRequest(id)
+  if (!validationResult.ok) return error(400, validationResult.error)
+
+  const result = await healthCheckService.delete(id!)
+  if (result.ok) return result.value
+  return error(400, result.error)
+}
+
+const validateRequest = (id: string | undefined): Result<boolean, Error> => {
+  if (!id) return new Error('Id is required')
+  return Ok(true)
 }
 
 const healthCheckRouter = (server: Elysia<'/api/v1/healthcheck'>) => {

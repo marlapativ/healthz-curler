@@ -52,8 +52,16 @@ export class RedisDataSource implements IDataSource {
   }
 
   async get<T>(key: string): Promise<Result<T, Error>> {
+    const exists = await this.has(key)
+    if (!exists.ok) return new Error('Key does not exist')
     const data = await this._redis.get(key)
-    if (!data) return new Error('Data not found')
-    return Ok(JSON.parse(data) as T)
+    return Ok(JSON.parse(data!) as T)
+  }
+
+  async delete(key: string): Promise<Result<boolean, Error>> {
+    const exists = await this.has(key)
+    if (!exists.ok) return new Error('Key does not exist')
+    const result = await this._redis.del(key)
+    return Ok(result === 1)
   }
 }

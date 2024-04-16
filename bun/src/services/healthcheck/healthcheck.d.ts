@@ -15,7 +15,6 @@ export type HealthCheckResponse = {
 }
 
 export interface HealthCheck extends Model {
-  id: string
   name: string
   description?: string
   url: string

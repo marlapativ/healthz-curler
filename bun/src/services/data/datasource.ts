@@ -8,6 +8,7 @@ export interface IDataSource {
   get: <T>(key: string) => Promise<Result<T, Error>>
   set: <T>(key: string, data: T) => Promise<Result<T, Error>>
   has: (key: string) => Promise<Result<boolean, Error>>
+  delete: (key: string) => Promise<Result<boolean, Error>>
   getAll: <T>(keyPrefix: string) => Promise<Result<Array<T>, Error>>
 }
 

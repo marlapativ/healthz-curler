@@ -36,4 +36,11 @@ export class InMemoryDataSource implements IDataSource {
     const clone = _.cloneDeep(value)
     return Ok(clone)
   }
+
+  async delete(key: string): Promise<Result<boolean, Error>> {
+    const keyExists = this.data.has(key)
+    if (!keyExists) return new Error(`Key ${key} not found`)
+    this.data.delete(key)
+    return Ok(true)
+  }
 }
