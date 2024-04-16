@@ -1,5 +1,6 @@
 import { Ok } from '../../utils/result.util'
 import { dataSourceFactory, IDataSource } from '../data/datasource'
+import { healthCheckProcessorFactory, IHealthCheckProcessor } from '../processor/healthcheck.processor'
 import { HealthCheck } from './healthcheck'
 
 export interface IHealthCheckService {
@@ -10,13 +11,15 @@ export interface IHealthCheckService {
   delete(id: string): Promise<Result<HealthCheck, Error>>
 }
 
-class HealthCheckService implements IHealthCheckService {
+export class HealthCheckService implements IHealthCheckService {
   dataSource: IDataSource
   keyPrefix: string
+  healthCheckProcessor: IHealthCheckProcessor
 
-  constructor(dataSourceService: IDataSource) {
+  constructor(dataSourceService: IDataSource, healthCheckProcessor: IHealthCheckProcessor) {
     this.keyPrefix = 'healthcheck'
     this.dataSource = dataSourceService
+    this.healthCheckProcessor = healthCheckProcessor
   }
 
   private async getKey(id: string): Promise<string> {
@@ -78,5 +81,6 @@ class HealthCheckService implements IHealthCheckService {
 }
 
 const dataSource = dataSourceFactory.get()
-const healthCheckService: IHealthCheckService = new HealthCheckService(dataSource)
+const healthCheckProcessor = healthCheckProcessorFactory.get(dataSource)
+const healthCheckService: IHealthCheckService = new HealthCheckService(dataSource, healthCheckProcessor)
 export default healthCheckService

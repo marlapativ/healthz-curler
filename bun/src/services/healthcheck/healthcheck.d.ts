@@ -5,9 +5,10 @@ export enum HealthCheckStatus {
   DEGRADED = 'degraded'
 }
 
-export enum HealthCheckExecutor {
+export enum HealthCheckExecutorType {
   DEFAULT = 'default',
-  CURL = 'curl'
+  CURL = 'curl',
+  FETCH = 'fetch'
 }
 
 export type HealthCheckResponse = {
@@ -18,6 +19,7 @@ export interface HealthCheck extends Model {
   name: string
   description?: string
   url: string
+  interval: number
   method?: string
   expectedResponseCode?: number
   timeout?: number
@@ -27,5 +29,5 @@ export interface HealthCheck extends Model {
     password: string
     apiKey: string
   }
-  executor?: HealthCheckExecutor
+  executor?: HealthCheckExecutorType
 }
