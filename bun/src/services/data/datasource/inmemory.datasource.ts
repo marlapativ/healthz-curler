@@ -1,4 +1,4 @@
-import { Ok } from '../../utils/result.util'
+import { Ok } from '../../../utils/result.util'
 import { IDataSource } from './datasource'
 import _ from 'lodash'
 

@@ -1,9 +1,9 @@
-import { IDataSource } from '../data/datasource'
+import { IDataSource } from '../data/datasource/datasource'
 import { HealthCheck } from '../healthcheck/healthcheck'
 import { HealthCheckExecutorFactory } from './executor/executor'
 import { INotificationProcessor } from '../realtime/notification.processor'
-import logger from '../../config/logger'
 import { NotificationType } from '../realtime/notification'
+import processorLogger from '../../config/processor.logger'
 
 export interface IHealthCheckProcessor {
   init(healthChecks: HealthCheck[]): Promise<void>
@@ -20,13 +20,12 @@ export class HealthCheckProcessor implements IHealthCheckProcessor {
   }
 
   async init(healthChecks: HealthCheck[]): Promise<void> {
-    console.log('HealthCheckProcessor process. Start the set timeouts.')
     for (const healthCheck of healthChecks) {
       const executor = HealthCheckExecutorFactory.get(healthCheck)
       this.timeouts[healthCheck.id] = setInterval(async () => {
-        logger.info(`Executing HealthCheckProcessor: ${healthCheck.id} - Start`)
+        processorLogger.debug(`Executing HealthCheckProcessor: ${healthCheck.id}`)
         const result = await executor.execute()
-        logger.info(`HealthCheckProcessor: ${healthCheck.id} - ${result}`)
+        processorLogger.debug(`Execution complete HealthCheckProcessor: ${healthCheck.id}`)
 
         // TODO: Update the result to database
 

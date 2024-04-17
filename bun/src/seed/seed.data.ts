@@ -1,14 +1,24 @@
 import logger from '../config/logger'
-import { IDataSource } from '../services/data/datasource'
-import { HealthCheck } from '../services/healthcheck/healthcheck'
+import { IDataSource } from '../services/data/datasource/datasource'
+import { HealthCheck, HealthCheckExecutorType } from '../services/healthcheck/healthcheck'
 import { Model } from '../types/model'
 
 export const healthChecksSeedData: HealthCheck[] = [
   {
-    id: 'webapp',
-    name: 'Webapp Health Check',
-    description: 'Health check for the webapp',
-    url: 'http://localhost:8080/healthz'
+    id: 'b1c4a89e-4905-5e3c-b57f-dc92627d011e',
+    name: 'webapp-fetch',
+    description: 'Webapp Fetch Health Check',
+    url: 'http://localhost:8080/healthz',
+    executor: HealthCheckExecutorType.FETCH,
+    interval: 10000
+  },
+  {
+    id: 'cdb63720-9628-5ef6-bbca-2e5ce6094f3c',
+    name: 'webapp-curl',
+    description: 'Webapp Curl Health Check',
+    url: 'http://localhost:8080/healthz',
+    executor: HealthCheckExecutorType.CURL,
+    interval: 10000
   }
 ]
 

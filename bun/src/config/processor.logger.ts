@@ -12,11 +12,11 @@ const logLevels = {
 }
 
 const logFormat = printf(({ level, message, timestamp }) => {
-  return `[${timestamp}] [server]       ${level}: ${message}`
+  return `[${timestamp}] [processor]    ${level}: ${message}`
 })
 
 const logFolder = env.getOrDefault('LOG_FOLDER', './logs')
-const logFileName = env.getOrDefault('LOG_FILE_NAME', 'server.log')
+const logFileName = env.getOrDefault('LOG_FILE_NAME', 'processor.log')
 const defaultLogLevel = env.getOrDefault('LOG_LEVEL', 'info')
 
 const transports = [
@@ -25,11 +25,11 @@ const transports = [
   // new winston.transports.File({ filename: `${logFolder}/${logFileName}`, level: defaultLogLevel })
 ]
 
-const logger = winston.createLogger({
+const processorLogger = winston.createLogger({
   levels: logLevels,
   level: defaultLogLevel,
   format: combine(timestamp({ format: 'YYYY-MM-DD hh:mm:ss A' }), align(), logFormat),
   transports: transports
 })
 
-export default logger
+export default processorLogger

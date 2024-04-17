@@ -1,5 +1,5 @@
-import logger from '../../config/logger'
-import env from '../../utils/env.util'
+import logger from '../../../config/logger'
+import env from '../../../utils/env.util'
 import { InMemoryDataSource } from './inmemory.datasource'
 import { RedisDataSource } from './redis.datasource'
 

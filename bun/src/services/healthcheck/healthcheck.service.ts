@@ -1,8 +1,9 @@
-import { IDataSource, dataSourceFactory } from '../data/datasource'
-import { HealthCheckProcessor, IHealthCheckProcessor } from '../processor/healthcheck.processor'
+import { IDataSource } from '../data/datasource/datasource'
+import { IInitializableService } from '../initializer/initializer'
+import { IHealthCheckProcessor } from '../processor/healthcheck.processor'
 import { HealthCheck } from './healthcheck'
 
-export interface IHealthCheckService {
+export interface IHealthCheckService extends IInitializableService {
   getAll(): Promise<Result<Array<HealthCheck>, Error>>
   get(id: string): Promise<Result<HealthCheck, Error>>
   create(healthCheck: HealthCheck): Promise<Result<HealthCheck, Error>>
@@ -21,8 +22,13 @@ export class HealthCheckService implements IHealthCheckService {
     this.healthCheckProcessor = healthCheckProcessor
   }
 
-  private async getKey(id: string): Promise<string> {
+  private getKey(id: string): string {
     return `${this.keyPrefix}:${id}`
+  }
+
+  async init(): Promise<void> {
+    const healthChecks = await this.getAll()
+    if (healthChecks.ok) this.healthCheckProcessor.init(healthChecks.value)
   }
 
   async getAll(): Promise<Result<Array<HealthCheck>, Error>> {
@@ -40,6 +46,8 @@ export class HealthCheckService implements IHealthCheckService {
     if (validationResult.length > 0) return new HttpStatusError(400, validationResult)
 
     const uuid = crypto.randomUUID()
+    healthCheck.id = uuid
+    healthCheck.active = true
     const result = await this.dataSource.set<HealthCheck>(`${this.getKey(uuid)}`, healthCheck)
     return result
   }

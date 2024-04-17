@@ -1,22 +1,23 @@
 import Elysia, { error } from 'elysia'
 import { HealthCheck } from '../services/healthcheck/healthcheck'
 import { Ok } from '../utils/result.util'
-import { healthCheckService } from '../container'
+import { IHealthCheckService } from '../services/healthcheck/healthcheck.service'
 
 type HealthCheckRequest = {
   params: {
     id?: string
   }
   body: HealthCheck
+  healthCheckService: IHealthCheckService
 }
 
-const getAll = async () => {
+const getAll = async ({ healthCheckService }: HealthCheckRequest) => {
   const result = await healthCheckService.getAll()
   if (result.ok) return result.value
   return error(400, result.error)
 }
 
-const getById = async ({ params: { id } }: HealthCheckRequest) => {
+const getById = async ({ params: { id }, healthCheckService }: HealthCheckRequest) => {
   const validationResult = validateRequest(id)
   if (!validationResult.ok) return error(400, validationResult.error)
 
@@ -25,13 +26,13 @@ const getById = async ({ params: { id } }: HealthCheckRequest) => {
   return error(400, result.error)
 }
 
-const create = async ({ body }: HealthCheckRequest) => {
+const create = async ({ body, healthCheckService }: HealthCheckRequest) => {
   const result = await healthCheckService.create(body)
   if (result.ok) return result.value
   return error(400, result.error)
 }
 
-const updateById = async ({ params: { id }, body }: HealthCheckRequest) => {
+const updateById = async ({ params: { id }, body, healthCheckService }: HealthCheckRequest) => {
   const validationResult = validateRequest(id)
   if (!validationResult.ok) return error(400, validationResult.error)
 
@@ -40,7 +41,7 @@ const updateById = async ({ params: { id }, body }: HealthCheckRequest) => {
   return error(400, result.error)
 }
 
-const deleteById = async ({ params: { id } }: HealthCheckRequest) => {
+const deleteById = async ({ params: { id }, healthCheckService }: HealthCheckRequest) => {
   const validationResult = validateRequest(id)
   if (!validationResult.ok) return error(400, validationResult.error)
 
@@ -54,8 +55,11 @@ const validateRequest = (id: string | undefined): Result<boolean, Error> => {
   return Ok(true)
 }
 
-const healthCheckRouter = (server: Elysia<'/api/v1/healthcheck'>) => {
+const healthCheckRouter = (server: Elysia<'/api/v1/healthcheck', false, Context>) => {
   return server
+    .derive(({ store: { container } }) => ({
+      healthCheckService: container.get<IHealthCheckService>('IHealthCheckService')
+    }))
     .get('/', getAll)
     .post('/', create)
     .get('/:id', getById)
