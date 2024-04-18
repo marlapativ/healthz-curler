@@ -3,7 +3,7 @@ import { HealthCheckExecutorFactory } from './executor/executor'
 import { INotificationProcessor } from '../realtime/notification.processor'
 import { NotificationType } from '../realtime/notification'
 import processorLogger from '../../config/processor.logger'
-import { ITimeSeriesDataSource } from '../data/time/timeseries.datasource'
+import { ITimeSeriesDataSource } from '../data/timeseries/timeseries.datasource'
 
 export interface IHealthCheckProcessor {
   init(healthChecks: HealthCheck[]): Promise<void>
@@ -27,7 +27,6 @@ export class HealthCheckProcessor implements IHealthCheckProcessor {
         const result = await executor.execute()
         processorLogger.debug(`Execution complete HealthCheckProcessor: ${healthCheck.id}`)
 
-        // TODO: Update the result to database
         this.timeSeriesDataSource.writePoint({
           id: healthCheck.id,
           name: healthCheck.name,

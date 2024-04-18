@@ -1,6 +1,6 @@
 import logger from '../../../config/logger'
 import env from '../../../utils/env.util'
-import { InfluxDBDataSource } from './influx.db'
+import { InfluxDBDataSource } from './influx.timeseries'
 
 export interface ITimeSeriesDataSource {
   writePoint(point: ITimeSeriesData): Promise<void>

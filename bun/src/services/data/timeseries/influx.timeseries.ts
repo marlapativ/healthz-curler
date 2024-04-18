@@ -1,10 +1,11 @@
-import { InfluxDB, Point, WriteApi } from '@influxdata/influxdb-client'
+import { InfluxDB, Point, QueryApi, WriteApi } from '@influxdata/influxdb-client'
 import env from '../../../utils/env.util'
 import { ITimeSeriesData, ITimeSeriesDataSource } from './timeseries.datasource'
 
 export class InfluxDBDataSource implements ITimeSeriesDataSource {
   private _influxDb: InfluxDB
   private writeApi: WriteApi
+  private queryApi: QueryApi
 
   constructor() {
     const token = env.getOrDefault('INFLUX_TOKEN', '')
@@ -18,6 +19,7 @@ export class InfluxDBDataSource implements ITimeSeriesDataSource {
     if (!bucket || !org) throw new Error('InfluxDB bucket and organization are required')
     this.writeApi = this._influxDb.getWriteApi(org, bucket, undefined, { flushInterval: 5000 })
     this.writeApi.useDefaultTags({ implementation: 'bun', language: 'js' })
+    this.queryApi = this._influxDb.getQueryApi(org)
   }
 
   async writePoint(point: ITimeSeriesData): Promise<void> {

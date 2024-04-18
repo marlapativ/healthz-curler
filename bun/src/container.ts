@@ -1,6 +1,5 @@
 import { IDataSource, dataSourceFactory } from './services/data/datasource/datasource'
-import { InfluxDBDataSource } from './services/data/time/influx.db'
-import { ITimeSeriesDataSource, timeSeriesDataSourceFactory } from './services/data/time/timeseries.datasource'
+import { ITimeSeriesDataSource, timeSeriesDataSourceFactory } from './services/data/timeseries/timeseries.datasource'
 import { HealthCheckService, IHealthCheckService } from './services/healthcheck/healthcheck.service'
 import { HealthCheckProcessor, IHealthCheckProcessor } from './services/processor/healthcheck.processor'
 import { INotificationExecutor } from './services/realtime/executor/notification.executor'

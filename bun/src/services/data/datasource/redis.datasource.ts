@@ -9,12 +9,11 @@ export class RedisDataSource implements IDataSource {
   _redis: RedisClientType
 
   constructor() {
+    const redisUrl = env.getOrDefault('REDIS_URL', 'redis://localhost:6379/2')
+    if (!redisUrl) throw new Error('REDIS_URL env variable is required')
     this._redis = createClient({
-      socket: {
-        host: env.getOrDefault('REDIS_HOST', 'localhost'),
-        port: parseInt(env.getOrDefault('REDIS_PORT', '6379')),
-        reconnectStrategy: 5000
-      },
+      url: redisUrl,
+      database: parseInt(env.getOrDefault('REDIS_DB', '2')),
       pingInterval: 2000
     })
     this._redis.on('error', (error) => {
