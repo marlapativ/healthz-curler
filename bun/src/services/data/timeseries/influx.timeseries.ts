@@ -9,14 +9,15 @@ export class InfluxDBDataSource implements ITimeSeriesDataSource {
 
   constructor() {
     const token = env.getOrDefault('INFLUX_TOKEN', '')
+    const bucket = env.getOrDefault('INFLUX_BUCKET', 'healthz-curler')
+    const org = env.getOrDefault('INFLUX_ORG', 'healthz-curler')
     if (!token) throw new Error('InfluxDB token is required')
+    if (!bucket || !org) throw new Error('InfluxDB bucket and organization are required')
+
     this._influxDb = new InfluxDB({
       url: env.getOrDefault('INFLUX_URL', 'http://localhost:8086'),
       token
     })
-    const bucket = env.getOrDefault('INFLUX_BUCKET', 'healthz-curler')
-    const org = env.getOrDefault('INFLUX_ORG', 'healthz-curler')
-    if (!bucket || !org) throw new Error('InfluxDB bucket and organization are required')
     this.writeApi = this._influxDb.getWriteApi(org, bucket, undefined, { flushInterval: 5000 })
     this.writeApi.useDefaultTags({ implementation: 'bun', language: 'js' })
     this.queryApi = this._influxDb.getQueryApi(org)
