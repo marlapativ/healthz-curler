@@ -1,21 +1,21 @@
-import { IDataSource } from '../data/datasource/datasource'
 import { HealthCheck } from '../healthcheck/healthcheck'
 import { HealthCheckExecutorFactory } from './executor/executor'
 import { INotificationProcessor } from '../realtime/notification.processor'
 import { NotificationType } from '../realtime/notification'
 import processorLogger from '../../config/processor.logger'
+import { ITimeSeriesDataSource } from '../data/time/timeseries.datasource'
 
 export interface IHealthCheckProcessor {
   init(healthChecks: HealthCheck[]): Promise<void>
 }
 
 export class HealthCheckProcessor implements IHealthCheckProcessor {
-  dataSource: IDataSource
+  timeSeriesDataSource: ITimeSeriesDataSource
   timeouts: Record<string, Timer> = {}
   notificationService: INotificationProcessor
 
-  constructor(dataSource: IDataSource, notificationService: INotificationProcessor) {
-    this.dataSource = dataSource
+  constructor(timeSeriesDataSource: ITimeSeriesDataSource, notificationService: INotificationProcessor) {
+    this.timeSeriesDataSource = timeSeriesDataSource
     this.notificationService = notificationService
   }
 
@@ -28,6 +28,14 @@ export class HealthCheckProcessor implements IHealthCheckProcessor {
         processorLogger.debug(`Execution complete HealthCheckProcessor: ${healthCheck.id}`)
 
         // TODO: Update the result to database
+        this.timeSeriesDataSource.writePoint({
+          id: healthCheck.id,
+          name: healthCheck.name,
+          type: 'healthcheck',
+          properties: {
+            result: result.ok ? result.value : false
+          }
+        })
 
         const message = {
           healthCheckId: healthCheck.id,

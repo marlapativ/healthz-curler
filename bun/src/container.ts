@@ -1,4 +1,6 @@
 import { IDataSource, dataSourceFactory } from './services/data/datasource/datasource'
+import { InfluxDBDataSource } from './services/data/time/influx.db'
+import { ITimeSeriesDataSource, timeSeriesDataSourceFactory } from './services/data/time/timeseries.datasource'
 import { HealthCheckService, IHealthCheckService } from './services/healthcheck/healthcheck.service'
 import { HealthCheckProcessor, IHealthCheckProcessor } from './services/processor/healthcheck.processor'
 import { INotificationExecutor } from './services/realtime/executor/notification.executor'
@@ -15,6 +17,8 @@ class Container implements IContainer {
 
   buildServices() {
     this.map.set('IDataSource', dataSourceFactory.get())
+    this.map.set('ITimeSeriesDataSource', timeSeriesDataSourceFactory.get())
+
     this.map.set('INotificationExecutor', [new SocketNotificationExecutor()])
     this.map.set(
       'INotificationProcessor',
@@ -23,7 +27,7 @@ class Container implements IContainer {
     this.map.set(
       'IHealthCheckProcessor',
       new HealthCheckProcessor(
-        this.get<IDataSource>('IDataSource'),
+        this.get<ITimeSeriesDataSource>('ITimeSeriesDataSource'),
         this.get<INotificationProcessor>('INotificationProcessor')
       )
     )
