@@ -4,12 +4,14 @@ import { INotificationProcessor } from '../realtime/notification.processor'
 import { NotificationType } from '../realtime/notification'
 import processorLogger from '../../config/processor.logger'
 import { ITimeSeriesDataSource } from '../data/timeseries/timeseries.datasource'
+import { IProcessor } from './processor'
 
-export interface IHealthCheckProcessor {
+export interface IHealthCheckProcessor extends IProcessor {
   init(healthChecks: HealthCheck[]): Promise<void>
 }
 
 export class HealthCheckProcessor implements IHealthCheckProcessor {
+  type: string = 'HealthCheck'
   timeSeriesDataSource: ITimeSeriesDataSource
   timeouts: Record<string, Timer> = {}
   notificationService: INotificationProcessor
@@ -30,7 +32,7 @@ export class HealthCheckProcessor implements IHealthCheckProcessor {
         this.timeSeriesDataSource.writePoint({
           id: healthCheck.id,
           name: healthCheck.name,
-          type: 'healthcheck',
+          type: this.type,
           properties: {
             result: result.ok ? result.value : false
           }
@@ -40,7 +42,7 @@ export class HealthCheckProcessor implements IHealthCheckProcessor {
           healthCheckId: healthCheck.id,
           result: result
         }
-        this.notificationService.notify(NotificationType.HEALTH_CHECK, message)
+        this.notificationService.notify(NotificationType.HealthCheck, message)
       }, healthCheck.interval)
     }
   }

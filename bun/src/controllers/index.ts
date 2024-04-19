@@ -1,8 +1,9 @@
 import Elysia from 'elysia'
 import { healthCheckRouter } from './healthcheck.controller'
+import { healthGraphRouter } from './healthgraph.controller'
 
 const routes = (server: Elysia<'/api/v1', false, Context>) => {
-  return server.group('/healthcheck', healthCheckRouter)
+  return server.group('/healthcheck', healthCheckRouter).group('/healthgraph', healthGraphRouter)
 }
 
 const apiRoutes = (server: Elysia<'', false, Context>) => {

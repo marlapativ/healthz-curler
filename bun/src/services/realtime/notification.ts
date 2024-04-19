@@ -1,3 +1,3 @@
 export enum NotificationType {
-  HEALTH_CHECK = 'HEALTH_CHECK'
+  HealthCheck = 'HealthCheck' // TYPES.HealthCheck
 }

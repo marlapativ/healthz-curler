@@ -4,6 +4,14 @@ import { InfluxDBDataSource } from './influx.timeseries'
 
 export interface ITimeSeriesDataSource {
   writePoint(point: ITimeSeriesData): Promise<void>
+  queryData<T>(request: IQueryableTimeSeriesData): Promise<T[]>
+}
+
+export interface IQueryableTimeSeriesData extends ITimeSeriesData {
+  startTime: Date
+  endTime: Date
+  pageSize?: number
+  page?: number
 }
 
 export interface ITimeSeriesData {
