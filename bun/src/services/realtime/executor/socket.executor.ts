@@ -1,7 +1,7 @@
 import notificationLogger from '../../../config/notification.logger'
 import { NotificationType } from '../notification'
 import { INotificationExecutor } from './notification.executor'
-import { IPubSubService } from '../../pubsub/pubsub.service'
+import { IPubSubService } from '../../socket/socket.pubsub'
 import { INotification } from '../notification.processor'
 
 export class SocketNotificationExecutor implements INotificationExecutor {
