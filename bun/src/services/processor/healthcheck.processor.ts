@@ -39,8 +39,11 @@ export class HealthCheckProcessor implements IHealthCheckProcessor {
         })
 
         const message = {
-          healthCheckId: healthCheck.id,
-          result: result
+          id: healthCheck.id,
+          message: {
+            healthCheckId: healthCheck.id,
+            result: result
+          }
         }
         this.notificationService.notify(NotificationType.HealthCheck, message)
       }, healthCheck.interval)
