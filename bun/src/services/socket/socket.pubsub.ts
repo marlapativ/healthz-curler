@@ -8,8 +8,14 @@ export interface IPubSubService {
   publish<T>(channel: string, message: T): Promise<void>
   subscribe<T>(channel: string, callback: (message: T) => void): Promise<void>
 }
-export type IWebSocketMessage = {
-  type: 'subscribe' | 'unsubscribe'
+
+export enum WebSocketMessageType {
+  SUBSCRIBE = 'subscribe',
+  UNSUBSCRIBE = 'unsubscribe'
+}
+
+export type WebSocketMessage = {
+  type: WebSocketMessageType
   channel: string
 }
 
@@ -28,6 +34,7 @@ export interface IWebSocketMessageHandler {
         message: unknown
       ) => any)
     | undefined
+
   init(server: Server | null): void
 }
 
@@ -57,11 +64,11 @@ export class PubSubService implements IPubSubService, IWebSocketMessageHandler {
     >,
     messageUnknown: unknown
   ): void {
-    const message = messageUnknown as IWebSocketMessage
+    const message = messageUnknown as WebSocketMessage
     logger.info(`Websocket connection: PubSubService: ${message.type} - ${message.channel}`)
-    if (message.type === 'subscribe') {
+    if (message.type === WebSocketMessageType.SUBSCRIBE) {
       ws.subscribe(message.channel)
-    } else if (message.type === 'unsubscribe') {
+    } else if (message.type === WebSocketMessageType.UNSUBSCRIBE) {
       ws.unsubscribe(message.channel)
     }
   }
