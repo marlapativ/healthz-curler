@@ -1,4 +1,4 @@
-import { ServerWebSocket } from 'bun'
+import { Server, ServerWebSocket } from 'bun'
 import { ElysiaWS } from 'elysia/ws'
 import logger from '../../config/logger'
 import { TypeCheck } from 'elysia/type-system'
@@ -28,11 +28,18 @@ export interface IWebSocketMessageHandler {
         message: unknown
       ) => any)
     | undefined
+  init(server: Server | null): void
 }
 
 export class PubSubService implements IPubSubService, IWebSocketMessageHandler {
+  server: Server | null = null
+  init(server: Server | null): void {
+    this.server = server
+  }
+
   async publish<T>(channel: string, message: T): Promise<void> {
     logger.info(`PubSubService: ${channel} - ${message}`)
+    this.server?.publish(channel, JSON.stringify(message))
   }
 
   async subscribe<T>(channel: string, callback: (message: T) => void): Promise<void> {
@@ -51,7 +58,7 @@ export class PubSubService implements IPubSubService, IWebSocketMessageHandler {
     messageUnknown: unknown
   ): void {
     const message = messageUnknown as IWebSocketMessage
-    logger.info(`PubSubService: ${message.type} - ${message.channel}`)
+    logger.info(`Websocket connection: PubSubService: ${message.type} - ${message.channel}`)
     if (message.type === 'subscribe') {
       ws.subscribe(message.channel)
     } else if (message.type === 'unsubscribe') {

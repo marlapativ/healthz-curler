@@ -21,6 +21,9 @@ const startServer = () => {
     .ws('/ws', {
       message: socketMessageHandler.message
     })
+    .onStart((elysiaServer) => {
+      socketMessageHandler.init(elysiaServer.server)
+    })
     .listen(SERVER_PORT, ({ hostname, port }) => {
       logger.info(`Server running on port ${port}`)
       logger.info(`Swagger: http://${hostname}:${port}/swagger`)
