@@ -7,15 +7,20 @@ import { dataSourceFactory } from './services/data/datasource/datasource'
 import { apiRoutes } from './controllers'
 import { seedDatabase } from './seed/seed.data'
 import { container } from './container'
+import { IWebSocketMessageHandler } from './services/socket/socket.pubsub'
 
 const SERVER_PORT = env.getOrDefault('SERVER_PORT', '4205')
 
 const startServer = () => {
+  const socketMessageHandler = container.get<IWebSocketMessageHandler>('IWebSocketMessageHandler')
   const server = new Elysia()
     .use(cors())
     .use(swagger())
     .state('container', container)
     .use(apiRoutes)
+    .ws('/ws', {
+      message: socketMessageHandler.message
+    })
     .listen(SERVER_PORT, ({ hostname, port }) => {
       logger.info(`Server running on port ${port}`)
       logger.info(`Swagger: http://${hostname}:${port}/swagger`)
