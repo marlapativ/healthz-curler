@@ -1,6 +1,4 @@
 import { Server, ServerWebSocket } from 'bun'
-import { TypeCheck } from 'elysia/type-system'
-import { InputSchema, MergeSchema, TSchema, UnwrapRoute } from 'elysia'
 import Logger from '../../config/logger'
 const logger = Logger(import.meta.file)
 

@@ -1,6 +1,6 @@
 import { Ok } from '../../utils/result.util'
 import { IQueryableTimeSeriesData, ITimeSeriesDataSource } from '../data/timeseries/timeseries.datasource'
-import { HealthCheckService, IHealthCheckService } from './healthcheck.service'
+import { IHealthCheckService } from './healthcheck.service'
 
 export interface IHealthGraphService {
   get(healthCheckId: string, page?: number, pageSize?: number): Promise<Result<any[], Error>>

@@ -1,9 +1,9 @@
 import { IDataSource } from '../data/datasource/datasource'
-import { IInitializableService } from '../initializer/initializer'
 import { IHealthCheckProcessor } from '../processor/healthcheck.processor'
 import { HealthCheck } from './healthcheck'
 
-export interface IHealthCheckService extends IInitializableService {
+export interface IHealthCheckService {
+  init(): Promise<void>
   getAll(): Promise<Result<Array<HealthCheck>, Error>>
   get(id: string): Promise<Result<HealthCheck, Error>>
   create(healthCheck: HealthCheck): Promise<Result<HealthCheck, Error>>
