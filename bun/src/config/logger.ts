@@ -13,7 +13,7 @@ const logLevels = {
 
 const logFormat = printf((data) => {
   const { namespace, level, message, timestamp } = data
-  return `[${timestamp}] [${namespace}]       ${level}: ${message}`
+  return `[${timestamp}] [${namespace}] ${level}: ${message}`
 })
 
 const logFolder = env.getOrDefault('LOG_FOLDER', './logs')
