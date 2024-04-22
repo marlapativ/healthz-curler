@@ -6,8 +6,9 @@ import { dataSourceFactory } from './services/data/datasource/datasource'
 import { apiRoutes } from './controllers'
 import { seedDatabase } from './seed/seed.data'
 import { container } from './container'
-import { IWebSocketMessageHandler } from './services/socket/socket.pubsub'
+import { IWebSocketMessageHandler, WebSocketMessage } from './services/socket/socket.publisher'
 import Logger from './config/logger'
+import { ServerWebSocket, SocketHandler } from 'bun'
 const logger = Logger(import.meta.file)
 
 const SERVER_PORT = env.getOrDefault('SERVER_PORT', '4205')
@@ -20,7 +21,11 @@ const startServer = () => {
     .state('container', container)
     .use(apiRoutes)
     .ws('/ws', {
-      message: socketMessageHandler.message
+      message: (ws, msg) => {
+        const websocket = ws as unknown as ServerWebSocket
+        const message = msg as WebSocketMessage
+        return socketMessageHandler.message(websocket, message)
+      }
     })
     .onStart((elysiaServer) => {
       socketMessageHandler.init(elysiaServer.server)

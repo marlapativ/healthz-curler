@@ -1,6 +1,6 @@
 import { HealthCheck } from '../healthcheck/healthcheck'
-import { HealthCheckExecutorFactory } from './executor/executor'
-import { INotificationProcessor } from '../realtime/notification.processor'
+import { HealthCheckExecutionResult, HealthCheckExecutorFactory } from './executor/executor'
+import { Notification, INotificationProcessor } from '../realtime/notification.processor'
 import { NotificationType } from '../realtime/notification'
 import { ITimeSeriesDataSource } from '../data/timeseries/timeseries.datasource'
 import { IProcessor } from './processor'
@@ -27,24 +27,27 @@ export class HealthCheckProcessor implements IHealthCheckProcessor {
       const executor = HealthCheckExecutorFactory.get(healthCheck)
       this.timeouts[healthCheck.id] = setInterval(async () => {
         logger.debug(`Executing HealthCheckProcessor: ${healthCheck.id}`)
-        const result = await executor.execute()
+        const executionResult = await executor.execute()
         logger.debug(`Execution complete HealthCheckProcessor: ${healthCheck.id}`)
+
+        const result: HealthCheckExecutionResult = executionResult.ok
+          ? executionResult.value
+          : {
+              result: false,
+              errorMessage: executionResult.error.message,
+              timestamp: new Date()
+            }
 
         this.timeSeriesDataSource.writePoint({
           id: healthCheck.id,
           name: healthCheck.name,
           type: this.type,
-          properties: {
-            result: result.ok ? result.value : false
-          }
+          properties: result
         })
 
-        const message = {
+        const message: Notification<HealthCheckExecutionResult> = {
           id: healthCheck.id,
-          message: {
-            healthCheckId: healthCheck.id,
-            result: result
-          }
+          message: result
         }
         this.notificationService.notify(NotificationType.HealthCheck, message)
       }, healthCheck.interval)

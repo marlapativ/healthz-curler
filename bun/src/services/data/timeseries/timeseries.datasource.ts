@@ -20,7 +20,7 @@ export interface ITimeSeriesData {
   name: string
   type: string
   timestamp?: Date
-  properties: Record<string, number | string | boolean>
+  properties: Record<string, number | string | boolean | Date>
 }
 
 let timeSeriesDataSource: ITimeSeriesDataSource

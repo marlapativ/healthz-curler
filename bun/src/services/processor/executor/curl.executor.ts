@@ -1,7 +1,7 @@
 import { random } from 'lodash'
 import { Ok } from '../../../utils/result.util'
 import { HealthCheck } from '../../healthcheck/healthcheck'
-import { IHealthCheckExecutor } from './executor'
+import { HealthCheckExecutionResult, IHealthCheckExecutor } from './executor'
 import Logger from '../../../config/logger'
 const logger = Logger(import.meta.file)
 
@@ -12,8 +12,14 @@ export class CurlExecutor implements IHealthCheckExecutor {
     this.healthCheck = healthCheck
   }
 
-  async execute(): Promise<Result<boolean, Error>> {
+  async execute(): Promise<Result<HealthCheckExecutionResult, Error>> {
     logger.info(`Executing 'Curl' executor for ${this.healthCheck.id} - ${this.healthCheck.name}`)
-    return Ok(random(0, 1) == 0)
+    const isSuccess = random(0, 1) == 0
+    const response: HealthCheckExecutionResult = {
+      result: isSuccess,
+      errorMessage: isSuccess ? undefined : 'Failed to fetch data',
+      timestamp: new Date()
+    }
+    return Ok(response)
   }
 }

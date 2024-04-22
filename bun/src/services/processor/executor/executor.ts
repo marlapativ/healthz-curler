@@ -2,8 +2,14 @@ import { HealthCheck, HealthCheckExecutorType } from '../../healthcheck/healthch
 import { CurlExecutor } from './curl.executor'
 import { FetchExecutor } from './fetch.executor'
 
+export type HealthCheckExecutionResult = {
+  result: boolean
+  errorMessage?: string
+  timestamp: Date
+}
+
 export interface IHealthCheckExecutor {
-  execute(): Promise<Result<boolean, Error>>
+  execute(): Promise<Result<HealthCheckExecutionResult, Error>>
 }
 
 const HealthCheckExecutorFactory = {
