@@ -1,8 +1,9 @@
 import { Server, ServerWebSocket } from 'bun'
 import { ElysiaWS } from 'elysia/ws'
-import logger from '../../config/logger'
 import { TypeCheck } from 'elysia/type-system'
 import { InputSchema, MergeSchema, TSchema, UnwrapRoute } from 'elysia'
+import Logger from '../../config/logger'
+const logger = Logger(import.meta.file)
 
 export interface IPubSubService {
   publish<T>(channel: string, message: T): Promise<void>

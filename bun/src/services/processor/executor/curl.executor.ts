@@ -1,8 +1,9 @@
 import { random } from 'lodash'
-import processorLogger from '../../../config/processor.logger'
 import { Ok } from '../../../utils/result.util'
 import { HealthCheck } from '../../healthcheck/healthcheck'
 import { IHealthCheckExecutor } from './executor'
+import Logger from '../../../config/logger'
+const logger = Logger(import.meta.file)
 
 export class CurlExecutor implements IHealthCheckExecutor {
   private healthCheck: HealthCheck
@@ -12,7 +13,7 @@ export class CurlExecutor implements IHealthCheckExecutor {
   }
 
   async execute(): Promise<Result<boolean, Error>> {
-    processorLogger.info(`Executing 'Curl' executor for ${this.healthCheck.id} - ${this.healthCheck.name}`)
+    logger.info(`Executing 'Curl' executor for ${this.healthCheck.id} - ${this.healthCheck.name}`)
     return Ok(random(0, 1) == 0)
   }
 }

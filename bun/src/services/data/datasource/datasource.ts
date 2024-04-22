@@ -1,7 +1,8 @@
-import logger from '../../../config/logger'
 import env from '../../../utils/env.util'
 import { InMemoryDataSource } from './inmemory.datasource'
 import { RedisDataSource } from './redis.datasource'
+import Logger from '../../../config/logger'
+const logger = Logger(import.meta.file)
 
 export interface IDataSource {
   init: () => Promise<IDataSource>

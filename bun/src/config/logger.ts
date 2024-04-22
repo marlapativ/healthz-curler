@@ -11,8 +11,9 @@ const logLevels = {
   trace: 5
 }
 
-const logFormat = printf(({ level, message, timestamp }) => {
-  return `[${timestamp}] [server]       ${level}: ${message}`
+const logFormat = printf((data) => {
+  const { namespace, level, message, timestamp } = data
+  return `[${timestamp}] [${namespace}]       ${level}: ${message}`
 })
 
 const logFolder = env.getOrDefault('LOG_FOLDER', './logs')
@@ -32,4 +33,11 @@ const logger = winston.createLogger({
   transports: transports
 })
 
-export default logger
+export const Logger = (namespace?: string) => {
+  if (namespace) {
+    return logger.child({ namespace })
+  }
+  return logger
+}
+
+export default Logger

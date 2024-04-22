@@ -1,13 +1,14 @@
 import { Elysia } from 'elysia'
 import { cors } from '@elysiajs/cors'
 import { swagger } from '@elysiajs/swagger'
-import logger from './config/logger'
 import env from './utils/env.util'
 import { dataSourceFactory } from './services/data/datasource/datasource'
 import { apiRoutes } from './controllers'
 import { seedDatabase } from './seed/seed.data'
 import { container } from './container'
 import { IWebSocketMessageHandler } from './services/socket/socket.pubsub'
+import Logger from './config/logger'
+const logger = Logger(import.meta.file)
 
 const SERVER_PORT = env.getOrDefault('SERVER_PORT', '4205')
 

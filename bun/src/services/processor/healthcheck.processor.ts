@@ -2,9 +2,10 @@ import { HealthCheck } from '../healthcheck/healthcheck'
 import { HealthCheckExecutorFactory } from './executor/executor'
 import { INotificationProcessor } from '../realtime/notification.processor'
 import { NotificationType } from '../realtime/notification'
-import processorLogger from '../../config/processor.logger'
 import { ITimeSeriesDataSource } from '../data/timeseries/timeseries.datasource'
 import { IProcessor } from './processor'
+import Logger from '../../config/logger'
+const logger = Logger(import.meta.file)
 
 export interface IHealthCheckProcessor extends IProcessor {
   init(healthChecks: HealthCheck[]): Promise<void>
@@ -25,9 +26,9 @@ export class HealthCheckProcessor implements IHealthCheckProcessor {
     for (const healthCheck of healthChecks) {
       const executor = HealthCheckExecutorFactory.get(healthCheck)
       this.timeouts[healthCheck.id] = setInterval(async () => {
-        processorLogger.debug(`Executing HealthCheckProcessor: ${healthCheck.id}`)
+        logger.debug(`Executing HealthCheckProcessor: ${healthCheck.id}`)
         const result = await executor.execute()
-        processorLogger.debug(`Execution complete HealthCheckProcessor: ${healthCheck.id}`)
+        logger.debug(`Execution complete HealthCheckProcessor: ${healthCheck.id}`)
 
         this.timeSeriesDataSource.writePoint({
           id: healthCheck.id,

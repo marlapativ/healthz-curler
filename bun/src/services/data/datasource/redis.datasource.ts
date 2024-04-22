@@ -1,9 +1,10 @@
 import { RedisClientType, createClient } from 'redis'
 import { IDataSource } from './datasource'
 import env from '../../../utils/env.util'
-import logger from '../../../config/logger'
 import validator from '../../../utils/validator.util'
 import { Ok } from '../../../utils/result.util'
+import Logger from '../../../config/logger'
+const logger = Logger(import.meta.file)
 
 export class RedisDataSource implements IDataSource {
   _redis: RedisClientType
