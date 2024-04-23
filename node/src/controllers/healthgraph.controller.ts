@@ -1,4 +1,4 @@
-import { Application, Request, Response } from 'express'
+import express, { Request, Response } from 'express'
 import { IHealthGraphService } from '../services/healthcheck/healthgraph.service'
 
 const getById = async ({ params: { id }, query: { page, pageSize }, container }: Request, res: Response) => {
@@ -10,8 +10,7 @@ const getById = async ({ params: { id }, query: { page, pageSize }, container }:
   return res.status(500).json(result.error)
 }
 
-const healthGraphRouter = (server: Application) => {
-  return server.get('/:id', getById)
-}
+const healthGraphRouter = express.Router()
+healthGraphRouter.get('/:id', getById)
 
 export { healthGraphRouter }

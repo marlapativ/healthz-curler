@@ -10,7 +10,8 @@ import { IWebSocketMessageHandler, WebSocketMessage } from './services/socket/so
 import Logger from './config/logger'
 import express from 'express'
 import cors from 'cors'
-import { Server } from 'socket.io'
+import { Server as SockerIOServer } from 'socket.io'
+import { Server } from 'http'
 const logger = Logger(__filename)
 
 const SERVER_PORT = env.getOrDefault('SERVER_PORT', '4215')
@@ -26,18 +27,25 @@ const startServer = () => {
     req.container = container
     next()
   })
+
   // Setup routes
   apiRoutes(server)
 
-  const httpServer = server.listen(SERVER_PORT, () => {
+  const httpServer = new Server(server)
+  httpServer.listen(SERVER_PORT, () => {
     logger.info(`Server running on port ${SERVER_PORT}`)
     logger.info(`Swagger: http://localhost:${SERVER_PORT}/swagger`)
   })
+  // const httpServer = server.listen(SERVER_PORT, () => {
+  //   logger.info(`Server running on port ${SERVER_PORT}`)
+  //   logger.info(`Swagger: http://localhost:${SERVER_PORT}/swagger`)
+  // })
 
-  const io = new Server(httpServer)
+  const io = new SockerIOServer(httpServer)
   socketMessageHandler.init(io)
   io.on('connection', (socket) => {
-    socket.on('message', (message: WebSocketMessage) => {
+    socket.on('message', (msg: string) => {
+      const message = JSON.parse(msg) as WebSocketMessage
       socketMessageHandler.message(socket, message)
     })
   })
