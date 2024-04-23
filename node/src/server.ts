@@ -36,10 +36,6 @@ const startServer = () => {
     logger.info(`Server running on port ${SERVER_PORT}`)
     logger.info(`Swagger: http://localhost:${SERVER_PORT}/swagger`)
   })
-  // const httpServer = server.listen(SERVER_PORT, () => {
-  //   logger.info(`Server running on port ${SERVER_PORT}`)
-  //   logger.info(`Swagger: http://localhost:${SERVER_PORT}/swagger`)
-  // })
 
   const io = new SockerIOServer(httpServer)
   socketMessageHandler.init(io)
