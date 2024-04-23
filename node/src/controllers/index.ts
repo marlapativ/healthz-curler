@@ -1,4 +1,3 @@
-import Elysia from 'elysia'
 import { healthCheckRouter } from './healthcheck.controller'
 import { healthGraphRouter } from './healthgraph.controller'
 

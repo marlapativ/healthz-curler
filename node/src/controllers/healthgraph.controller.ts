@@ -1,4 +1,3 @@
-import Elysia, { error } from 'elysia'
 import { IHealthGraphService } from '../services/healthcheck/healthgraph.service'
 
 type HealthGraphRequest = {

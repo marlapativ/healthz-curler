@@ -2,7 +2,7 @@
   "name": "healthz-curler",
   "type": "module",
   "scripts": {
-    "dev": "node --watch run src/server.ts",
+    "dev": "tsc -w src/server.ts",
     "build": "tsc"
   },
   "devDependencies": {

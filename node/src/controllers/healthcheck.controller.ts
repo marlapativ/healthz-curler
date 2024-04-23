@@ -1,4 +1,3 @@
-import Elysia, { error } from 'elysia'
 import { HealthCheck } from '../services/healthcheck/healthcheck'
 import { Ok } from '../utils/result.util'
 import { IHealthCheckService } from '../services/healthcheck/healthcheck.service'
