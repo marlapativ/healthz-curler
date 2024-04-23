@@ -39,8 +39,8 @@ export const seedDatabase = async (db: IDataSource) => {
           if (!result.ok) throw result.error
         }
       }
-      return true
     }
+    return true
   } catch (error) {
     logger.error('Error seeding database', error)
     return false

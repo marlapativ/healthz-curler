@@ -30,6 +30,7 @@ const startServer = () => {
   })
 
   const io = new Server(httpServer)
+  socketMessageHandler.init(io)
   io.on('connection', (socket) => {
     socket.on('message', (message: WebSocketMessage) => {
       socketMessageHandler.message(socket, message)

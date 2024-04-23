@@ -16,7 +16,10 @@ declare global {
   class HttpStatusError extends Error {
     statusCode: number
     message: string | string[]
-    constructor(public statusCode: number, public message: string | string[]) {
+    constructor(
+      public statusCode: number,
+      public message: string | string[]
+    ) {
       super(typeof message === 'string' ? message : message[0])
       this.statusCode = status
       this.message = message
@@ -29,12 +32,12 @@ declare global {
   }
 
   type Context = {
-    decorator: {}
+    decorator: object
     store: {
       container: IContainer
     }
-    derive: {}
-    resolve: {}
+    derive: object
+    resolve: object
   }
 }
 

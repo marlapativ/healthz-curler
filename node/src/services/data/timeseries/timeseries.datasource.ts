@@ -1,7 +1,7 @@
 import env from '../../../utils/env.util'
 import { InfluxDBDataSource } from './influx.timeseries'
 import Logger from '../../../config/logger'
-const logger = Logger(import.meta.file)
+const logger = Logger(import.meta.filename)
 
 export interface ITimeSeriesDataSource {
   writePoint(point: ITimeSeriesData): Promise<void>

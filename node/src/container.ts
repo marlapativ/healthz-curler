@@ -13,7 +13,7 @@ import { SocketNotificationExecutor } from './services/realtime/executor/socket.
 import { INotificationProcessor, NotificationProcessor } from './services/realtime/notification.processor'
 
 class Container implements IContainer {
-  private map: Map<string, any> = new Map()
+  private map: Map<string, unknown> = new Map()
 
   async init() {
     this.buildServices()
@@ -67,7 +67,7 @@ class Container implements IContainer {
   }
 
   get<T>(key: string): T {
-    return this.map.get(key)
+    return this.map.get(key) as T
   }
 }
 

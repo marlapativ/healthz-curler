@@ -3,7 +3,7 @@ import { IDataSource } from './datasource'
 import _ from 'lodash'
 
 export class InMemoryDataSource implements IDataSource {
-  data: Map<string, any>
+  data: Map<string, unknown>
   constructor() {
     this.data = new Map()
   }
@@ -19,7 +19,7 @@ export class InMemoryDataSource implements IDataSource {
     keyPrefix = keyPrefix.endsWith('*') ? keyPrefix.substring(0, keyPrefix.length - 1) : keyPrefix
     const result = [...this.data.entries()]
       .filter(([key]) => key.startsWith(keyPrefix))
-      .map(([, value]) => _.cloneDeep<T>(value))
+      .map(([, value]) => _.cloneDeep<T>(value as T))
     return Ok(result)
   }
 

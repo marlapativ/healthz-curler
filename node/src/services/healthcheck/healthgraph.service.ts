@@ -3,7 +3,7 @@ import { IQueryableTimeSeriesData, ITimeSeriesDataSource } from '../data/timeser
 import { IHealthCheckService } from './healthcheck.service'
 
 export interface IHealthGraphService {
-  get(healthCheckId: string, page?: number, pageSize?: number): Promise<Result<any[], Error>>
+  get(healthCheckId: string, page?: number, pageSize?: number): Promise<Result<unknown[], Error>>
 }
 
 export class HealthGraphService implements IHealthGraphService {
@@ -15,7 +15,7 @@ export class HealthGraphService implements IHealthGraphService {
     this.healthCheckService = healthCheckService
   }
 
-  async get(healthCheckId: string, page?: number, pageSize?: number): Promise<Result<any[], Error>> {
+  async get(healthCheckId: string, page?: number, pageSize?: number): Promise<Result<unknown[], Error>> {
     const healthCheckResult = await this.healthCheckService.get(healthCheckId)
     if (!healthCheckResult.ok) return healthCheckResult
     const healthCheck = healthCheckResult.value

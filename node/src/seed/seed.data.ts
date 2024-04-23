@@ -2,7 +2,7 @@ import { IDataSource } from '../services/data/datasource/datasource'
 import { HealthCheck, HealthCheckExecutorType } from '../services/healthcheck/healthcheck'
 import { Model } from '../types/model'
 import Logger from '../config/logger'
-const logger = Logger(import.meta.file)
+const logger = Logger(import.meta.filename)
 
 export const healthChecksSeedData: HealthCheck[] = [
   {
@@ -39,8 +39,8 @@ export const seedDatabase = async (db: IDataSource) => {
           if (!result.ok) throw result.error
         }
       }
-      return true
     }
+    return true
   } catch (error) {
     logger.error('Error seeding database', error)
     return false
