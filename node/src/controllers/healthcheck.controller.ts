@@ -1,4 +1,4 @@
-import { Application, Request, Response } from 'express'
+import express, { Request, Response } from 'express'
 import { IHealthCheckService } from '../services/healthcheck/healthcheck.service'
 import { Ok } from '../utils/result.util'
 
@@ -56,13 +56,11 @@ const validateRequest = (id: string | undefined): Result<boolean, Error> => {
   return Ok(true)
 }
 
-const healthCheckRouter = (server: Application) => {
-  return server
-    .get('/', getAll)
-    .post('/', create)
-    .get('/:id', getById)
-    .put('/:id', updateById)
-    .delete('/:id', deleteById)
-}
+const healthCheckRouter = express.Router()
+healthCheckRouter.get('/', getAll)
+healthCheckRouter.post('/', create)
+healthCheckRouter.get('/:id', getById)
+healthCheckRouter.put('/:id', updateById)
+healthCheckRouter.delete('/:id', deleteById)
 
 export { healthCheckRouter }

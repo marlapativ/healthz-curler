@@ -1,3 +1,6 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 import env from './utils/env.util'
 import { dataSourceFactory } from './services/data/datasource/datasource'
 import { apiRoutes } from './controllers'
@@ -19,8 +22,7 @@ const startServer = () => {
 
   server.use(express.json())
   server.use(cors())
-  server.use('/swagger')
-  server.use('context', (req: Express.Request, _, next) => {
+  server.use((req: Express.Request, _, next) => {
     req.container = container
     next()
   })
@@ -65,6 +67,7 @@ const server = Promise.resolve()
   })
   .catch((error) => {
     logger.error('Error initializing database/server', error)
+    console.error(error)
     process.exit(1)
   })
 
