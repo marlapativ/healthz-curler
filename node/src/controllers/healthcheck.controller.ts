@@ -1,52 +1,54 @@
-import { HealthCheck } from '../services/healthcheck/healthcheck'
-import { Ok } from '../utils/result.util'
+import { Application, Request, Response } from 'express'
 import { IHealthCheckService } from '../services/healthcheck/healthcheck.service'
+import { Ok } from '../utils/result.util'
 
-type HealthCheckRequest = {
-  params: {
-    id?: string
-  }
-  body: HealthCheck
-  healthCheckService: IHealthCheckService
-}
+const getHealthCheckService = ({ container }: Request) => container.get<IHealthCheckService>('IHealthCheckService')
 
-const getAll = async ({ healthCheckService }: HealthCheckRequest) => {
+const getAll = async (req: Request, res: Response) => {
+  const healthCheckService = getHealthCheckService(req)
   const result = await healthCheckService.getAll()
-  if (result.ok) return result.value
-  return error(400, result.error)
+  if (result.ok) return res.status(200).json(result.value)
+  return res.status(400).json(result.error)
 }
 
-const getById = async ({ params: { id }, healthCheckService }: HealthCheckRequest) => {
+const getById = async (req: Request, res: Response) => {
+  const { id } = req.params
+  const healthCheckService = getHealthCheckService(req)
   const validationResult = validateRequest(id)
-  if (!validationResult.ok) return error(400, validationResult.error)
+  if (!validationResult.ok) return res.status(400).json(validationResult.error)
 
   const result = await healthCheckService.get(id!)
-  if (result.ok) return result.value
-  return error(400, result.error)
+  if (result.ok) return res.status(200).json(result.value)
+  return res.status(500).json(result.error)
 }
 
-const create = async ({ body, healthCheckService }: HealthCheckRequest) => {
-  const result = await healthCheckService.create(body)
-  if (result.ok) return result.value
-  return error(400, result.error)
+const create = async (req: Request, res: Response) => {
+  const healthCheckService = getHealthCheckService(req)
+  const result = await healthCheckService.create(req.body)
+  if (result.ok) return res.status(200).json(result.value)
+  return res.status(500).json(result.error)
 }
 
-const updateById = async ({ params: { id }, body, healthCheckService }: HealthCheckRequest) => {
+const updateById = async (req: Request, res: Response) => {
+  const { id } = req.params
+  const healthCheckService = getHealthCheckService(req)
   const validationResult = validateRequest(id)
-  if (!validationResult.ok) return error(400, validationResult.error)
+  if (!validationResult.ok) return res.status(400).json(validationResult.error)
 
-  const result = await healthCheckService.update(id!, body)
-  if (result.ok) return result.value
-  return error(400, result.error)
+  const result = await healthCheckService.update(id!, req.body)
+  if (result.ok) return res.status(200).json(result.value)
+  return res.status(500).json(result.error)
 }
 
-const deleteById = async ({ params: { id }, healthCheckService }: HealthCheckRequest) => {
+const deleteById = async (req: Request, res: Response) => {
+  const { id } = req.params
+  const healthCheckService = getHealthCheckService(req)
   const validationResult = validateRequest(id)
-  if (!validationResult.ok) return error(400, validationResult.error)
+  if (!validationResult.ok) return res.status(400).json(validationResult.error)
 
   const result = await healthCheckService.delete(id!)
-  if (result.ok) return result.value
-  return error(400, result.error)
+  if (result.ok) return res.status(200).json(result.value)
+  return res.status(500).json(result.error)
 }
 
 const validateRequest = (id: string | undefined): Result<boolean, Error> => {
@@ -54,11 +56,8 @@ const validateRequest = (id: string | undefined): Result<boolean, Error> => {
   return Ok(true)
 }
 
-const healthCheckRouter = (server: Elysia<'/api/v1/healthcheck', false, Context>) => {
+const healthCheckRouter = (server: Application) => {
   return server
-    .derive(({ store: { container } }) => ({
-      healthCheckService: container.get<IHealthCheckService>('IHealthCheckService')
-    }))
     .get('/', getAll)
     .post('/', create)
     .get('/:id', getById)

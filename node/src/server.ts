@@ -8,7 +8,7 @@ import Logger from './config/logger'
 import express from 'express'
 import cors from 'cors'
 import { Server } from 'socket.io'
-const logger = Logger(import.meta.filename)
+const logger = Logger(__filename)
 
 const SERVER_PORT = env.getOrDefault('SERVER_PORT', '4215')
 

@@ -2,7 +2,7 @@ import { IDataSource } from '../services/data/datasource/datasource'
 import { HealthCheck, HealthCheckExecutorType } from '../services/healthcheck/healthcheck'
 import { Model } from '../types/model'
 import Logger from '../config/logger'
-const logger = Logger(import.meta.filename)
+const logger = Logger(__filename)
 
 export const healthChecksSeedData: HealthCheck[] = [
   {

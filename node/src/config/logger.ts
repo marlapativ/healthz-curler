@@ -35,6 +35,7 @@ const logger = winston.createLogger({
 
 export const Logger = (namespace?: string) => {
   if (namespace) {
+    if (namespace.includes('/')) namespace = namespace.split('/').pop()
     return logger.child({ namespace })
   }
   return logger

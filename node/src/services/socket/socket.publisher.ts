@@ -1,6 +1,6 @@
 import Logger from '../../config/logger'
 import { Server, Socket } from 'socket.io'
-const logger = Logger(import.meta.filename)
+const logger = Logger(__filename)
 
 export enum WebSocketMessageType {
   SUBSCRIBE = 'subscribe',

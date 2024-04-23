@@ -5,7 +5,7 @@ import { NotificationType } from '../realtime/notification'
 import { ITimeSeriesDataSource } from '../data/timeseries/timeseries.datasource'
 import { IProcessor } from './processor'
 import Logger from '../../config/logger'
-const logger = Logger(import.meta.filename)
+const logger = Logger(__filename)
 
 export interface IHealthCheckProcessor extends IProcessor {
   init(healthChecks: HealthCheck[]): Promise<void>

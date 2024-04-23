@@ -3,7 +3,7 @@ import { INotificationExecutor } from './notification.executor'
 import { IWebSocketPublisher } from '../../socket/socket.publisher'
 import { Notification } from '../notification.processor'
 import Logger from '../../../config/logger'
-const logger = Logger(import.meta.filename)
+const logger = Logger(__filename)
 
 export class SocketNotificationExecutor implements INotificationExecutor {
   pubsub: IWebSocketPublisher

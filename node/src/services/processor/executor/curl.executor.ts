@@ -3,7 +3,7 @@ import { Ok } from '../../../utils/result.util'
 import { HealthCheck } from '../../healthcheck/healthcheck'
 import { HealthCheckExecutionResult, IHealthCheckExecutor } from './executor'
 import Logger from '../../../config/logger'
-const logger = Logger(import.meta.filename)
+const logger = Logger(__filename)
 
 export class CurlExecutor implements IHealthCheckExecutor {
   private healthCheck: HealthCheck
