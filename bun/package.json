@@ -2,7 +2,8 @@
   "name": "healthz-curler",
   "type": "module",
   "scripts": {
-    "dev": "bun --watch run src/server.ts"
+    "dev": "bun --watch run src/server.ts",
+    "build": "bun build src/server.ts --target bun --outfile dist/server-bun.js --minify"
   },
   "devDependencies": {
     "@types/bun": "latest",

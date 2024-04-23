@@ -8,7 +8,7 @@ import { seedDatabase } from './seed/seed.data'
 import { container } from './container'
 import { IWebSocketMessageHandler, WebSocketMessage } from './services/socket/socket.publisher'
 import Logger from './config/logger'
-import { ServerWebSocket, SocketHandler } from 'bun'
+import { ServerWebSocket } from 'bun'
 const logger = Logger(import.meta.file)
 
 const SERVER_PORT = env.getOrDefault('SERVER_PORT', '4205')
