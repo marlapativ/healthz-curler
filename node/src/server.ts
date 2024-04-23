@@ -5,12 +5,36 @@ import { seedDatabase } from './seed/seed.data'
 import { container } from './container'
 import { IWebSocketMessageHandler, WebSocketMessage } from './services/socket/socket.publisher'
 import Logger from './config/logger'
+import express from 'express'
+import cors from 'cors'
+import { Server } from 'socket.io'
 const logger = Logger(import.meta.filename)
 
-const SERVER_PORT = env.getOrDefault('SERVER_PORT', '4205')
+const SERVER_PORT = env.getOrDefault('SERVER_PORT', '4215')
 
 const startServer = () => {
   const socketMessageHandler = container.get<IWebSocketMessageHandler>('IWebSocketMessageHandler')
+
+  const server = express()
+
+  server.use(express.json())
+  server.use(cors())
+  server.use('/swagger')
+
+  // Setup routes
+  apiRoutes(server)
+
+  const httpServer = server.listen(SERVER_PORT, () => {
+    logger.info(`Server running on port ${SERVER_PORT}`)
+    logger.info(`Swagger: http://localhost:${SERVER_PORT}/swagger`)
+  })
+
+  const io = new Server(httpServer)
+  io.on('connection', (socket) => {
+    socket.on('message', (message: WebSocketMessage) => {
+      socketMessageHandler.message(socket, message)
+    })
+  })
   return server
 }
 

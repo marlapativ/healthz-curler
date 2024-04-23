@@ -1,5 +1,5 @@
-import { Server, ServerWebSocket } from 'bun'
 import Logger from '../../config/logger'
+import { Socket } from 'socket.io'
 const logger = Logger(import.meta.file)
 
 export enum WebSocketMessageType {
@@ -17,27 +17,27 @@ export interface IWebSocketPublisher {
 }
 
 export interface IWebSocketMessageHandler {
-  message(ws: ServerWebSocket, message: WebSocketMessage): any
-  init(server: Server | null): void
+  message(ws: Socket, message: WebSocketMessage): unknown
+  init(server: Socket | null): void
 }
 
 export class WebSocketPublisherService implements IWebSocketPublisher, IWebSocketMessageHandler {
-  server: Server | null = null
-  init(server: Server | null): void {
+  server: Socket | null = null
+  init(server: Socket | null): void {
     this.server = server
   }
 
   async publish<T>(channel: string, message: T): Promise<void> {
     logger.info(`Publishing to channel: ${channel}`)
-    this.server?.publish(channel, JSON.stringify(message))
+    this.server?.emit(channel, JSON.stringify(message))
   }
 
-  message(ws: ServerWebSocket, message: WebSocketMessage): any {
+  message(ws: Socket, message: WebSocketMessage): void {
     logger.info(`Websocket connection: ${message.type} - ${message.channel}`)
     if (message.type === WebSocketMessageType.SUBSCRIBE) {
-      ws.subscribe(message.channel)
+      ws.join(message.channel)
     } else if (message.type === WebSocketMessageType.UNSUBSCRIBE) {
-      ws.unsubscribe(message.channel)
+      ws.leave(message.channel)
     }
   }
 }
