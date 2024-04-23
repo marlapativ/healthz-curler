@@ -3,11 +3,7 @@ import { ITimeSeriesDataSource, timeSeriesDataSourceFactory } from './services/d
 import { HealthCheckService, IHealthCheckService } from './services/healthcheck/healthcheck.service'
 import { HealthGraphService, IHealthGraphService } from './services/healthcheck/healthgraph.service'
 import { HealthCheckProcessor, IHealthCheckProcessor } from './services/processor/healthcheck.processor'
-import {
-  IWebSocketPublisher,
-  IWebSocketMessageHandler,
-  WebSocketPublisherService
-} from './services/socket/socket.publisher'
+import { ISocketPublisher, ISocketMessageHandler, WebSocketPublisherService } from './services/socket/socket.publisher'
 import { INotificationExecutor } from './services/realtime/executor/notification.executor'
 import { SocketNotificationExecutor } from './services/realtime/executor/socket.executor'
 import { INotificationProcessor, NotificationProcessor } from './services/realtime/notification.processor'
@@ -25,10 +21,10 @@ class Container implements IContainer {
     this.insert<ITimeSeriesDataSource>('ITimeSeriesDataSource', timeSeriesDataSourceFactory.get())
 
     const pubSubService = new WebSocketPublisherService()
-    this.insert<IWebSocketPublisher>('IWebSocketPublisher', pubSubService)
-    this.insert<IWebSocketMessageHandler>('IWebSocketMessageHandler', pubSubService)
+    this.insert<ISocketPublisher>('IWebSocketPublisher', pubSubService)
+    this.insert<ISocketMessageHandler>('IWebSocketMessageHandler', pubSubService)
     this.insert<INotificationExecutor>('INotificationExecutor', [
-      new SocketNotificationExecutor(this.get<IWebSocketPublisher>('IWebSocketPublisher'))
+      new SocketNotificationExecutor(this.get<ISocketPublisher>('IWebSocketPublisher'))
     ])
     this.insert<INotificationProcessor>(
       'INotificationProcessor',

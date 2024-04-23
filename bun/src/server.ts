@@ -6,7 +6,7 @@ import { dataSourceFactory } from './services/data/datasource/datasource'
 import { apiRoutes } from './controllers'
 import { seedDatabase } from './seed/seed.data'
 import { container } from './container'
-import { IWebSocketMessageHandler, WebSocketMessage } from './services/socket/socket.publisher'
+import { ISocketMessageHandler, WebSocketMessage } from './services/socket/socket.publisher'
 import Logger from './config/logger'
 import { ServerWebSocket } from 'bun'
 const logger = Logger(import.meta.file)
@@ -14,7 +14,7 @@ const logger = Logger(import.meta.file)
 const SERVER_PORT = env.getOrDefault('SERVER_PORT', '4205')
 
 const startServer = () => {
-  const socketMessageHandler = container.get<IWebSocketMessageHandler>('IWebSocketMessageHandler')
+  const socketMessageHandler = container.get<ISocketMessageHandler>('IWebSocketMessageHandler')
   const server = new Elysia()
     .use(cors())
     .use(swagger())
