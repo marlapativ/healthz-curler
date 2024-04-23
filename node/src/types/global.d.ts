@@ -31,13 +31,10 @@ declare global {
     get: <T>(key: string) => T
   }
 
-  type Context = {
-    decorator: object
-    store: {
+  declare namespace Express {
+    export interface Request {
       container: IContainer
     }
-    derive: object
-    resolve: object
   }
 }
 

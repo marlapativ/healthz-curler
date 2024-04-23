@@ -1,30 +1,18 @@
+import { Application, Response } from 'express'
 import { IHealthGraphService } from '../services/healthcheck/healthgraph.service'
+import { Request } from 'express'
 
-type HealthGraphRequest = {
-  params: {
-    id?: string
-  }
-  query: {
-    page?: number
-    pageSize?: number
-  }
-  healthGraphService: IHealthGraphService
+const getById = async ({ params: { id }, query: { page, pageSize }, container }: Request, res: Response) => {
+  const healthGraphService = container.get<IHealthGraphService>('IHealthGraphService')
+  const pageNo = page === undefined ? 1 : parseInt(page as string)
+  const pageSizeValue = pageSize === undefined ? 100 : parseInt(pageSize as string)
+  const result = await healthGraphService.get(id!, pageNo, pageSizeValue)
+  if (result.ok) return res.status(200).json(result.value)
+  return res.status(400).json(result.error)
 }
 
-const getById = async ({ params: { id }, query: { page, pageSize }, healthGraphService }: HealthGraphRequest) => {
-  page = page || 1
-  pageSize = pageSize || 100
-  const result = await healthGraphService.get(id!, page, pageSize)
-  if (result.ok) return result.value
-  return error(400, result.error)
-}
-
-const healthGraphRouter = (server: Elysia<'/api/v1/healthgraph', false, Context>) => {
-  return server
-    .derive(({ store: { container } }) => ({
-      healthGraphService: container.get<IHealthGraphService>('IHealthGraphService')
-    }))
-    .get('/:id', getById)
+const healthGraphRouter = (server: Application) => {
+  return server.get('/:id', getById)
 }
 
 export { healthGraphRouter }

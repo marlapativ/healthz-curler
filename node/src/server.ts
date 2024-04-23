@@ -20,7 +20,10 @@ const startServer = () => {
   server.use(express.json())
   server.use(cors())
   server.use('/swagger')
-
+  server.use('context', (req: Express.Request, _, next) => {
+    req.container = container
+    next()
+  })
   // Setup routes
   apiRoutes(server)
 
