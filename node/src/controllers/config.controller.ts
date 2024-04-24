@@ -7,6 +7,7 @@ type ServerConfig = {
 }
 
 type WebsocketConfig = {
+  name: string
   path: string
   port: number | string
 }
@@ -20,18 +21,25 @@ type Config = {
 }
 
 const getConfig = async (_: Request, res: Response) => {
+  const port = env.getOrDefault('SERVER_PORT', '4215')
   const config: Config = {
     id: 'node-express',
     runtime: 'node',
     apiVersion: 'v1',
     server: {
-      port: env.getOrDefault('SERVER_PORT', '4215'),
+      port,
       framework: 'Express'
     },
     websocket: [
       {
+        name: 'websocket',
+        path: '/ws',
+        port
+      },
+      {
+        name: 'socket.io',
         path: '/socket.io',
-        port: env.getOrDefault('SOCKETIO_PORT', '4215')
+        port
       }
     ]
   }

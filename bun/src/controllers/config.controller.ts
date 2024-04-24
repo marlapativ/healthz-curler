@@ -7,6 +7,7 @@ type ServerConfig = {
 }
 
 type WebsocketConfig = {
+  name: string
   path: string
   port: number | string
 }
@@ -20,20 +21,23 @@ type Config = {
 }
 
 const getConfig = async () => {
+  const port = env.getOrDefault('SERVER_PORT', '4205')
   const config: Config = {
     id: 'bun-elysia',
     runtime: 'bun',
     apiVersion: 'v1',
     server: {
-      port: env.getOrDefault('SERVER_PORT', '4205'),
+      port,
       framework: 'Elysia'
     },
     websocket: [
       {
+        name: 'websocket',
         path: '/ws',
-        port: env.getOrDefault('SERVER_PORT', '4205')
+        port
       },
       {
+        name: 'socket.io',
         path: '/socket.io',
         port: env.getOrDefault('SOCKETIO_PORT', '4206')
       }
