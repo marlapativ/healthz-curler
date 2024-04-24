@@ -39,7 +39,7 @@ const startServer = () => {
     .onStart((elysiaServer) => {
       const httpServer = elysiaServer.server!
       // TODO: Change to use the same port as the server once SocketIO is supported
-      const io = new SocketIOServer(4206)
+      const io = new SocketIOServer(parseInt(SOCKETIO_PORT))
       io.on('connection', (socket) => {
         socket.on('message', (msg: string) => {
           const message = JSON.parse(msg) as WebSocketMessage
