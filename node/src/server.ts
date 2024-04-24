@@ -12,6 +12,7 @@ import express from 'express'
 import cors from 'cors'
 import { Server as SocketIOServer } from 'socket.io'
 import { Server } from 'http'
+import expressWs from 'express-ws'
 const logger = Logger(__filename)
 
 const SERVER_PORT = env.getOrDefault('SERVER_PORT', '4215')
@@ -20,7 +21,17 @@ const startServer = () => {
   const socketMessageHandler = container.get<IWebSocketMessageHandler>('IWebSocketMessageHandler')
 
   const server = express()
+  const httpServer = new Server(server)
 
+  // Setup WebSocket
+  expressWs(server, httpServer).app.ws('/ws', (ws) => {
+    ws.on('message', (msg: string) => {
+      const message = JSON.parse(msg) as WebSocketMessage
+      console.log('Received message', message)
+    })
+  })
+
+  // Setup middleware
   server.use(express.json())
   server.use(cors())
   server.use((req: Express.Request, _, next) => {
@@ -31,7 +42,6 @@ const startServer = () => {
   // Setup routes
   apiRoutes(server)
 
-  const httpServer = new Server(server)
   httpServer.listen(SERVER_PORT, () => {
     logger.info(`Server running on port ${SERVER_PORT}`)
     logger.info(`Swagger: http://localhost:${SERVER_PORT}/swagger`)
