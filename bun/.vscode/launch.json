@@ -8,9 +8,22 @@
       "type": "bun",
       "internalConsoleOptions": "neverOpen",
       "request": "launch",
-      "name": "Debug File",
+      "name": "Debug Bun Server",
       "program": "src/server.ts",
       "cwd": "${workspaceFolder}",
+      "stopOnEntry": false,
+      "watchMode": false
+    },
+    {
+      "type": "bun",
+      "internalConsoleOptions": "neverOpen",
+      "request": "launch",
+      "name": "Debug Bun Server(Inspect)",
+      "program": "src/server.ts",
+      "cwd": "${workspaceFolder}",
+      "args": [
+        "--inspect"
+      ],
       "stopOnEntry": false,
       "watchMode": false
     }

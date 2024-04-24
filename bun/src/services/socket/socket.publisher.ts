@@ -14,7 +14,7 @@ export interface ISocketPublisher {
   publish<T>(channel: string, message: T): Promise<void>
 }
 
-export interface ISocketMessageHandler<SocketType, Server> {
-  message(ws: SocketType, message: WebSocketMessage): any
-  init(server: Server | null): void
+export interface ISocketMessageHandler<Socket, SocketServer> {
+  init(server: SocketServer | null): void
+  message(ws: Socket, message: WebSocketMessage): any
 }

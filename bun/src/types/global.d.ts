@@ -26,6 +26,7 @@ declare global {
   interface IContainer {
     init: () => Promise<void>
     get: <T>(key: string) => T
+    //set<T>(type: Partial<Record<string, IContainerType<T>>>, value: T)
   }
 
   type Context = {

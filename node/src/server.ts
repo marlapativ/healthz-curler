@@ -10,7 +10,7 @@ import { IWebSocketMessageHandler, WebSocketMessage } from './services/socket/so
 import Logger from './config/logger'
 import express from 'express'
 import cors from 'cors'
-import { Server as SockerIOServer } from 'socket.io'
+import { Server as SocketIOServer } from 'socket.io'
 import { Server } from 'http'
 const logger = Logger(__filename)
 
@@ -37,7 +37,7 @@ const startServer = () => {
     logger.info(`Swagger: http://localhost:${SERVER_PORT}/swagger`)
   })
 
-  const io = new SockerIOServer(httpServer)
+  const io = new SocketIOServer(httpServer)
   socketMessageHandler.init(io)
   io.on('connection', (socket) => {
     socket.on('message', (msg: string) => {

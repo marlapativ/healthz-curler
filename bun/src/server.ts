@@ -7,15 +7,22 @@ import { apiRoutes } from './controllers'
 import { seedDatabase } from './seed/seed.data'
 import { container } from './container'
 import { ISocketMessageHandler, WebSocketMessage } from './services/socket/socket.publisher'
+import { Server as SocketIOServer, Socket as SocketIOSocket } from 'socket.io'
 import Logger from './config/logger'
-import { ServerWebSocket } from 'bun'
+import { Server, ServerWebSocket } from 'bun'
 const logger = Logger(import.meta.file)
 
 const SERVER_PORT = env.getOrDefault('SERVER_PORT', '4205')
+const SOCKETIO_PORT = env.getOrDefault('SOCKETIO_PORT', '4206')
 
 const startServer = () => {
-  const socketMessageHandler = container.get<ISocketMessageHandler>('IWebSocketMessageHandler')
-  const server = new Elysia()
+  const webSocketMessageHandler = container.get<ISocketMessageHandler<ServerWebSocket, Server>>(
+    'ISocketMessageHandler<ServerWebSocket, Server>'
+  )
+  const socketIOMessageHandler = container.get<ISocketMessageHandler<SocketIOSocket, SocketIOServer>>(
+    'ISocketMessageHandler<SocketIOSocket, SocketIOServer>'
+  )
+  const elysiaServer = new Elysia()
     .use(cors())
     .use(swagger())
     .state('container', container)
@@ -24,17 +31,30 @@ const startServer = () => {
       message: (ws, msg) => {
         const websocket = ws as unknown as ServerWebSocket
         const message = msg as WebSocketMessage
-        return socketMessageHandler.message(websocket, message)
+        return webSocketMessageHandler.message(websocket, message)
       }
     })
+
+  elysiaServer
     .onStart((elysiaServer) => {
-      socketMessageHandler.init(elysiaServer.server)
+      const httpServer = elysiaServer.server!
+      // TODO: Change to use the same port as the server once SocketIO is supported
+      const io = new SocketIOServer(4206)
+      io.on('connection', (socket) => {
+        socket.on('message', (msg: string) => {
+          const message = JSON.parse(msg) as WebSocketMessage
+          socketIOMessageHandler.message(socket, message)
+        })
+      })
+
+      socketIOMessageHandler.init(io)
+      webSocketMessageHandler.init(httpServer)
     })
     .listen(SERVER_PORT, ({ hostname, port }) => {
       logger.info(`Server running on port ${port}`)
       logger.info(`Swagger: http://${hostname}:${port}/swagger`)
     })
-  return server
+  return elysiaServer
 }
 
 const server = Promise.resolve()
@@ -60,6 +80,7 @@ const server = Promise.resolve()
   })
   .catch((error) => {
     logger.error('Error initializing database/server', error)
+    console.error(error)
     process.exit(1)
   })
 
