@@ -26,12 +26,14 @@ const startServer = () => {
   const httpServer = new Server(server)
 
   // Setup WebSocket
-  expressWs(server, httpServer).app.ws('/ws', (ws) => {
-    ws.on('message', (msg: string) => {
-      const message = JSON.parse(msg) as WebSocketMessage
-      console.log('Received message', message)
-    })
-  })
+
+  // TODO: Figure out why socket.io doesn't work with express socket
+  // expressWs(server, httpServer).app.ws('/ws', (ws) => {
+  //   ws.on('message', (msg: string) => {
+  //     const message = JSON.parse(msg) as WebSocketMessage
+  //     console.log('Received message', message)
+  //   })
+  // })
 
   // Setup middleware
   server.use(express.json())
