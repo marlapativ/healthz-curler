@@ -1,13 +1,13 @@
 import { NotificationType } from '../notification'
 import { INotificationExecutor } from './notification.executor'
-import { IWebSocketPublisher } from '../../socket/socket.publisher'
+import { ISocketPublisher } from '../../socket/socket.publisher'
 import { Notification } from '../notification.processor'
 import Logger from '../../../config/logger'
 const logger = Logger(__filename)
 
 export class SocketNotificationExecutor implements INotificationExecutor {
-  pubsub: IWebSocketPublisher
-  constructor(pubsub: IWebSocketPublisher) {
+  pubsub: ISocketPublisher
+  constructor(pubsub: ISocketPublisher) {
     this.pubsub = pubsub
   }
 

@@ -3,15 +3,12 @@ import { ITimeSeriesDataSource, timeSeriesDataSourceFactory } from './services/d
 import { HealthCheckService, IHealthCheckService } from './services/healthcheck/healthcheck.service'
 import { HealthGraphService, IHealthGraphService } from './services/healthcheck/healthgraph.service'
 import { HealthCheckProcessor, IHealthCheckProcessor } from './services/processor/healthcheck.processor'
-import {
-  IWebSocketPublisher,
-  IWebSocketMessageHandler,
-  WebSocketPublisherService
-} from './services/socket/socket.publisher'
+import { ISocketPublisher, ISocketMessageHandler } from './services/socket/socket.publisher'
 import { INotificationExecutor } from './services/realtime/executor/notification.executor'
 import { SocketNotificationExecutor } from './services/realtime/executor/socket.executor'
 import { INotificationProcessor, NotificationProcessor } from './services/realtime/notification.processor'
-
+import { SockerIOPublisherService } from './services/socket/socketio.publisher'
+import { Server as SocketIOServer, Socket as SocketIOSocket } from 'socket.io'
 class Container implements IContainer {
   private map: Map<string, unknown> = new Map()
 
@@ -24,11 +21,16 @@ class Container implements IContainer {
     this.insert<IDataSource>('IDataSource', dataSourceFactory.get())
     this.insert<ITimeSeriesDataSource>('ITimeSeriesDataSource', timeSeriesDataSourceFactory.get())
 
-    const pubSubService = new WebSocketPublisherService()
-    this.insert<IWebSocketPublisher>('IWebSocketPublisher', pubSubService)
-    this.insert<IWebSocketMessageHandler>('IWebSocketMessageHandler', pubSubService)
+    const pubSubService = new SockerIOPublisherService()
+    this.insert<ISocketPublisher>('IWebSocketPublisher', pubSubService)
+    const socketIOPublisher = new SockerIOPublisherService()
+    this.insert<ISocketPublisher[]>('ISocketPublisher', [websocketPublisher, socketIOPublisher])
+    this.insert<ISocketMessageHandler<SocketIOSocket, SocketIOServer>>(
+      'ISocketMessageHandler<SocketIOSocket, SocketIOServer>',
+      socketIOPublisher
+    )
     this.insert<INotificationExecutor>('INotificationExecutor', [
-      new SocketNotificationExecutor(this.get<IWebSocketPublisher>('IWebSocketPublisher'))
+      new SocketNotificationExecutor(this.get<ISocketPublisher>('IWebSocketPublisher'))
     ])
     this.insert<INotificationProcessor>(
       'INotificationProcessor',
