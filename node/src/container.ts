@@ -24,7 +24,7 @@ class Container implements IContainer {
     const pubSubService = new SockerIOPublisherService()
     this.insert<ISocketPublisher>('IWebSocketPublisher', pubSubService)
     const socketIOPublisher = new SockerIOPublisherService()
-    this.insert<ISocketPublisher[]>('ISocketPublisher', [websocketPublisher, socketIOPublisher])
+    this.insert<ISocketPublisher[]>('ISocketPublisher', [socketIOPublisher])
     this.insert<ISocketMessageHandler<SocketIOSocket, SocketIOServer>>(
       'ISocketMessageHandler<SocketIOSocket, SocketIOServer>',
       socketIOPublisher

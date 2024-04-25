@@ -8,9 +8,9 @@ import { seedDatabase } from './seed/seed.data'
 import { container } from './container'
 import { ISocketMessageHandler, WebSocketMessage } from './services/socket/socket.publisher'
 import Logger from './config/logger'
+import { Server as SocketIOServer, Socket as SocketIOSocket } from 'socket.io'
 import express from 'express'
 import cors from 'cors'
-import { Server as SocketIOServer } from 'socket.io'
 import { Server } from 'http'
 import expressWs from 'express-ws'
 const logger = Logger(__filename)
@@ -18,7 +18,9 @@ const logger = Logger(__filename)
 const SERVER_PORT = env.getOrDefault('SERVER_PORT', '4215')
 
 const startServer = () => {
-  const socketMessageHandler = container.get<ISocketMessageHandler>('IWebSocketMessageHandler')
+  const socketMessageHandler = container.get<ISocketMessageHandler<SocketIOSocket, SocketIOServer>>(
+    'ISocketMessageHandler<SocketIOSocket, SocketIOServer>'
+  )
 
   const server = express()
   const httpServer = new Server(server)
