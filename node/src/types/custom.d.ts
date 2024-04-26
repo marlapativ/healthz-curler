@@ -6,10 +6,4 @@ declare global {
   }
 }
 
-declare module 'ws' {
-  export interface WebSocket {
-    id: string
-  }
-}
-
 export {}

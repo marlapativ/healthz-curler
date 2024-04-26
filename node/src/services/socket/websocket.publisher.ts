@@ -17,10 +17,6 @@ export class WebSocketPublisherService implements ISocketPublisher, ISocketMessa
 
   init(server: WebSocketServer): void {
     this.server = server
-    this.server.on('message', (msg: string) => {
-      const message = JSON.parse(msg) as WebSocketMessage
-      console.log('Received message', message)
-    })
     this.server.on('close', (ws: WebSocket) => {
       this.rooms.forEach((room) => {
         room.delete(ws)

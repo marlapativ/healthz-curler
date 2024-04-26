@@ -3,7 +3,7 @@ import { ISocketPublisher, ISocketMessageHandler, WebSocketMessage, WebSocketMes
 import Logger from '../../config/logger'
 const logger = Logger(import.meta.file)
 
-export class SockerIOPublisherService implements ISocketPublisher, ISocketMessageHandler<Socket, Server> {
+export class SocketIOPublisherService implements ISocketPublisher, ISocketMessageHandler<Socket, Server> {
   server: Server | null = null
   init(server: Server): void {
     this.server = server

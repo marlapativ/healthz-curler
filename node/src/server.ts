@@ -9,6 +9,7 @@ import { container } from './container'
 import { ISocketMessageHandler, WebSocketMessage } from './services/socket/socket.publisher'
 import Logger from './config/logger'
 import { Server as SocketIOServer, Socket as SocketIOSocket } from 'socket.io'
+import { WebSocket, WebSocketServer } from 'ws'
 import express from 'express'
 import cors from 'cors'
 import { Server } from 'http'
@@ -19,14 +20,20 @@ const SERVER_PORT = env.getOrDefault('SERVER_PORT', '4215')
 const SOCKETIO_PORT = env.getOrDefault('SOCKETIO_PORT', '4216')
 
 const startServer = () => {
+  const webSocketMessageHandler = container.get<ISocketMessageHandler<WebSocket, WebSocketServer>>(
+    'ISocketMessageHandler<WebSocket, WebSocketServer>'
+  )
+
   const server = express()
   const httpServer = new Server(server)
 
   // Setup WebSocket
-  expressWs(server, httpServer).app.ws('/ws', (ws) => {
+  const expressWsServer = expressWs(server, httpServer)
+  expressWsServer.getWss()
+  expressWsServer.app.ws('/ws', (ws: WebSocket) => {
     ws.on('message', (msg: string) => {
       const message = JSON.parse(msg) as WebSocketMessage
-      console.log('Received message', message)
+      webSocketMessageHandler.message(ws, message)
     })
   })
 
@@ -42,6 +49,8 @@ const startServer = () => {
   apiRoutes(server)
 
   httpServer.listen(SERVER_PORT, () => {
+    webSocketMessageHandler.init(expressWsServer.getWss())
+
     logger.info(`Server running on port ${SERVER_PORT}`)
     logger.info(`Swagger: http://localhost:${SERVER_PORT}/swagger`)
   })

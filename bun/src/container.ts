@@ -9,7 +9,7 @@ import { SocketNotificationExecutor } from './services/realtime/executor/socket.
 import { INotificationProcessor, NotificationProcessor } from './services/realtime/notification.processor'
 import { WebSocketPublisherService } from './services/socket/websocket.publisher'
 import { Server, ServerWebSocket } from 'bun'
-import { SockerIOPublisherService } from './services/socket/socketio.publisher'
+import { SocketIOPublisherService } from './services/socket/socketio.publisher'
 import { Server as SocketIOServer, Socket as SocketIOSocket } from 'socket.io'
 
 class Container implements IContainer {
@@ -25,7 +25,7 @@ class Container implements IContainer {
     this.insert<ITimeSeriesDataSource>('ITimeSeriesDataSource', timeSeriesDataSourceFactory.get())
 
     const websocketPublisher = new WebSocketPublisherService()
-    const socketIOPublisher = new SockerIOPublisherService()
+    const socketIOPublisher = new SocketIOPublisherService()
     this.insert<ISocketPublisher[]>('ISocketPublisher', [websocketPublisher, socketIOPublisher])
     this.insert<ISocketMessageHandler<ServerWebSocket, Server>>(
       'ISocketMessageHandler<ServerWebSocket, Server>',

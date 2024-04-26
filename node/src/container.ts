@@ -7,8 +7,10 @@ import { ISocketPublisher, ISocketMessageHandler } from './services/socket/socke
 import { INotificationExecutor } from './services/realtime/executor/notification.executor'
 import { SocketNotificationExecutor } from './services/realtime/executor/socket.executor'
 import { INotificationProcessor, NotificationProcessor } from './services/realtime/notification.processor'
-import { SockerIOPublisherService } from './services/socket/socketio.publisher'
+import { SocketIOPublisherService } from './services/socket/socketio.publisher'
+import { WebSocketPublisherService } from './services/socket/websocket.publisher'
 import { Server as SocketIOServer, Socket as SocketIOSocket } from 'socket.io'
+import { WebSocket, WebSocketServer } from 'ws'
 class Container implements IContainer {
   private map: Map<string, unknown> = new Map()
 
@@ -21,16 +23,19 @@ class Container implements IContainer {
     this.insert<IDataSource>('IDataSource', dataSourceFactory.get())
     this.insert<ITimeSeriesDataSource>('ITimeSeriesDataSource', timeSeriesDataSourceFactory.get())
 
-    const pubSubService = new SockerIOPublisherService()
-    this.insert<ISocketPublisher>('IWebSocketPublisher', pubSubService)
-    const socketIOPublisher = new SockerIOPublisherService()
-    this.insert<ISocketPublisher[]>('ISocketPublisher', [socketIOPublisher])
+    const socketIOPublisher = new SocketIOPublisherService()
+    const webSocketPublisher = new WebSocketPublisherService()
+    this.insert<ISocketPublisher[]>('ISocketPublisher', [socketIOPublisher, webSocketPublisher])
     this.insert<ISocketMessageHandler<SocketIOSocket, SocketIOServer>>(
       'ISocketMessageHandler<SocketIOSocket, SocketIOServer>',
       socketIOPublisher
     )
+    this.insert<ISocketMessageHandler<WebSocket, WebSocketServer>>(
+      'ISocketMessageHandler<WebSocket, WebSocketServer>',
+      webSocketPublisher
+    )
     this.insert<INotificationExecutor>('INotificationExecutor', [
-      new SocketNotificationExecutor(this.get<ISocketPublisher>('IWebSocketPublisher'))
+      new SocketNotificationExecutor(this.get<ISocketPublisher[]>('ISocketPublisher'))
     ])
     this.insert<INotificationProcessor>(
       'INotificationProcessor',
