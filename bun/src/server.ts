@@ -53,12 +53,6 @@ const startSocketIOServer = () => {
     'ISocketMessageHandler<SocketIOSocket, SocketIOServer>'
   )
   const io = new SocketIOServer(parseInt(SOCKETIO_PORT))
-  io.on('connection', (socket) => {
-    socket.on('message', (msg: string) => {
-      const message = JSON.parse(msg) as WebSocketMessage
-      socketIOMessageHandler.message(socket, message)
-    })
-  })
   socketIOMessageHandler.init(io)
 }
 

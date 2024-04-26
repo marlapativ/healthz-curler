@@ -7,6 +7,12 @@ export class SockerIOPublisherService implements ISocketPublisher, ISocketMessag
   server: Server | null = null
   init(server: Server): void {
     this.server = server
+    this.server.on('connection', (socket) => {
+      socket.on('message', (msg: string) => {
+        const message = JSON.parse(msg) as WebSocketMessage
+        this.message(socket, message)
+      })
+    })
   }
 
   async publish<T>(channel: string, message: T): Promise<void> {
