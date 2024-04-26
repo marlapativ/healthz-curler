@@ -1,12 +1,12 @@
 import { Server, ServerWebSocket } from 'bun'
-import { Logger } from '../../config/logger'
+import Logger from '../../config/logger'
 const logger = Logger(import.meta.file)
 
 import { ISocketPublisher, ISocketMessageHandler, WebSocketMessage, WebSocketMessageType } from './socket.publisher'
 
 export class WebSocketPublisherService implements ISocketPublisher, ISocketMessageHandler<ServerWebSocket, Server> {
   server: Server | null = null
-  init(server: Server | null): void {
+  init(server: Server): void {
     this.server = server
   }
 

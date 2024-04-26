@@ -22,6 +22,7 @@ type Config = {
 
 const getConfig = async (_: Request, res: Response) => {
   const port = env.getOrDefault('SERVER_PORT', '4215')
+  const socketIOPort = env.getOrDefault('SOCKETIO_PORT', '4216')
   const config: Config = {
     id: 'node-express',
     runtime: 'node',
@@ -39,7 +40,7 @@ const getConfig = async (_: Request, res: Response) => {
       {
         name: 'socket.io',
         path: '/socket.io',
-        port
+        port: socketIOPort
       }
     ]
   }

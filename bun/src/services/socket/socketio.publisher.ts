@@ -1,11 +1,11 @@
 import { Server, Socket } from 'socket.io'
 import { ISocketPublisher, ISocketMessageHandler, WebSocketMessage, WebSocketMessageType } from './socket.publisher'
-import { Logger } from '../../config/logger'
+import Logger from '../../config/logger'
 const logger = Logger(import.meta.file)
 
 export class SockerIOPublisherService implements ISocketPublisher, ISocketMessageHandler<Socket, Server> {
   server: Server | null = null
-  init(server: Server | null): void {
+  init(server: Server): void {
     this.server = server
   }
 

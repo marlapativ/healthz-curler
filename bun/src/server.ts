@@ -19,9 +19,6 @@ const startServer = () => {
   const webSocketMessageHandler = container.get<ISocketMessageHandler<ServerWebSocket, Server>>(
     'ISocketMessageHandler<ServerWebSocket, Server>'
   )
-  const socketIOMessageHandler = container.get<ISocketMessageHandler<SocketIOSocket, SocketIOServer>>(
-    'ISocketMessageHandler<SocketIOSocket, SocketIOServer>'
-  )
   const elysiaServer = new Elysia()
     .use(cors())
     .use(swagger())
@@ -38,23 +35,31 @@ const startServer = () => {
   elysiaServer
     .onStart((elysiaServer) => {
       const httpServer = elysiaServer.server!
-      // TODO: Change to use the same port as the server once SocketIO is supported
-      const io = new SocketIOServer(parseInt(SOCKETIO_PORT))
-      io.on('connection', (socket) => {
-        socket.on('message', (msg: string) => {
-          const message = JSON.parse(msg) as WebSocketMessage
-          socketIOMessageHandler.message(socket, message)
-        })
-      })
-
-      socketIOMessageHandler.init(io)
       webSocketMessageHandler.init(httpServer)
     })
     .listen(SERVER_PORT, ({ hostname, port }) => {
       logger.info(`Server running on port ${port}`)
       logger.info(`Swagger: http://${hostname}:${port}/swagger`)
     })
+
+  // Setup SocketIO Server
+  startSocketIOServer()
+
   return elysiaServer
+}
+
+const startSocketIOServer = () => {
+  const socketIOMessageHandler = container.get<ISocketMessageHandler<SocketIOSocket, SocketIOServer>>(
+    'ISocketMessageHandler<SocketIOSocket, SocketIOServer>'
+  )
+  const io = new SocketIOServer(parseInt(SOCKETIO_PORT))
+  io.on('connection', (socket) => {
+    socket.on('message', (msg: string) => {
+      const message = JSON.parse(msg) as WebSocketMessage
+      socketIOMessageHandler.message(socket, message)
+    })
+  })
+  socketIOMessageHandler.init(io)
 }
 
 const server = Promise.resolve()

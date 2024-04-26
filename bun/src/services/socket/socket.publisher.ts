@@ -1,5 +1,3 @@
-import Logger from '../../config/logger'
-
 export enum WebSocketMessageType {
   SUBSCRIBE = 'subscribe',
   UNSUBSCRIBE = 'unsubscribe'
@@ -15,6 +13,6 @@ export interface ISocketPublisher {
 }
 
 export interface ISocketMessageHandler<Socket, SocketServer> {
-  init(server: SocketServer | null): void
+  init(server: SocketServer): void
   message(ws: Socket, message: WebSocketMessage): any
 }

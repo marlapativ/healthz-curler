@@ -16,24 +16,19 @@ import expressWs from 'express-ws'
 const logger = Logger(__filename)
 
 const SERVER_PORT = env.getOrDefault('SERVER_PORT', '4215')
+const SOCKETIO_PORT = env.getOrDefault('SOCKETIO_PORT', '4216')
 
 const startServer = () => {
-  const socketMessageHandler = container.get<ISocketMessageHandler<SocketIOSocket, SocketIOServer>>(
-    'ISocketMessageHandler<SocketIOSocket, SocketIOServer>'
-  )
-
   const server = express()
   const httpServer = new Server(server)
 
   // Setup WebSocket
-
-  // TODO: Figure out why socket.io doesn't work with express socket
-  // expressWs(server, httpServer).app.ws('/ws', (ws) => {
-  //   ws.on('message', (msg: string) => {
-  //     const message = JSON.parse(msg) as WebSocketMessage
-  //     console.log('Received message', message)
-  //   })
-  // })
+  expressWs(server, httpServer).app.ws('/ws', (ws) => {
+    ws.on('message', (msg: string) => {
+      const message = JSON.parse(msg) as WebSocketMessage
+      console.log('Received message', message)
+    })
+  })
 
   // Setup middleware
   server.use(express.json())
@@ -51,15 +46,24 @@ const startServer = () => {
     logger.info(`Swagger: http://localhost:${SERVER_PORT}/swagger`)
   })
 
-  const io = new SocketIOServer(httpServer)
-  socketMessageHandler.init(io)
+  // Setup SocketIO Server
+  startSocketIOServer()
+
+  return server
+}
+
+const startSocketIOServer = () => {
+  const socketIOMessageHandler = container.get<ISocketMessageHandler<SocketIOSocket, SocketIOServer>>(
+    'ISocketMessageHandler<SocketIOSocket, SocketIOServer>'
+  )
+  const io = new SocketIOServer(parseInt(SOCKETIO_PORT))
   io.on('connection', (socket) => {
     socket.on('message', (msg: string) => {
       const message = JSON.parse(msg) as WebSocketMessage
-      socketMessageHandler.message(socket, message)
+      socketIOMessageHandler.message(socket, message)
     })
   })
-  return server
+  socketIOMessageHandler.init(io)
 }
 
 const server = Promise.resolve()

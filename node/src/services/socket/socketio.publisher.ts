@@ -5,7 +5,7 @@ const logger = Logger(__filename)
 
 export class SockerIOPublisherService implements ISocketPublisher, ISocketMessageHandler<Socket, Server> {
   server: Server | null = null
-  init(server: Server): void {
+  init(server: Server | null): void {
     this.server = server
   }
 
