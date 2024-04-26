@@ -17,9 +17,11 @@ export class WebSocketPublisherService implements ISocketPublisher, ISocketMessa
 
   init(server: WebSocketServer): void {
     this.server = server
-    this.server.on('close', (ws: WebSocket) => {
-      this.rooms.forEach((room) => {
-        room.delete(ws)
+    this.server.addListener('connection', (ws: WebSocket) => {
+      ws.on('close', () => {
+        this.rooms.forEach((room) => {
+          room.delete(ws)
+        })
       })
     })
   }
