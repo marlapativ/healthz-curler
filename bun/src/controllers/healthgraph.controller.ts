@@ -20,12 +20,16 @@ const getById = async ({ params: { id }, query: { page, pageSize }, healthGraphS
   return error(400, result.error)
 }
 
-const healthGraphRouter = (server: Elysia<'/api/v1/healthgraph', false, Context>) => {
-  return server
+const healthGraphRouter = () => {
+  const server = new Elysia<'healthgraph', false, Context>({
+    prefix: 'healthgraph',
+    tags: ['healthgraph']
+  })
     .derive(({ store: { container } }) => ({
       healthGraphService: container.get<IHealthGraphService>('IHealthGraphService')
     }))
     .get('/:id', getById)
+  return server
 }
 
 export { healthGraphRouter }

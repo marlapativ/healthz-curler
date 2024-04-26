@@ -47,8 +47,11 @@ const getConfig = async () => {
   return config
 }
 
-const configRouter = (server: Elysia<'/api/v1/config', false, Context>) => {
-  return server.get('/', getConfig)
+const configRouter = () => {
+  return new Elysia<'config', false, Context>({ prefix: 'config', tags: ['config'] }).get<'/', any, any, any>(
+    '/',
+    getConfig
+  )
 }
 
 export { configRouter }

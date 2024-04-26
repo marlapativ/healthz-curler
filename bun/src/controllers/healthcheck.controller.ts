@@ -55,8 +55,11 @@ const validateRequest = (id: string | undefined): Result<boolean, Error> => {
   return Ok(true)
 }
 
-const healthCheckRouter = (server: Elysia<'/api/v1/healthcheck', false, Context>) => {
-  return server
+const healthCheckRouter = () => {
+  const healthcheckServer = new Elysia<'healthcheck', false, Context>({
+    prefix: 'healthcheck',
+    tags: ['healthcheck']
+  })
     .derive(({ store: { container } }) => ({
       healthCheckService: container.get<IHealthCheckService>('IHealthCheckService')
     }))
@@ -65,6 +68,8 @@ const healthCheckRouter = (server: Elysia<'/api/v1/healthcheck', false, Context>
     .get('/:id', getById)
     .put('/:id', updateById)
     .delete('/:id', deleteById)
+
+  return healthcheckServer
 }
 
 export { healthCheckRouter }

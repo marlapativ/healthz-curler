@@ -49,6 +49,7 @@ export class HealthCheckService implements IHealthCheckService {
     healthCheck.id = uuid
     healthCheck.active = true
     const result = await this.dataSource.set<HealthCheck>(`${this.getKey(uuid)}`, healthCheck)
+    if (result.ok) this.healthCheckProcessor.add(healthCheck)
     return result
   }
 
@@ -62,6 +63,7 @@ export class HealthCheckService implements IHealthCheckService {
     if (!exists.value) return new Error('HealthCheck does not exist')
 
     const result = await this.dataSource.set<HealthCheck>(`${this.getKey(healthCheck.id)}`, healthCheck)
+    if (result.ok) this.healthCheckProcessor.update(healthCheck)
     return result
   }
 
@@ -71,6 +73,8 @@ export class HealthCheckService implements IHealthCheckService {
 
     const result = await this.dataSource.delete(`${this.getKey(id)}`)
     if (!result.ok) return result
+
+    this.healthCheckProcessor.delete(data.value)
     return data
   }
 
@@ -85,6 +89,8 @@ export class HealthCheckService implements IHealthCheckService {
     if (!healthCheck.name) validationResults.push('HealthCheck name is required')
     if (!healthCheck.url) validationResults.push('HealthCheck url is required')
     if (!healthCheck.interval) validationResults.push('HealthCheck interval is required')
+    if (healthCheck.interval < 250) validationResults.push('HealthCheck interval must be greater than 250ms')
+
     return validationResults
   }
 }

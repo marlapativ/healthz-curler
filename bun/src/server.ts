@@ -3,7 +3,7 @@ import { cors } from '@elysiajs/cors'
 import { swagger } from '@elysiajs/swagger'
 import env from './utils/env.util'
 import { dataSourceFactory } from './services/data/datasource/datasource'
-import { apiRoutes } from './controllers'
+import { apiRouter } from './controllers'
 import { seedDatabase } from './seed/seed.data'
 import { container } from './container'
 import { ISocketMessageHandler, WebSocketMessage } from './services/socket/socket.publisher'
@@ -21,9 +21,35 @@ const startServer = () => {
   )
   const elysiaServer = new Elysia()
     .use(cors())
-    .use(swagger())
+    .use(
+      swagger({
+        provider: 'swagger-ui',
+        autoDarkMode: false,
+        documentation: {
+          info: {
+            title: 'Healthz-curler API',
+            version: '1.0.0',
+            description: 'Healthz-curler API Documentation'
+          },
+          tags: [
+            {
+              name: 'config',
+              description: 'Config API'
+            },
+            {
+              name: 'healthcheck',
+              description: 'Healthcheck API'
+            },
+            {
+              name: 'healthgraph',
+              description: 'Healthgraph API'
+            }
+          ]
+        }
+      })
+    )
     .state('container', container)
-    .use(apiRoutes)
+    .use(apiRouter())
     .ws('/ws', {
       message: (ws, msg) => {
         const websocket = ws as unknown as ServerWebSocket

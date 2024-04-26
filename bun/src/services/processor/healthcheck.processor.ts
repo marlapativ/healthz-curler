@@ -9,6 +9,9 @@ const logger = Logger(import.meta.file)
 
 export interface IHealthCheckProcessor extends IProcessor {
   init(healthChecks: HealthCheck[]): Promise<void>
+  add(healthCheck: HealthCheck): Promise<void>
+  update(healthCheck: HealthCheck): Promise<void>
+  delete(healthCheck: HealthCheck): Promise<void>
 }
 
 export class HealthCheckProcessor implements IHealthCheckProcessor {
@@ -20,6 +23,20 @@ export class HealthCheckProcessor implements IHealthCheckProcessor {
   constructor(timeSeriesDataSource: ITimeSeriesDataSource, notificationService: INotificationProcessor) {
     this.timeSeriesDataSource = timeSeriesDataSource
     this.notificationService = notificationService
+  }
+
+  async add(healthCheck: HealthCheck): Promise<void> {
+    return this.init([healthCheck])
+  }
+
+  async update(healthCheck: HealthCheck): Promise<void> {
+    this.delete(healthCheck)
+    return this.init([healthCheck])
+  }
+
+  async delete(healthCheck: HealthCheck): Promise<void> {
+    clearInterval(this.timeouts[healthCheck.id])
+    delete this.timeouts[healthCheck.id]
   }
 
   async init(healthChecks: HealthCheck[]): Promise<void> {
