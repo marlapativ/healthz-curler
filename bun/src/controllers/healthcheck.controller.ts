@@ -1,5 +1,5 @@
 import Elysia, { Static, t } from 'elysia'
-import { Ok } from '../utils/result.util'
+import { HttpStatusError, Ok } from '../utils/result.util'
 import { IHealthCheckService } from '../services/healthcheck/healthcheck.service'
 import { HealthCheckExecutorType } from '../services/healthcheck/healthcheck'
 
@@ -35,44 +35,44 @@ const tHealthCheck = t.Object({
 const getAll = async ({ healthCheckService }: HealthCheckIdRequest) => {
   const result = await healthCheckService.getAll()
   if (result.ok) return result.value
-  throw new HttpStatusError(400, result.error)
+  throw new HttpStatusError(400, result.error.message)
 }
 
 const getById = async ({ params: { id }, healthCheckService }: HealthCheckIdRequest) => {
   const validationResult = validateRequest(id)
-  if (!validationResult.ok) throw new HttpStatusError(400, validationResult.error)
+  if (!validationResult.ok) throw new HttpStatusError(400, validationResult.error.message)
 
   const result = await healthCheckService.get(id!)
   if (result.ok) return result.value
-  throw new HttpStatusError(400, result.error)
+  throw new HttpStatusError(400, result.error.message)
 }
 
 const create = async ({ body, healthCheckService }: HealthCheckBodyRequest) => {
   const result = await healthCheckService.create(body!)
   if (result.ok) return result.value
-  throw new HttpStatusError(400, result.error)
+  throw new HttpStatusError(400, result.error.message)
 }
 
 const updateById = async ({ params: { id }, body, healthCheckService }: HealthCheckBodyRequest) => {
   const validationResult = validateRequest(id)
-  if (!validationResult.ok) throw new HttpStatusError(400, validationResult.error)
+  if (!validationResult.ok) validationResult.error
 
   const result = await healthCheckService.update(id!, body!)
   if (result.ok) return result.value
-  throw new HttpStatusError(400, result.error)
+  else throw result.error
 }
 
 const deleteById = async ({ params: { id }, healthCheckService }: HealthCheckIdRequest) => {
   const validationResult = validateRequest(id)
-  if (!validationResult.ok) throw new HttpStatusError(400, validationResult.error)
+  if (!validationResult.ok) throw new HttpStatusError(400, validationResult.error.message)
 
   const result = await healthCheckService.delete(id!)
   if (result.ok) return result.value
-  throw new HttpStatusError(400, result.error)
+  throw new HttpStatusError(400, result.error.message)
 }
 
 const validateRequest = (id: string | undefined): Result<boolean, Error> => {
-  if (!id) return new Error('Id is required')
+  if (!id) return new HttpStatusError(400, 'Id is required')
   return Ok(true)
 }
 

@@ -2,7 +2,7 @@ import { RedisClientType, createClient } from 'redis'
 import { IDataSource } from './datasource'
 import env from '../../../utils/env.util'
 import validator from '../../../utils/validator.util'
-import { Ok } from '../../../utils/result.util'
+import { Exception, Ok } from '../../../utils/result.util'
 import Logger from '../../../config/logger'
 const logger = Logger(import.meta.file)
 
@@ -53,14 +53,14 @@ export class RedisDataSource implements IDataSource {
 
   async get<T>(key: string): Promise<Result<T, Error>> {
     const exists = await this.has(key)
-    if (!exists.ok) return new Error('Key does not exist')
+    if (!exists.ok) return new Exception('Key does not exist')
     const data = await this._redis.get(key)
     return Ok(JSON.parse(data!) as T)
   }
 
   async delete(key: string): Promise<Result<boolean, Error>> {
     const exists = await this.has(key)
-    if (!exists.ok) return new Error('Key does not exist')
+    if (!exists.ok) return new Exception('Key does not exist')
     const result = await this._redis.del(key)
     return Ok(result === 1)
   }

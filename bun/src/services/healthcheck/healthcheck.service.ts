@@ -1,3 +1,4 @@
+import { HttpStatusError } from '../../utils/result.util'
 import { IDataSource } from '../data/datasource/datasource'
 import { IHealthCheckProcessor } from '../processor/healthcheck.processor'
 import { HealthCheck } from './healthcheck'
@@ -38,6 +39,7 @@ export class HealthCheckService implements IHealthCheckService {
 
   async get(id: string): Promise<Result<HealthCheck, Error>> {
     const result = await this.dataSource.get<HealthCheck>(`${this.getKey(id)}`)
+    if (!result.ok) return new HttpStatusError(400, result.error.message)
     return result
   }
 
@@ -59,8 +61,8 @@ export class HealthCheckService implements IHealthCheckService {
     if (validationResult.length > 0) return new HttpStatusError(400, validationResult)
 
     const exists = await this.dataSource.has(healthCheck.id)
-    if (!exists.ok) return new Error('Error retrieving healthcheck')
-    if (!exists.value) return new Error('HealthCheck does not exist')
+    if (!exists.ok) return new HttpStatusError(500, 'Error retrieving healthcheck')
+    if (!exists.value) return new HttpStatusError(400, 'HealthCheck does not exist')
 
     const result = await this.dataSource.set<HealthCheck>(`${this.getKey(healthCheck.id)}`, healthCheck)
     if (result.ok) this.healthCheckProcessor.update(healthCheck)

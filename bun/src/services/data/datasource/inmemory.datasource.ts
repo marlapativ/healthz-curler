@@ -1,4 +1,4 @@
-import { Ok } from '../../../utils/result.util'
+import { Exception, Ok } from '../../../utils/result.util'
 import { IDataSource } from './datasource'
 import _ from 'lodash'
 
@@ -31,7 +31,7 @@ export class InMemoryDataSource implements IDataSource {
 
   async get<T>(key: string): Promise<Result<T, Error>> {
     const keyExists = this.data.has(key)
-    if (!keyExists) return new Error(`Key ${key} not found`)
+    if (!keyExists) return new Exception(`Key ${key} not found`)
     const value = this.data.get(key) as T
     const clone = _.cloneDeep(value)
     return Ok(clone)
@@ -39,7 +39,7 @@ export class InMemoryDataSource implements IDataSource {
 
   async delete(key: string): Promise<Result<boolean, Error>> {
     const keyExists = this.data.has(key)
-    if (!keyExists) return new Error(`Key ${key} not found`)
+    if (!keyExists) return new Exception(`Key ${key} not found`)
     this.data.delete(key)
     return Ok(true)
   }
