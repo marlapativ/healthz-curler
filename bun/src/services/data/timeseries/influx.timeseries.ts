@@ -39,7 +39,7 @@ export class InfluxDBDataSource implements ITimeSeriesDataSource {
     const page = request.page ? request.page : 1
     const pageSize = request.pageSize ? request.pageSize : 100
     const query = `from(bucket: "${this.bucket}")
-      |> range(start: ${request.startTime.getTime()}, stop: ${request.endTime.getTime()})
+      |> range(start: ${request.startTime!.getTime()}, stop: ${request.endTime!.getTime()})
       |> filter(fn: (r) => r["implementation"] == "bun")
       |> filter(fn: (r) => r["language"] == "js")
       |> filter(fn: (r) => r["_measurement"] == "${request.name}")
