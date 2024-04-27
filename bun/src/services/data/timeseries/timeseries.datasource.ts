@@ -8,12 +8,14 @@ export interface ITimeSeriesDataSource {
   queryData<T>(request: IQueryableTimeSeriesData): Promise<T[]>
 }
 
-export interface IQueryableTimeSeriesData extends ITimeSeriesData {
-  startTime: Date
-  endTime: Date
+export interface IQueryableTimeParams {
+  startTime?: Date
+  endTime?: Date
   pageSize?: number
   page?: number
 }
+
+export interface IQueryableTimeSeriesData extends IQueryableTimeParams, ITimeSeriesData {}
 
 export interface ITimeSeriesData {
   id: string

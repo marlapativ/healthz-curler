@@ -1,26 +1,27 @@
-import Elysia from 'elysia'
+import Elysia, { Static, t } from 'elysia'
 import env from '../utils/env.util'
 
-type ServerConfig = {
-  port: number | string
-  framework: string
-}
+const tServerConfig = t.Object({
+  port: t.Union([t.Number(), t.String()]),
+  framework: t.String()
+})
 
-type WebsocketConfig = {
-  name: string
-  path: string
-  port: number | string
-}
+const tWebsocketConfig = t.Object({
+  name: t.String(),
+  path: t.String(),
+  port: t.Union([t.Number(), t.String()])
+})
 
-type Config = {
-  id: string
-  runtime: string
-  apiVersion: string
-  server: ServerConfig
-  websocket: WebsocketConfig[]
-}
+type Config = Static<typeof tConfig>
+const tConfig = t.Object({
+  id: t.String(),
+  runtime: t.String(),
+  apiVersion: t.String(),
+  server: tServerConfig,
+  websocket: t.Array(tWebsocketConfig)
+})
 
-const getConfig = async () => {
+const getConfig = async (): Promise<Config> => {
   const port = env.getOrDefault('SERVER_PORT', '4205')
   const config: Config = {
     id: 'bun-elysia',
@@ -50,7 +51,14 @@ const getConfig = async () => {
 const configRouter = () => {
   return new Elysia<'config', false, Context>({ prefix: 'config', tags: ['config'] }).get<'/', any, any, any>(
     '/',
-    getConfig
+    getConfig,
+    {
+      response: tConfig,
+      detail: {
+        summary: 'Get the server configuration',
+        description: 'Get the server configuration'
+      }
+    }
   )
 }
 

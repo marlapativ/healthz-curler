@@ -1,21 +1,17 @@
 import Elysia, { error } from 'elysia'
 import { IHealthGraphService } from '../services/healthcheck/healthgraph.service'
+import { IQueryableTimeParams } from '../services/data/timeseries/timeseries.datasource'
 
 type HealthGraphRequest = {
   params: {
     id?: string
   }
-  query: {
-    page?: number
-    pageSize?: number
-  }
+  query: IQueryableTimeParams
   healthGraphService: IHealthGraphService
 }
 
-const getById = async ({ params: { id }, query: { page, pageSize }, healthGraphService }: HealthGraphRequest) => {
-  page = page || 1
-  pageSize = pageSize || 100
-  const result = await healthGraphService.get(id!, page, pageSize)
+const getById = async ({ params: { id }, query, healthGraphService }: HealthGraphRequest) => {
+  const result = await healthGraphService.get(id!, query)
   if (result.ok) return result.value
   return error(400, result.error)
 }

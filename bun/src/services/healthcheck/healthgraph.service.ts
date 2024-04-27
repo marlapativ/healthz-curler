@@ -1,9 +1,13 @@
 import { Ok } from '../../utils/result.util'
-import { IQueryableTimeSeriesData, ITimeSeriesDataSource } from '../data/timeseries/timeseries.datasource'
+import {
+  IQueryableTimeParams,
+  IQueryableTimeSeriesData,
+  ITimeSeriesDataSource
+} from '../data/timeseries/timeseries.datasource'
 import { IHealthCheckService } from './healthcheck.service'
 
 export interface IHealthGraphService {
-  get(healthCheckId: string, page?: number, pageSize?: number): Promise<Result<any[], Error>>
+  get(healthCheckId: string, queryTimeParams?: IQueryableTimeParams): Promise<Result<any[], Error>>
 }
 
 export class HealthGraphService implements IHealthGraphService {
@@ -15,21 +19,23 @@ export class HealthGraphService implements IHealthGraphService {
     this.healthCheckService = healthCheckService
   }
 
-  async get(healthCheckId: string, page?: number, pageSize?: number): Promise<Result<any[], Error>> {
+  async get(healthCheckId: string, queryTimeParams?: IQueryableTimeParams): Promise<Result<any[], Error>> {
     const healthCheckResult = await this.healthCheckService.get(healthCheckId)
     if (!healthCheckResult.ok) return healthCheckResult
     const healthCheck = healthCheckResult.value
-    const endDate = new Date()
-    const startDate = new Date()
+    let endDate = new Date()
+    if (queryTimeParams?.endTime) endDate = new Date(queryTimeParams.endTime)
+    let startDate = new Date()
     startDate.setHours(startDate.getHours() - 3)
+    if (queryTimeParams?.startTime) startDate = new Date(queryTimeParams.startTime)
     const query: IQueryableTimeSeriesData = {
       id: healthCheck.id,
       name: healthCheck.name,
       type: 'HealthCheck',
       startTime: startDate,
       endTime: endDate,
-      page: page || 1,
-      pageSize: pageSize || 100,
+      page: queryTimeParams?.page ?? 1,
+      pageSize: queryTimeParams?.pageSize ?? 100,
       properties: {}
     }
     const results = await this.timeSeriesDataSource.queryData(query)

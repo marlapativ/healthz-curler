@@ -85,6 +85,7 @@ const healthCheckRouter = () => {
       healthCheckService: container.get<IHealthCheckService>('IHealthCheckService')
     }))
     .get('/', getAll, {
+      type: 'application/json',
       response: t.Array(tHealthCheck),
       detail: {
         summary: 'Get all health checks',
@@ -92,6 +93,7 @@ const healthCheckRouter = () => {
       }
     })
     .post('/', create, {
+      type: 'application/json',
       body: tHealthCheck,
       response: tHealthCheck,
       detail: {
@@ -100,6 +102,7 @@ const healthCheckRouter = () => {
       }
     })
     .get('/:id', getById, {
+      type: 'application/json',
       params: t.Object({
         id: t.String()
       }),
@@ -110,12 +113,23 @@ const healthCheckRouter = () => {
       }
     })
     .put('/:id', updateById, {
+      type: 'application/json',
+      params: t.Object({
+        id: t.String()
+      }),
+      body: tHealthCheck,
+      response: tHealthCheck,
       detail: {
         summary: 'Update a health check by id',
         description: 'Updates a health check by id'
       }
     })
     .delete('/:id', deleteById, {
+      type: 'application/json',
+      params: t.Object({
+        id: t.String()
+      }),
+      response: tHealthCheck,
       detail: {
         summary: 'Delete a health check by id',
         description: 'Deletes a health check by id'
