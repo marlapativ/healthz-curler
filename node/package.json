@@ -1,6 +1,7 @@
 {
   "name": "healthz-curler",
   "scripts": {
+    "preinstall": "cd ../shared/js && npm link",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc"
   },
@@ -30,6 +31,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-ws": "^5.0.2",
+    "healthz-curler-shared-js": "file:../shared/js",
     "lodash": "^4.17.21",
     "redis": "^4.6.13",
     "socket.io": "^4.7.5",

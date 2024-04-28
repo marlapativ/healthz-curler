@@ -2,6 +2,7 @@
   "name": "healthz-curler",
   "type": "module",
   "scripts": {
+    "preinstall": "cd ../shared/js && bun link",
     "dev": "bun --watch run src/server.ts",
     "build": "bun build src/server.ts --target bun --outfile dist/server-bun.js --minify"
   },
@@ -19,6 +20,7 @@
     "@elysiajs/swagger": "^1.0.3",
     "@influxdata/influxdb-client": "^1.33.2",
     "elysia": "^1.0.13",
+    "healthz-curler-shared-js": "link:healthz-curler-shared-js",
     "lodash": "^4.17.21",
     "redis": "^4.6.13",
     "socket.io": "^4.7.5",

@@ -1,0 +1,8 @@
+{
+  "name": "healthz-curler-shared-js",
+  "version": "1.0.0",
+  "description": "Shared code for healthz-curler",
+  "dependencies": {
+    "typescript": "^5.4.5"
+  }
+}
