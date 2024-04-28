@@ -9,4 +9,4 @@ const env = {
   getOrDefault
 }
 
-export default env
+export { env }

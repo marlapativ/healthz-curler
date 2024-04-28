@@ -1,7 +1,7 @@
 import { Elysia } from 'elysia'
 import { cors } from '@elysiajs/cors'
 import { swagger } from '@elysiajs/swagger'
-import env from './utils/env.util'
+import { env } from 'healthz-curler-shared-js'
 import { dataSourceFactory } from './services/data/datasource/datasource'
 import { apiRouter } from './controllers'
 import { seedDatabase } from './seed/seed.data'
