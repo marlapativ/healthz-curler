@@ -14,6 +14,8 @@ import express from 'express'
 import cors from 'cors'
 import { Server } from 'http'
 import expressWs from 'express-ws'
+import swaggerUi from 'swagger-ui-express'
+import swaggerDocument from './swagger.json'
 import { IWebSocketMessageHandler } from './services/socket/websocket.publisher'
 const logger = Logger(__filename)
 
@@ -38,6 +40,7 @@ const startServer = () => {
 
   // Setup middleware
   server.use(express.json())
+  server.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
   server.use(cors())
   server.use((req: Express.Request, _, next) => {
     req.container = container

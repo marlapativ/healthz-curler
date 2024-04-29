@@ -49,17 +49,30 @@ const getConfig = async (): Promise<Config> => {
 }
 
 const configRouter = () => {
-  return new Elysia<'config', false, Context>({ prefix: 'config', tags: ['config'] }).get<'/', any, any, any>(
-    '/',
-    getConfig,
-    {
-      response: tConfig,
+  return new Elysia<'config', false, Context>({ name: 'config', prefix: 'config', tags: ['config'] })
+    .model({
+      config: tConfig
+    })
+    .get<'/', any, any, any>('/', getConfig, {
+      response: 'config',
       detail: {
         summary: 'Get the server configuration',
-        description: 'Get the server configuration'
+        description: 'Get the server configuration',
+        responses: {
+          200: {
+            description: 'Server configuration',
+            content: {
+              'application/json': {
+                schema: tConfig
+              }
+            }
+          },
+          500: {
+            description: 'Internal server error'
+          }
+        }
       }
-    }
-  )
+    })
 }
 
 export { configRouter }

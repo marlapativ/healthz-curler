@@ -31,6 +31,7 @@ const tHealthCheck = t.Object({
   ),
   executor: t.Optional(t.Enum(HealthCheckExecutorType))
 })
+const tHealthChecks = t.Array(tHealthCheck)
 
 const getAll = async ({ healthCheckService }: HealthCheckIdRequest) => {
   const result = await healthCheckService.getAll()
@@ -78,61 +79,133 @@ const validateRequest = (id: string | undefined): Result<boolean, Error> => {
 
 const healthCheckRouter = () => {
   const healthcheckServer = new Elysia<'healthcheck', false, Context>({
+    name: 'healthcheck',
     prefix: 'healthcheck',
     tags: ['healthcheck']
   })
+    .model({
+      healthCheck: tHealthCheck,
+      healthChecks: tHealthChecks
+    })
     .derive(({ store: { container } }) => ({
       healthCheckService: container.get<IHealthCheckService>('IHealthCheckService')
     }))
-    .get('/', getAll, {
+    .get<'/', any, any, any>('/', getAll, {
       type: 'application/json',
-      response: t.Array(tHealthCheck),
+      response: 'healthCheck',
       detail: {
         summary: 'Get all health checks',
-        description: 'Returns a list of all health checks'
+        description: 'Returns a list of all health checks',
+        responses: {
+          200: {
+            description: 'Health checks',
+            content: {
+              'application/json': {
+                schema: tHealthChecks
+              }
+            }
+          },
+          400: {
+            description: 'Bad request'
+          }
+        }
       }
     })
-    .post('/', create, {
+    .post<'/', any, any, any>('/', create, {
       type: 'application/json',
-      body: tHealthCheck,
-      response: tHealthCheck,
+      body: 'healthCheck',
+      response: 'healthCheck',
       detail: {
         summary: 'Create a health check',
-        description: 'Creates a new health check'
+        description: 'Creates a new health check',
+        responses: {
+          200: {
+            description: 'Health check',
+            content: {
+              'application/json': {
+                schema: tHealthCheck
+              }
+            }
+          },
+          400: {
+            description: 'Bad request'
+          }
+        }
       }
     })
-    .get('/:id', getById, {
+    .get<'/:id', any, any, any>('/:id', getById, {
       type: 'application/json',
       params: t.Object({
         id: t.String()
       }),
-      response: tHealthCheck,
+      response: {
+        200: 'healthCheck'
+      },
       detail: {
         summary: 'Get a health check by id',
-        description: 'Returns a health check by id'
+        description: 'Returns a health check by id',
+        responses: {
+          200: {
+            description: 'Health check',
+            content: {
+              'application/json': {
+                schema: tHealthCheck
+              }
+            }
+          },
+          400: {
+            description: 'Bad request'
+          }
+        }
       }
     })
-    .put('/:id', updateById, {
+    .put<'/:id', any, any, any>('/:id', updateById, {
       type: 'application/json',
       params: t.Object({
         id: t.String()
       }),
-      body: tHealthCheck,
-      response: tHealthCheck,
+      body: 'healthCheck',
+      response: 'healthCheck',
       detail: {
         summary: 'Update a health check by id',
-        description: 'Updates a health check by id'
+        description: 'Updates a health check by id',
+        responses: {
+          200: {
+            description: 'Health check',
+            content: {
+              'application/json': {
+                schema: tHealthCheck
+              }
+            }
+          },
+          400: {
+            description: 'Bad request'
+          }
+        }
       }
     })
-    .delete('/:id', deleteById, {
+    .delete<'/:id', any, any, any>('/:id', deleteById, {
       type: 'application/json',
       params: t.Object({
         id: t.String()
       }),
-      response: tHealthCheck,
+      response: 'healthCheck',
       detail: {
         summary: 'Delete a health check by id',
-        description: 'Deletes a health check by id'
+        description: 'Deletes a health check by id',
+        responses: {
+          200: {
+            description: 'Health check',
+            content: {
+              'application/json': {
+                schema: tHealthCheck
+              }
+            }
+          },
+          400: {
+            description: 'Bad request'
+          }
+        }
       }
     })
 
