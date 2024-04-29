@@ -4,7 +4,7 @@ import { swagger } from '@elysiajs/swagger'
 import { ISocketIOMessageHandler, env } from 'healthz-curler-shared-js'
 import { dataSourceFactory } from 'healthz-curler-shared-js'
 import { ISocketMessageHandler, WebSocketMessage } from 'healthz-curler-shared-js'
-import { apiRouter } from './controllers'
+import { apiRouter, router } from './controllers'
 import { seedDatabase } from './seed/seed.data'
 import { container } from './container'
 import { Server as SocketIOServer } from 'socket.io'
@@ -49,6 +49,7 @@ const startServer = () => {
       })
     )
     .state('container', container)
+    .use(router())
     .use(apiRouter())
     .ws('/ws', {
       message: (ws, msg) => {

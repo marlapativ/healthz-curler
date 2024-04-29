@@ -20,6 +20,19 @@
     }
   ],
   "paths": {
+    "/healthz": {
+      "get": {
+        "operationId": "getHealthz",
+        "tags": [
+          "healthz"
+        ],
+        "responses": {
+          "200": {
+            "description": "Service availability check"
+          }
+        }
+      }
+    },
     "/api/v1/config/": {
       "get": {
         "responses": {

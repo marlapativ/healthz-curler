@@ -3,7 +3,7 @@ dotenv.config()
 
 import { ISocketIOMessageHandler, env } from 'healthz-curler-shared-js'
 import { dataSourceFactory } from 'healthz-curler-shared-js'
-import { apiRoutes } from './controllers'
+import { routes } from './controllers'
 import { seedDatabase } from './seed/seed.data'
 import { container } from './container'
 import { WebSocketMessage } from 'healthz-curler-shared-js'
@@ -48,7 +48,7 @@ const startServer = () => {
   })
 
   // Setup routes
-  apiRoutes(server)
+  routes(server)
 
   httpServer.listen(SERVER_PORT, () => {
     webSocketMessageHandler.init(expressWsServer.getWss())
