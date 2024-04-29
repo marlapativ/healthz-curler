@@ -17,7 +17,7 @@ export interface IHealthCheckProcessor extends IProcessor {
 export class HealthCheckProcessor implements IHealthCheckProcessor {
   type: string = 'HealthCheck'
   timeSeriesDataSource: ITimeSeriesDataSource
-  timeouts: Record<string, NodeJS.Timeout> = {}
+  timeouts: Record<string, any> = {}
   notificationService: INotificationProcessor
 
   constructor(timeSeriesDataSource: ITimeSeriesDataSource, notificationService: INotificationProcessor) {
@@ -31,7 +31,7 @@ export class HealthCheckProcessor implements IHealthCheckProcessor {
 
   async update(healthCheck: HealthCheck): Promise<void> {
     this.delete(healthCheck)
-    return this.init([healthCheck])
+    return this.add(healthCheck)
   }
 
   async delete(healthCheck: HealthCheck): Promise<void> {

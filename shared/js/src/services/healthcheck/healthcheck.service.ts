@@ -61,20 +61,22 @@ export class HealthCheckService implements IHealthCheckService {
     const validationResult = this.validate(healthCheck, false)
     if (validationResult.length > 0) return new HttpStatusError(400, validationResult)
 
-    const exists = await this.dataSource.has(healthCheck.id)
+    const key = `${this.getKey(id)}`
+    const exists = await this.dataSource.has(key)
     if (!exists.ok) return new HttpStatusError(500, 'Error retrieving healthcheck')
     if (!exists.value) return new HttpStatusError(400, 'HealthCheck does not exist')
 
-    const result = await this.dataSource.set<HealthCheck>(`${this.getKey(healthCheck.id)}`, healthCheck)
+    const result = await this.dataSource.set<HealthCheck>(key, healthCheck)
     if (result.ok) this.healthCheckProcessor.update(healthCheck)
     return result
   }
 
   async delete(id: string): Promise<Result<HealthCheck, Error>> {
-    const data = await this.dataSource.get<HealthCheck>(id)
+    const key = `${this.getKey(id)}`
+    const data = await this.dataSource.get<HealthCheck>(key)
     if (!data.ok) return data
 
-    const result = await this.dataSource.delete(`${this.getKey(id)}`)
+    const result = await this.dataSource.delete(key)
     if (!result.ok) return result
 
     this.healthCheckProcessor.delete(data.value)

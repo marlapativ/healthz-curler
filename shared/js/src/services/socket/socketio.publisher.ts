@@ -3,7 +3,9 @@ import { ISocketPublisher, ISocketMessageHandler, WebSocketMessage, WebSocketMes
 import Logger from '../../config/logger'
 const logger = Logger(__filename)
 
-export class SocketIOPublisherService implements ISocketPublisher, ISocketMessageHandler<Socket, Server> {
+export type ISocketIOMessageHandler = ISocketMessageHandler<Socket, Server>
+
+export class SocketIOPublisherService implements ISocketPublisher, ISocketIOMessageHandler {
   server: Server | null = null
   init(server: Server): void {
     this.server = server
