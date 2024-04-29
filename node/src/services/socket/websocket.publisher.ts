@@ -1,10 +1,16 @@
 import { WebSocket, WebSocketServer } from 'ws'
-import Logger from '../../config/logger'
+import {
+  ISocketPublisher,
+  ISocketMessageHandler,
+  WebSocketMessage,
+  WebSocketMessageType
+} from 'healthz-curler-shared-js'
+import { Logger } from 'healthz-curler-shared-js'
 const logger = Logger(__filename)
 
-import { ISocketPublisher, ISocketMessageHandler, WebSocketMessage, WebSocketMessageType } from './socket.publisher'
+export type IWebSocketMessageHandler = ISocketMessageHandler<WebSocket, WebSocketServer>
 
-export class WebSocketPublisherService implements ISocketPublisher, ISocketMessageHandler<WebSocket, WebSocketServer> {
+export class WebSocketPublisherService implements ISocketPublisher, IWebSocketMessageHandler {
   server: WebSocketServer | null = null
   rooms: Map<string, Set<WebSocket>> = new Map()
 

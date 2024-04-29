@@ -1,16 +1,15 @@
-import { IDataSource, dataSourceFactory } from './services/data/datasource/datasource'
-import { ITimeSeriesDataSource, timeSeriesDataSourceFactory } from './services/data/timeseries/timeseries.datasource'
-import { HealthCheckService, IHealthCheckService } from './services/healthcheck/healthcheck.service'
-import { HealthGraphService, IHealthGraphService } from './services/healthcheck/healthgraph.service'
-import { HealthCheckProcessor, IHealthCheckProcessor } from './services/processor/healthcheck.processor'
-import { ISocketPublisher, ISocketMessageHandler } from './services/socket/socket.publisher'
-import { INotificationExecutor } from './services/realtime/executor/notification.executor'
-import { SocketNotificationExecutor } from './services/realtime/executor/socket.executor'
-import { INotificationProcessor, NotificationProcessor } from './services/realtime/notification.processor'
-import { SocketIOPublisherService } from './services/socket/socketio.publisher'
-import { WebSocketPublisherService } from './services/socket/websocket.publisher'
-import { Server as SocketIOServer, Socket as SocketIOSocket } from 'socket.io'
-import { WebSocket, WebSocketServer } from 'ws'
+import { IDataSource, ISocketIOMessageHandler, dataSourceFactory } from 'healthz-curler-shared-js'
+import { ITimeSeriesDataSource, timeSeriesDataSourceFactory } from 'healthz-curler-shared-js'
+import { HealthCheckService, IHealthCheckService } from 'healthz-curler-shared-js'
+import { HealthGraphService, IHealthGraphService } from 'healthz-curler-shared-js'
+import { HealthCheckProcessor, IHealthCheckProcessor } from 'healthz-curler-shared-js'
+import { ISocketPublisher } from 'healthz-curler-shared-js'
+import { INotificationExecutor } from 'healthz-curler-shared-js'
+import { SocketNotificationExecutor } from 'healthz-curler-shared-js'
+import { INotificationProcessor, NotificationProcessor } from 'healthz-curler-shared-js'
+import { SocketIOPublisherService } from 'healthz-curler-shared-js'
+import { IWebSocketMessageHandler, WebSocketPublisherService } from './services/socket/websocket.publisher'
+
 class Container implements IContainer {
   private map: Map<string, unknown> = new Map()
 
@@ -26,14 +25,8 @@ class Container implements IContainer {
     const socketIOPublisher = new SocketIOPublisherService()
     const webSocketPublisher = new WebSocketPublisherService()
     this.insert<ISocketPublisher[]>('ISocketPublisher', [socketIOPublisher, webSocketPublisher])
-    this.insert<ISocketMessageHandler<SocketIOSocket, SocketIOServer>>(
-      'ISocketMessageHandler<SocketIOSocket, SocketIOServer>',
-      socketIOPublisher
-    )
-    this.insert<ISocketMessageHandler<WebSocket, WebSocketServer>>(
-      'ISocketMessageHandler<WebSocket, WebSocketServer>',
-      webSocketPublisher
-    )
+    this.insert<ISocketIOMessageHandler>('ISocketIOMessageHandler', socketIOPublisher)
+    this.insert<IWebSocketMessageHandler>('IWebSocketMessageHandler', webSocketPublisher)
     this.insert<INotificationExecutor>('INotificationExecutor', [
       new SocketNotificationExecutor(this.get<ISocketPublisher[]>('ISocketPublisher'))
     ])
