@@ -1,7 +1,7 @@
-import { IDataSource } from '../services/data/datasource/datasource'
-import { HealthCheck, HealthCheckExecutorType } from '../services/healthcheck/healthcheck'
-import { Model } from '../types/model'
-import Logger from '../config/logger'
+import { Model } from 'healthz-curler-shared-js'
+import { IDataSource } from 'healthz-curler-shared-js'
+import { HealthCheck, HealthCheckExecutorType } from 'healthz-curler-shared-js'
+import { Logger } from 'healthz-curler-shared-js'
 const logger = Logger(import.meta.file)
 
 export const healthChecksSeedData: HealthCheck[] = [

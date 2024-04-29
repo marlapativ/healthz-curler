@@ -6,6 +6,7 @@
             "ESNext",
             "dom"
         ],
+        "resolveJsonModule": true,
         "outDir": "./dist",
         "removeComments": true,
         "target": "ES6",

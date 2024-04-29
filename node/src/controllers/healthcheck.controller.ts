@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
-import { IHealthCheckService } from '../services/healthcheck/healthcheck.service'
-import { Ok } from '../utils/result.util'
+import { Exception, IHealthCheckService, Result } from 'healthz-curler-shared-js'
+import { Ok } from 'healthz-curler-shared-js'
 
 const getHealthCheckService = ({ container }: Request) => container.get<IHealthCheckService>('IHealthCheckService')
 
@@ -52,7 +52,7 @@ const deleteById = async (req: Request, res: Response) => {
 }
 
 const validateRequest = (id: string | undefined): Result<boolean, Error> => {
-  if (!id) return new Error('Id is required')
+  if (!id) return new Exception('Id is required')
   return Ok(true)
 }
 

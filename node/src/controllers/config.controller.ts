@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express'
-import env from '../utils/env.util'
+import { env } from 'healthz-curler-shared-js'
 
 type ServerConfig = {
   port: number | string

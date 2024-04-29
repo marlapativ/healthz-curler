@@ -1,28 +1,29 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
-import env from './utils/env.util'
-import { dataSourceFactory } from './services/data/datasource/datasource'
+import { ISocketIOMessageHandler, env } from 'healthz-curler-shared-js'
+import { dataSourceFactory } from 'healthz-curler-shared-js'
 import { apiRoutes } from './controllers'
 import { seedDatabase } from './seed/seed.data'
 import { container } from './container'
-import { ISocketMessageHandler, WebSocketMessage } from './services/socket/socket.publisher'
-import Logger from './config/logger'
-import { Server as SocketIOServer, Socket as SocketIOSocket } from 'socket.io'
-import { WebSocket, WebSocketServer } from 'ws'
+import { WebSocketMessage } from 'healthz-curler-shared-js'
+import { Logger } from 'healthz-curler-shared-js'
+import { Server as SocketIOServer } from 'socket.io'
+import { WebSocket } from 'ws'
 import express from 'express'
 import cors from 'cors'
 import { Server } from 'http'
 import expressWs from 'express-ws'
+import swaggerUi from 'swagger-ui-express'
+import swaggerDocument from './swagger.json'
+import { IWebSocketMessageHandler } from './services/socket/websocket.publisher'
 const logger = Logger(__filename)
 
 const SERVER_PORT = env.getOrDefault('SERVER_PORT', '4215')
 const SOCKETIO_PORT = env.getOrDefault('SOCKETIO_PORT', '4216')
 
 const startServer = () => {
-  const webSocketMessageHandler = container.get<ISocketMessageHandler<WebSocket, WebSocketServer>>(
-    'ISocketMessageHandler<WebSocket, WebSocketServer>'
-  )
+  const webSocketMessageHandler = container.get<IWebSocketMessageHandler>('IWebSocketMessageHandler')
 
   const server = express()
   const httpServer = new Server(server)
@@ -39,6 +40,7 @@ const startServer = () => {
 
   // Setup middleware
   server.use(express.json())
+  server.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
   server.use(cors())
   server.use((req: Express.Request, _, next) => {
     req.container = container
@@ -62,9 +64,7 @@ const startServer = () => {
 }
 
 const startSocketIOServer = () => {
-  const socketIOMessageHandler = container.get<ISocketMessageHandler<SocketIOSocket, SocketIOServer>>(
-    'ISocketMessageHandler<SocketIOSocket, SocketIOServer>'
-  )
+  const socketIOMessageHandler = container.get<ISocketIOMessageHandler>('ISocketIOMessageHandler')
   const io = new SocketIOServer(parseInt(SOCKETIO_PORT))
   socketIOMessageHandler.init(io)
 }
