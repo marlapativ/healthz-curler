@@ -7,6 +7,7 @@ export class InfluxDBDataSource implements ITimeSeriesDataSource {
   private _influxDb: InfluxDB
   private writeApi: WriteApi
   private queryApi: QueryApi
+  private implementation: string = env.getRuntime()
 
   constructor() {
     const token = env.getOrDefault('INFLUX_TOKEN', '')
@@ -20,7 +21,7 @@ export class InfluxDBDataSource implements ITimeSeriesDataSource {
       token
     })
     this.writeApi = this._influxDb.getWriteApi(org, this.bucket, undefined, { flushInterval: 5000 })
-    this.writeApi.useDefaultTags({ implementation: 'bun', language: 'js' })
+    this.writeApi.useDefaultTags({ implementation: this.implementation, language: 'js' })
     this.queryApi = this._influxDb.getQueryApi(org)
   }
 
@@ -40,7 +41,7 @@ export class InfluxDBDataSource implements ITimeSeriesDataSource {
     const pageSize = request.pageSize ? request.pageSize : 100
     const query = `from(bucket: "${this.bucket}")
       |> range(start: ${request.startTime!.getTime()}, stop: ${request.endTime!.getTime()})
-      |> filter(fn: (r) => r["implementation"] == "bun")
+      |> filter(fn: (r) => r["implementation"] == "${this.implementation}")
       |> filter(fn: (r) => r["language"] == "js")
       |> filter(fn: (r) => r["_measurement"] == "${request.name}")
       |> filter(fn: (r) => r["id"] == "${request.id}")
