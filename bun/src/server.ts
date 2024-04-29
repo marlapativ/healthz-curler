@@ -1,15 +1,15 @@
 import { Elysia } from 'elysia'
 import { cors } from '@elysiajs/cors'
 import { swagger } from '@elysiajs/swagger'
-import { env } from 'healthz-curler-shared-js'
-import { dataSourceFactory } from './services/data/datasource/datasource'
+import { ISocketIOMessageHandler, env } from 'healthz-curler-shared-js'
+import { dataSourceFactory } from 'healthz-curler-shared-js'
+import { ISocketMessageHandler, WebSocketMessage } from 'healthz-curler-shared-js'
 import { apiRouter } from './controllers'
 import { seedDatabase } from './seed/seed.data'
 import { container } from './container'
-import { ISocketMessageHandler, WebSocketMessage } from './services/socket/socket.publisher'
-import { Server as SocketIOServer, Socket as SocketIOSocket } from 'socket.io'
-import Logger from './config/logger'
+import { Server as SocketIOServer } from 'socket.io'
 import { Server, ServerWebSocket } from 'bun'
+import { Logger } from 'healthz-curler-shared-js'
 const logger = Logger(import.meta.file)
 
 const SERVER_PORT = env.getOrDefault('SERVER_PORT', '4205')
@@ -75,9 +75,7 @@ const startServer = () => {
 }
 
 const startSocketIOServer = () => {
-  const socketIOMessageHandler = container.get<ISocketMessageHandler<SocketIOSocket, SocketIOServer>>(
-    'ISocketMessageHandler<SocketIOSocket, SocketIOServer>'
-  )
+  const socketIOMessageHandler = container.get<ISocketIOMessageHandler>('ISocketIOMessageHandler')
   const io = new SocketIOServer(parseInt(SOCKETIO_PORT))
   socketIOMessageHandler.init(io)
 }

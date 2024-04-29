@@ -1,3 +1,5 @@
+import { Result, ResultError } from '../types/result'
+
 const Ok = <T>(data: T): Result<T, never> => {
   return { ok: true, value: data }
 }
@@ -5,7 +7,7 @@ const Ok = <T>(data: T): Result<T, never> => {
 export class Exception extends Error implements ResultError<Exception> {
   ok: false = false
   error: Exception = this
-  constructor(message: string) {
+  constructor(message?: string) {
     super(message)
   }
 }

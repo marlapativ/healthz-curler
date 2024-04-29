@@ -1,5 +1,5 @@
 import Elysia, { Static, t } from 'elysia'
-import env from '../utils/env.util'
+import { env } from 'healthz-curler-shared-js'
 
 const tServerConfig = t.Object({
   port: t.Union([t.Number(), t.String()]),

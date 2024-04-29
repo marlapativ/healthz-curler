@@ -1,7 +1,7 @@
 import Elysia, { Static, t } from 'elysia'
-import { HttpStatusError, Ok } from '../utils/result.util'
-import { IHealthCheckService } from '../services/healthcheck/healthcheck.service'
-import { HealthCheckExecutorType } from '../services/healthcheck/healthcheck'
+import { HttpStatusError, Ok, Result } from 'healthz-curler-shared-js'
+import { IHealthCheckService } from 'healthz-curler-shared-js'
+import { HealthCheckExecutorType } from 'healthz-curler-shared-js'
 
 type HealthCheckIdRequest = {
   params: { id: string }

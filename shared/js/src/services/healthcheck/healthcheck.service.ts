@@ -1,3 +1,4 @@
+import { Result } from '../../types/result'
 import { HttpStatusError } from '../../utils/result.util'
 import { IDataSource } from '../data/datasource/datasource'
 import { IHealthCheckProcessor } from '../processor/healthcheck.processor'

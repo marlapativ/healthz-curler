@@ -1,3 +1,4 @@
+import { Result } from '../../../types/result'
 import { HealthCheck, HealthCheckExecutorType } from '../../healthcheck/healthcheck'
 import { CurlExecutor } from './curl.executor'
 import { FetchExecutor } from './fetch.executor'

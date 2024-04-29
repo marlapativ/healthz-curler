@@ -4,6 +4,7 @@ import env from '../../../utils/env.util'
 import validator from '../../../utils/validator.util'
 import { Exception, Ok } from '../../../utils/result.util'
 import Logger from '../../../config/logger'
+import { Result } from '../../../types/result'
 const logger = Logger(__filename)
 
 export class RedisDataSource implements IDataSource {

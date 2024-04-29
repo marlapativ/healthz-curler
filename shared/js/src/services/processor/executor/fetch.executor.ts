@@ -3,6 +3,7 @@ import { Ok } from '../../../utils/result.util'
 import { HealthCheck } from '../../healthcheck/healthcheck'
 import { HealthCheckExecutionResult, IHealthCheckExecutor } from './executor'
 import Logger from '../../../config/logger'
+import { Result } from '../../../types/result'
 const logger = Logger(__filename)
 
 export class FetchExecutor implements IHealthCheckExecutor {

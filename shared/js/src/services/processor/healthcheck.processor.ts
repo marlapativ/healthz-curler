@@ -17,7 +17,7 @@ export interface IHealthCheckProcessor extends IProcessor {
 export class HealthCheckProcessor implements IHealthCheckProcessor {
   type: string = 'HealthCheck'
   timeSeriesDataSource: ITimeSeriesDataSource
-  timeouts: Record<string, Timer> = {}
+  timeouts: Record<string, NodeJS.Timeout> = {}
   notificationService: INotificationProcessor
 
   constructor(timeSeriesDataSource: ITimeSeriesDataSource, notificationService: INotificationProcessor) {

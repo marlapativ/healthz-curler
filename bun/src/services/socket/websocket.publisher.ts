@@ -1,8 +1,12 @@
 import { Server, ServerWebSocket } from 'bun'
-import Logger from '../../config/logger'
+import {
+  ISocketPublisher,
+  ISocketMessageHandler,
+  WebSocketMessage,
+  WebSocketMessageType
+} from 'healthz-curler-shared-js'
+import { Logger } from 'healthz-curler-shared-js'
 const logger = Logger(import.meta.file)
-
-import { ISocketPublisher, ISocketMessageHandler, WebSocketMessage, WebSocketMessageType } from './socket.publisher'
 
 export class WebSocketPublisherService implements ISocketPublisher, ISocketMessageHandler<ServerWebSocket, Server> {
   server: Server | null = null

@@ -1,6 +1,6 @@
 import Elysia, { error } from 'elysia'
-import { IHealthGraphService } from '../services/healthcheck/healthgraph.service'
-import { IQueryableTimeParams } from '../services/data/timeseries/timeseries.datasource'
+import { IHealthGraphService } from 'healthz-curler-shared-js'
+import { IQueryableTimeParams } from 'healthz-curler-shared-js'
 
 type HealthGraphRequest = {
   params: {

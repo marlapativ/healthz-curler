@@ -2,7 +2,7 @@ import Elysia from 'elysia'
 import { healthCheckRouter } from './healthcheck.controller'
 import { healthGraphRouter } from './healthgraph.controller'
 import { configRouter } from './config.controller'
-import { HttpStatusError } from '../utils/result.util'
+import { HttpStatusError } from 'healthz-curler-shared-js'
 
 const apiRouter = () => {
   const server = new Elysia<'/api/v1', false, Context>({ prefix: '/api/v1' })

@@ -2,6 +2,10 @@
   "name": "healthz-curler-shared-js",
   "version": "1.0.0",
   "description": "Shared code for healthz-curler",
+  "scripts": {
+    "build:bun": "bun build index.ts --target bun",
+    "build:node": "tsc"
+  },
   "dependencies": {
     "@influxdata/influxdb-client": "^1.33.2",
     "typescript": "^5.4.5",

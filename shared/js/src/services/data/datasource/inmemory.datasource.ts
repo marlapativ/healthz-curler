@@ -1,3 +1,4 @@
+import { Result } from '../../../types/result'
 import { Exception, Ok } from '../../../utils/result.util'
 import { IDataSource } from './datasource'
 import _ from 'lodash'

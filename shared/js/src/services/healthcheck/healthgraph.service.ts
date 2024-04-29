@@ -1,3 +1,4 @@
+import { Result } from '../../types/result'
 import { Ok } from '../../utils/result.util'
 import {
   IQueryableTimeParams,

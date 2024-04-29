@@ -2,6 +2,7 @@ import env from '../../../utils/env.util'
 import { InMemoryDataSource } from './inmemory.datasource'
 import { RedisDataSource } from './redis.datasource'
 import Logger from '../../../config/logger'
+import { Result } from '../../../types/result'
 const logger = Logger(__filename)
 
 export interface IDataSource {
