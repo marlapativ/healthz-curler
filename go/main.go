@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"log"
 	"server/config"
+	"server/middleware"
 	"server/router"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/gofiber/fiber/v3/middleware/cors"
-	"github.com/gofiber/fiber/v3/middleware/logger"
 )
 
 func main() {
@@ -17,10 +16,7 @@ func main() {
 	app := fiber.New(fiberConfig)
 
 	// Setup middlewares
-	app.Use(
-		cors.New(),
-		logger.New(),
-	)
+	middleware.SetupMiddleware(app)
 
 	// Setup routes
 	router.SetupRoutes(app)
