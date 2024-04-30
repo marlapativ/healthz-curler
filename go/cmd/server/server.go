@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/marlpativ/healthz-curler/cmd/server/config"
 	"github.com/marlpativ/healthz-curler/cmd/server/middleware"
 	"github.com/marlpativ/healthz-curler/cmd/server/router"
 	"github.com/marlpativ/healthz-curler/pkg/env"
@@ -16,8 +15,11 @@ func main() {
 	// Setup environment variables
 	env.SetupEnv()
 
+	// Setup Fiber config
+	appName := env.GetOrDefault("APP_NAME", "Healthz-curler Go")
+	fiberConfig := fiber.Config{AppName: appName}
+
 	// Create a new Fiber instance
-	fiberConfig := config.FiberConfig()
 	app := fiber.New(fiberConfig)
 
 	// Setup middlewares
@@ -33,8 +35,7 @@ func main() {
 
 	err := app.Listen(url)
 	if err != nil {
-		log.Printf("Server failed to run. Reason: %v", err)
-		panic(err)
+		log.Fatalf("Server failed to run. Reason: %v", err)
 	} else {
 		log.Printf("Server is running on %s", url)
 	}

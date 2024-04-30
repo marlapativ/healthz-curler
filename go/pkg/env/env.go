@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/joho/godotenv"
+	"github.com/spf13/viper"
 )
 
 func GetOrDefault(key string, defaultValue string) string {
@@ -16,9 +16,13 @@ func GetOrDefault(key string, defaultValue string) string {
 }
 
 func SetupEnv() {
-	err := godotenv.Load()
+	viper.SetDefault("ContentDir", "configs")
+	viper.SetConfigName(".env")
+	viper.SetConfigType("env")
+	viper.AddConfigPath("configs")
+	err := viper.ReadInConfig()
 	if err != nil {
+		log.Println(err)
 		log.Fatal("Error loading .env file")
-		panic(err)
 	}
 }
