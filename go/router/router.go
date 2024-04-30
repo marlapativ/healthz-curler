@@ -9,6 +9,6 @@ import (
 func SetupRoutes(a *fiber.App) {
 	a.Get("/healthz", controllers.GetHealthz)
 
-	// apiRoute := a.Group("/api/v1")
-	// apiRoute.Get("/healthz", controllers.GetHealthz)
+	apiRoute := a.Group("/api/v1")
+	apiRoute.Get("/config", controllers.GetConfig)
 }
