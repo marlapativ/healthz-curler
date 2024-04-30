@@ -37,7 +37,9 @@ export class HealthGraphService implements IHealthGraphService {
       endTime: endDate,
       page: queryTimeParams?.page ?? 1,
       pageSize: queryTimeParams?.pageSize ?? 100,
-      properties: {}
+      properties: {
+        result: ''
+      }
     }
     const results = await this.timeSeriesDataSource.queryData(query)
     return Ok(results)

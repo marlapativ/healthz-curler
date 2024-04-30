@@ -39,6 +39,9 @@ export class InfluxDBDataSource implements ITimeSeriesDataSource {
   async queryData<T>(request: IQueryableTimeSeriesData): Promise<T[]> {
     const page = request.page ? request.page : 1
     const pageSize = request.pageSize ? request.pageSize : 100
+    const queryProperties = Object.keys(request.properties).map(
+      (key) => `|> filter(fn: (r) => r["_field"] == "${key}")`
+    )
     const query = `from(bucket: "${this.bucket}")
       |> range(start: ${request.startTime!.getTime()}, stop: ${request.endTime!.getTime()})
       |> filter(fn: (r) => r["implementation"] == "${this.implementation}")
@@ -46,6 +49,7 @@ export class InfluxDBDataSource implements ITimeSeriesDataSource {
       |> filter(fn: (r) => r["_measurement"] == "${request.name}")
       |> filter(fn: (r) => r["id"] == "${request.id}")
       |> filter(fn: (r) => r["type"] == "${request.type}")
+      ${queryProperties}
       |> sort(columns: ["_time"], desc: true)
       |> limit(n: ${pageSize}, offset: ${(page - 1) * pageSize})`
     const result = []

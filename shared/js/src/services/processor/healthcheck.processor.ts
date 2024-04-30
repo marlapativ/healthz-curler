@@ -59,6 +59,7 @@ export class HealthCheckProcessor implements IHealthCheckProcessor {
           id: healthCheck.id,
           name: healthCheck.name,
           type: this.type,
+          timestamp: executionResult.ok ? executionResult.value.timestamp : new Date(),
           properties: result
         })
 
