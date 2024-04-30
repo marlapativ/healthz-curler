@@ -22,7 +22,9 @@ func main() {
 	router.SetupRoutes(app)
 
 	// Start server
-	var url = fmt.Sprintf("%s:%s", config.GetEnv("SERVER_HOST", ""), config.GetEnv("SERVER_PORT", "4225"))
+	var host = config.GetEnv("SERVER_HOST", "")
+	var port = config.GetEnv("SERVER_PORT", "4225")
+	var url = fmt.Sprintf("%s:%s", host, port)
 
 	err := app.Listen(url)
 	if err != nil {
