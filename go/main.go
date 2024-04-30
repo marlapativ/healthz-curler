@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"server/config"
+	"server/env"
 	"server/middleware"
 	"server/router"
 
@@ -22,8 +23,8 @@ func main() {
 	router.SetupRoutes(app)
 
 	// Start server
-	var host = config.GetEnv("SERVER_HOST", "")
-	var port = config.GetEnv("SERVER_PORT", "4225")
+	var host = env.GetEnv("SERVER_HOST", "")
+	var port = env.GetEnv("SERVER_PORT", "4225")
 	var url = fmt.Sprintf("%s:%s", host, port)
 
 	err := app.Listen(url)
