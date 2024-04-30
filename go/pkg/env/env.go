@@ -16,7 +16,6 @@ func GetOrDefault(key string, defaultValue string) string {
 }
 
 func SetupEnv() {
-	viper.SetDefault("ContentDir", "configs")
 	viper.SetConfigName(".env")
 	viper.SetConfigType("env")
 	viper.AddConfigPath("configs")

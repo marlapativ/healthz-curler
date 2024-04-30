@@ -3,7 +3,7 @@ package router
 import (
 	"github.com/marlpativ/healthz-curler/cmd/server/controllers"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 )
 
 func SetupRoutes(a *fiber.App) {

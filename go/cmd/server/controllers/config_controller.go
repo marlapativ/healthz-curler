@@ -4,10 +4,10 @@ import (
 	"github.com/marlpativ/healthz-curler/cmd/server/models"
 	"github.com/marlpativ/healthz-curler/pkg/env"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 )
 
-func GetConfig(c fiber.Ctx) error {
+func GetConfig(c *fiber.Ctx) error {
 	var port = env.GetOrDefault("SERVER_PORT", "4225")
 	var config models.AppConfig = models.AppConfig{
 		ID:         "go-fiber",

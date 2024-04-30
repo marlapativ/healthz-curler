@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"fmt"
@@ -6,12 +6,13 @@ import (
 
 	"github.com/marlpativ/healthz-curler/cmd/server/middleware"
 	"github.com/marlpativ/healthz-curler/cmd/server/router"
+	"github.com/marlpativ/healthz-curler/cmd/server/websocket"
 	"github.com/marlpativ/healthz-curler/pkg/env"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 )
 
-func main() {
+func Run() {
 	// Setup environment variables
 	env.SetupEnv()
 
@@ -21,6 +22,9 @@ func main() {
 
 	// Create a new Fiber instance
 	app := fiber.New(fiberConfig)
+
+	// Setup Websocket
+	websocket.SetupWebsocket(app)
 
 	// Setup middlewares
 	middleware.SetupMiddleware(app)
