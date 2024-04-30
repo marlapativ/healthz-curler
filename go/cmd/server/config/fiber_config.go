@@ -1,7 +1,7 @@
 package config
 
 import (
-	"server/env"
+	"github.com/marlpativ/healthz-curler/pkg/env"
 
 	"github.com/gofiber/fiber/v3"
 )

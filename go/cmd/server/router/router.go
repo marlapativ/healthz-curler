@@ -1,7 +1,7 @@
 package router
 
 import (
-	"server/controllers"
+	"github.com/marlpativ/healthz-curler/cmd/server/controllers"
 
 	"github.com/gofiber/fiber/v3"
 )

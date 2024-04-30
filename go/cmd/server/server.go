@@ -3,10 +3,11 @@ package main
 import (
 	"fmt"
 	"log"
-	"server/config"
-	"server/env"
-	"server/middleware"
-	"server/router"
+
+	"github.com/marlpativ/healthz-curler/cmd/server/config"
+	"github.com/marlpativ/healthz-curler/cmd/server/middleware"
+	"github.com/marlpativ/healthz-curler/cmd/server/router"
+	"github.com/marlpativ/healthz-curler/pkg/env"
 
 	"github.com/gofiber/fiber/v3"
 )

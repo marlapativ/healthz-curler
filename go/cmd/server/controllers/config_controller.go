@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"server/env"
-	"server/models"
+	"github.com/marlpativ/healthz-curler/cmd/server/models"
+	"github.com/marlpativ/healthz-curler/pkg/env"
 
 	"github.com/gofiber/fiber/v3"
 )

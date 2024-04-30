@@ -23,3 +23,4 @@ go.work
 # Environment variables file
 .env
 .env.*
+!.env.example
