@@ -11,7 +11,7 @@ type WebsocketConfig struct {
 	Port string `json:"port"`
 }
 
-type Config struct {
+type AppConfig struct {
 	ID         string            `json:"id"`
 	Runtime    string            `json:"runtime"`
 	APIVersion string            `json:"apiVersion"`

@@ -7,7 +7,7 @@ import (
 )
 
 func FiberConfig() fiber.Config {
-	appName := env.GetEnv("APP_NAME", "Healthz-curler Go")
+	appName := env.GetOrDefault("APP_NAME", "Healthz-curler Go")
 
 	return fiber.Config{
 		AppName: appName,

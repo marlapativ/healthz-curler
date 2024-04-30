@@ -1,11 +1,24 @@
 package env
 
-import "os"
+import (
+	"log"
+	"os"
 
-func GetEnv(key string, defaultValue string) string {
+	"github.com/joho/godotenv"
+)
+
+func GetOrDefault(key string, defaultValue string) string {
 	value := os.Getenv(key)
 	if value == "" {
 		return defaultValue
 	}
 	return value
+}
+
+func SetupEnv() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+		panic(err)
+	}
 }

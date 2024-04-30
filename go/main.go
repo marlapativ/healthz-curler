@@ -12,6 +12,9 @@ import (
 )
 
 func main() {
+	// Setup environment variables
+	env.SetupEnv()
+
 	// Create a new Fiber instance
 	fiberConfig := config.FiberConfig()
 	app := fiber.New(fiberConfig)
@@ -23,8 +26,8 @@ func main() {
 	router.SetupRoutes(app)
 
 	// Start server
-	var host = env.GetEnv("SERVER_HOST", "")
-	var port = env.GetEnv("SERVER_PORT", "4225")
+	var host = env.GetOrDefault("SERVER_HOST", "")
+	var port = env.GetOrDefault("SERVER_PORT", "4225")
 	var url = fmt.Sprintf("%s:%s", host, port)
 
 	err := app.Listen(url)

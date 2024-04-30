@@ -8,8 +8,8 @@ import (
 )
 
 func GetConfig(c fiber.Ctx) error {
-	var port = env.GetEnv("SERVER_PORT", "4225")
-	var config models.Config = models.Config{
+	var port = env.GetOrDefault("SERVER_PORT", "4225")
+	var config models.AppConfig = models.AppConfig{
 		ID:         "go-fiber",
 		Runtime:    "go",
 		APIVersion: "v1",
