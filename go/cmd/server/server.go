@@ -7,6 +7,7 @@ import (
 	"github.com/marlpativ/healthz-curler/cmd/server/middleware"
 	"github.com/marlpativ/healthz-curler/cmd/server/router"
 	"github.com/marlpativ/healthz-curler/cmd/server/websocket"
+	"github.com/marlpativ/healthz-curler/internal/handlers"
 	"github.com/marlpativ/healthz-curler/pkg/env"
 
 	"github.com/gofiber/fiber/v2"
@@ -24,7 +25,8 @@ func Run() {
 	app := fiber.New(fiberConfig)
 
 	// Setup Websocket
-	websocket.SetupWebsocket(app)
+	webSocketHandler := handlers.NewWebSocketHandler()
+	websocket.SetupWebsocket(app, webSocketHandler)
 
 	// Setup middlewares
 	middleware.SetupMiddleware(app)

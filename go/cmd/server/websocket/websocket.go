@@ -1,28 +1,39 @@
 package websocket
 
 import (
+	"encoding/json"
 	"log"
 
 	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
+	"github.com/marlpativ/healthz-curler/cmd/server/models"
+	"github.com/marlpativ/healthz-curler/internal/handlers"
 )
 
-func SetupWebsocket(app *fiber.App) {
+func SetupWebsocket(app *fiber.App, webSocketHandler *handlers.WebSocketHandler) {
 	app.Use("/ws", websocket.New(func(c *websocket.Conn) {
-		// Websocket logic
 		for {
-			mtype, msg, err := c.ReadMessage()
+			_, msg, err := c.ReadMessage()
 			if err != nil {
+				log.Println("Error reading message:", err)
 				break
 			}
-			log.Printf("Read: %s", msg)
 
-			err = c.WriteMessage(mtype, msg)
-			if err != nil {
+			var message models.WebSocketMessage
+			err = json.Unmarshal(msg, &message)
+			if err != nil || message.Type == "" || message.Channel == "" {
+				log.Println("Error unmarshalling/Invalid data passed: ", err)
 				break
 			}
+
+			switch message.Type {
+			case models.Subscribe:
+				webSocketHandler.Subscribe(message.Channel, c)
+			case models.Unsubscribe:
+				webSocketHandler.Unsubscribe(message.Channel, c)
+			}
+
+			webSocketHandler.Publish(message.Channel, []byte(message.Type))
 		}
-		log.Println("Error:")
 	}))
-
 }
