@@ -70,7 +70,7 @@ func (s *healthCheckService) Create(healthCheck models.HealthCheck) (models.Heal
 		return models.HealthCheck{}, err
 	}
 
-	_, err = s.dataSource.Set(s.getKeyName(healthCheck.Name), string(value))
+	_, err = s.dataSource.Set(s.getKeyName(healthCheck.Name), value)
 	if err != nil {
 		return models.HealthCheck{}, err
 	}
@@ -83,7 +83,7 @@ func (s *healthCheckService) Update(id string, healthCheck models.HealthCheck) (
 		return models.HealthCheck{}, err
 	}
 
-	_, err = s.dataSource.Set(s.getKeyName(id), string(value))
+	_, err = s.dataSource.Set(s.getKeyName(id), value)
 	if err != nil {
 		return models.HealthCheck{}, err
 	}

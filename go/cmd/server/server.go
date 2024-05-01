@@ -7,6 +7,7 @@ import (
 	"github.com/marlpativ/healthz-curler/cmd/server/container"
 	"github.com/marlpativ/healthz-curler/cmd/server/middleware"
 	"github.com/marlpativ/healthz-curler/cmd/server/router"
+	seed "github.com/marlpativ/healthz-curler/migrations"
 	"github.com/marlpativ/healthz-curler/pkg/env"
 
 	"github.com/gofiber/fiber/v2"
@@ -22,6 +23,9 @@ func Run() {
 
 	// Setup Container
 	container := container.NewContainer()
+
+	// Seed the database
+	seed.Seed(container.DataSource)
 
 	// Create a new Fiber instance
 	app := fiber.New(fiberConfig)

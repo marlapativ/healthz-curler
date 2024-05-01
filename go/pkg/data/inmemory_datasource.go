@@ -3,12 +3,12 @@ package data
 import "errors"
 
 type inmemoryDataSource struct {
-	store map[string]string
+	store map[string][]byte
 }
 
 func NewInMemoryDataSource() DataSource {
 	return &inmemoryDataSource{
-		store: make(map[string]string),
+		store: make(map[string][]byte),
 	}
 }
 
@@ -19,16 +19,16 @@ func (r *inmemoryDataSource) Has(key string) (bool, error) {
 	return ok, nil
 }
 
-func (r *inmemoryDataSource) Get(key string) (string, error) {
+func (r *inmemoryDataSource) Get(key string) ([]byte, error) {
 	value, ok := r.store[key]
 	if !ok {
-		return "", errors.New("key not found")
+		return nil, errors.New("key not found")
 	}
 	return value, nil
 }
 
-func (r *inmemoryDataSource) GetAll(prefix string) ([]string, error) {
-	values := []string{}
+func (r *inmemoryDataSource) GetAll(prefix string) ([][]byte, error) {
+	values := [][]byte{}
 	for key, value := range r.store {
 		if key[:len(prefix)] == prefix {
 			values = append(values, value)
@@ -37,15 +37,15 @@ func (r *inmemoryDataSource) GetAll(prefix string) ([]string, error) {
 	return values, nil
 }
 
-func (r *inmemoryDataSource) Set(key string, value string) (string, error) {
+func (r *inmemoryDataSource) Set(key string, value []byte) ([]byte, error) {
 	r.store[key] = value
 	return value, nil
 }
 
-func (r *inmemoryDataSource) Delete(key string) (string, error) {
+func (r *inmemoryDataSource) Delete(key string) ([]byte, error) {
 	value, ok := r.store[key]
 	if !ok {
-		return "", errors.New("key not found")
+		return nil, errors.New("key not found")
 	}
 	delete(r.store, key)
 	return value, nil
