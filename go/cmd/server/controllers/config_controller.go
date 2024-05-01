@@ -27,3 +27,8 @@ func GetConfig(c *fiber.Ctx) error {
 	}
 	return c.Status(fiber.StatusOK).JSON(config)
 }
+
+func SetupConfigRoute(app fiber.Router) {
+	configRouter := app.Group("/config")
+	configRouter.Get("/", GetConfig)
+}

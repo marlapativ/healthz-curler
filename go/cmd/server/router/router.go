@@ -22,5 +22,6 @@ func SetupRoutes(a *fiber.App, container *container.Container) {
 	setContext(a, container)
 
 	apiRoute := a.Group("/api/v1")
-	apiRoute.Get("/config", controllers.GetConfig)
+	controllers.SetupConfigRoute(apiRoute)
+	controllers.SetupHealthCheckRoute(apiRoute)
 }
