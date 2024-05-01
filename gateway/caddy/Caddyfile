@@ -5,7 +5,7 @@ localhost {
         "node"           "localhost:4215"
         "node-socket.io" "localhost:4216"
         "go"             "localhost:4225"
-        default "localhost:4205"
+        default          "localhost:4225"
     }
 
     reverse_proxy {backend}
