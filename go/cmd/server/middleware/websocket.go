@@ -1,4 +1,4 @@
-package websocket
+package middleware
 
 import (
 	"encoding/json"
@@ -32,8 +32,6 @@ func SetupWebsocket(app *fiber.App, webSocketHandler *handlers.WebSocketHandler)
 			case models.Unsubscribe:
 				webSocketHandler.Unsubscribe(message.Channel, c)
 			}
-
-			webSocketHandler.Publish(message.Channel, []byte(message.Type))
 		}
 	}))
 }
