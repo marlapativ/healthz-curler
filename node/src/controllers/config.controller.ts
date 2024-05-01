@@ -33,12 +33,12 @@ const getConfig = async (_: Request, res: Response) => {
     },
     websocket: [
       {
-        name: 'websocket',
+        name: 'node',
         path: '/ws',
         port
       },
       {
-        name: 'socket.io',
+        name: 'node-socket.io',
         path: '/socket.io',
         port: socketIOPort
       }
