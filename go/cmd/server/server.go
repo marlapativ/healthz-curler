@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/marlpativ/healthz-curler/cmd/server/container"
 	"github.com/marlpativ/healthz-curler/cmd/server/middleware"
 	"github.com/marlpativ/healthz-curler/cmd/server/router"
-	"github.com/marlpativ/healthz-curler/internal/handlers"
 	"github.com/marlpativ/healthz-curler/pkg/env"
 
 	"github.com/gofiber/fiber/v2"
@@ -20,18 +20,20 @@ func Run() {
 	appName := env.GetOrDefault("APP_NAME", "Healthz-curler Go")
 	fiberConfig := fiber.Config{AppName: appName}
 
+	// Setup Container
+	container := container.NewContainer()
+
 	// Create a new Fiber instance
 	app := fiber.New(fiberConfig)
 
 	// Setup Websocket
-	webSocketHandler := handlers.NewWebSocketHandler()
-	middleware.SetupWebsocket(app, webSocketHandler)
+	middleware.SetupWebsocket(app, container.WebSocketHandler)
 
 	// Setup middlewares
 	middleware.SetupMiddleware(app)
 
 	// Setup routes
-	router.SetupRoutes(app)
+	router.SetupRoutes(app, container)
 
 	// Start server
 	var host = env.GetOrDefault("SERVER_HOST", "")

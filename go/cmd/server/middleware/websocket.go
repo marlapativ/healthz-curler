@@ -10,7 +10,7 @@ import (
 	"github.com/marlpativ/healthz-curler/internal/handlers"
 )
 
-func SetupWebsocket(app *fiber.App, webSocketHandler *handlers.WebSocketHandler) {
+func SetupWebsocket(app *fiber.App, webSocketHandler handlers.WebSocketHandler) {
 	app.Use("/ws", websocket.New(func(c *websocket.Conn) {
 		for {
 			_, msg, err := c.ReadMessage()
