@@ -19,7 +19,7 @@ func GetConfig(c *fiber.Ctx) error {
 		},
 		Websocket: []models.WebsocketConfig{
 			{
-				Name: "websocket",
+				Name: "go",
 				Path: "/ws",
 				Port: port,
 			},
