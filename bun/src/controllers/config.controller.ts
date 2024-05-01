@@ -33,12 +33,12 @@ const getConfig = async (): Promise<Config> => {
     },
     websocket: [
       {
-        name: 'websocket',
+        name: 'bun',
         path: '/ws',
         port
       },
       {
-        name: 'socket.io',
+        name: 'bun-socket.io',
         path: '/socket.io',
         port: env.getOrDefault('SOCKETIO_PORT', '4206')
       }
