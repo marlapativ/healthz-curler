@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "preinstall": "cd ../shared/js && npm link",
-    "prebuild": "NODE_ENV=production npm i --prefix ../shared/js",
+    "prebuild": "npm i --prefix ../shared/js",
     "build": "NODE_ENV=production webpack",
     "postbuild": "cp -r package* dist/ && NODE_ENV=production npm i --omit=dev --prefix dist --ignore-scripts"
   },
