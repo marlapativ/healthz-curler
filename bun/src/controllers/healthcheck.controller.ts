@@ -92,7 +92,7 @@ const healthCheckRouter = () => {
     }))
     .get<'/', any, any, any>('/', getAll, {
       type: 'application/json',
-      response: 'healthCheck',
+      response: 'healthChecks',
       detail: {
         summary: 'Get all health checks',
         description: 'Returns a list of all health checks',
