@@ -1,8 +1,10 @@
 package server
 
 import (
+	"errors"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/marlpativ/healthz-curler/cmd/server/container"
 	"github.com/marlpativ/healthz-curler/cmd/server/middleware"
@@ -19,7 +21,10 @@ func Run(envFile string) {
 	if envFile == "" {
 		envFile = "configs/.env"
 	}
-	env.SetupEnv(envFile)
+
+	if _, err := os.Stat(envFile); !errors.Is(err, os.ErrNotExist) {
+		env.SetupEnv(envFile)
+	}
 
 	// Setup Fiber config
 	appName := env.GetOrDefault("APP_NAME", "Healthz-curler Go")
