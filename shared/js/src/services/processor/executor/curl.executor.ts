@@ -1,4 +1,4 @@
-import { random } from 'lodash'
+import random from 'lodash.random'
 import { Ok } from '../../../utils/result.util'
 import { HealthCheck } from '../../healthcheck/healthcheck'
 import { HealthCheckExecutionResult, IHealthCheckExecutor } from './executor'
