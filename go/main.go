@@ -1,7 +1,15 @@
 package main
 
-import "github.com/marlpativ/healthz-curler/cmd/server"
+import (
+	"os"
+
+	"github.com/marlpativ/healthz-curler/cmd/server"
+)
 
 func main() {
-	server.Run()
+	var configFile = ""
+	if len(os.Args) > 1 {
+		configFile = os.Args[1]
+	}
+	server.Run(configFile)
 }

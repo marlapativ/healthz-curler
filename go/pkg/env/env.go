@@ -15,10 +15,9 @@ func GetOrDefault(key string, defaultValue string) string {
 	return value
 }
 
-func SetupEnv() {
-	viper.SetConfigName(".env")
+func SetupEnv(configFile string) {
+	viper.SetConfigFile(configFile)
 	viper.SetConfigType("env")
-	viper.AddConfigPath("configs")
 	err := viper.ReadInConfig()
 	if err != nil {
 		log.Println(err)

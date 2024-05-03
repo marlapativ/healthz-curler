@@ -13,9 +13,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func Run() {
+func Run(envFile string) {
+
 	// Setup environment variables
-	env.SetupEnv()
+	if envFile == "" {
+		envFile = "configs/.env"
+	}
+	env.SetupEnv(envFile)
 
 	// Setup Fiber config
 	appName := env.GetOrDefault("APP_NAME", "Healthz-curler Go")
