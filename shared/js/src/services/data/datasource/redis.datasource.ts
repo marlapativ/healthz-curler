@@ -1,4 +1,4 @@
-import { RedisClientType, createClient } from 'redis'
+import { RedisClientType, createClient } from '@redis/client'
 import { IDataSource } from './datasource'
 import env from '../../../utils/env.util'
 import validator from '../../../utils/validator.util'

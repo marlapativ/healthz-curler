@@ -173,7 +173,3 @@ dist
 
 # Finder (MacOS) folder config
 .DS_Store
-
-# Not committing lock files
-*.lockb
-*-lock.json
