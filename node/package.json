@@ -2,10 +2,11 @@
   "name": "healthz-curler",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "preinstall": "cd ../shared/js && npm link",
-    "prebuild": "npm i --prefix ../shared/js",
+    "link": "cd ../shared/js && npm link",
+    "prebuild": "npm run link && echo $NODE_ENV && npm i --prefix ../shared/js",
     "build": "NODE_ENV=production webpack",
-    "postbuild": "cp -r package* dist/ && NODE_ENV=production npm i --omit=dev --prefix dist --ignore-scripts"
+    "postbuild": "cp -r package* dist/ && npm run postbuild-install",
+    "postbuild-install": "NODE_ENV=production npm i --ignore-scripts --prefix dist"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
@@ -37,6 +38,7 @@
     "healthz-curler-shared-js": "file:../shared/js",
     "socket.io": "^4.7.5",
     "swagger-ui-express": "^5.0.0",
+    "yallist": "4.0.0",
     "ws": "^8.16.0"
   }
 }
