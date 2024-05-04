@@ -2,7 +2,7 @@ package data
 
 import "time"
 
-type TimeseriesData struct {
+type TimeSeriesData struct {
 	Id         string
 	Name       string
 	Type       string
@@ -18,11 +18,11 @@ type QueryableTimeParams struct {
 }
 
 type QueryableTimeSeriesData struct {
-	TimeseriesData
+	TimeSeriesData
 	QueryableTimeParams
 }
 
-type TimeseriesDatasource interface {
+type TimeSeriesDataSource interface {
+	WritePoint(point TimeSeriesData) error
 	QueryData(query QueryableTimeSeriesData) ([]any, error)
-	WritePoint(point TimeseriesData) error
 }

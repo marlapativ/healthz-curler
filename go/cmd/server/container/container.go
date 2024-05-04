@@ -4,6 +4,7 @@ import (
 	"github.com/marlpativ/healthz-curler/internal/handlers"
 	services "github.com/marlpativ/healthz-curler/internal/services/healthcheck"
 	"github.com/marlpativ/healthz-curler/pkg/data"
+	"github.com/marlpativ/healthz-curler/pkg/data/datasource"
 )
 
 type Container struct {
@@ -13,7 +14,7 @@ type Container struct {
 }
 
 func NewContainer() *Container {
-	dataSource := data.NewInMemoryDataSource()
+	dataSource := datasource.NewInMemoryDataSource()
 	webSocketHandler := handlers.NewWebSocketHandler()
 	healthCheckService := services.NewHealthCheckService(dataSource)
 

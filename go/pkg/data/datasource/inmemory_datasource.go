@@ -1,12 +1,16 @@
-package data
+package datasource
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/marlpativ/healthz-curler/pkg/data"
+)
 
 type inmemoryDataSource struct {
 	store map[string][]byte
 }
 
-func NewInMemoryDataSource() DataSource {
+func NewInMemoryDataSource() data.DataSource {
 	return &inmemoryDataSource{
 		store: make(map[string][]byte),
 	}
