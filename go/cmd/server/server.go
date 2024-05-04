@@ -23,6 +23,7 @@ func Run(envFile string) {
 	}
 
 	if _, err := os.Stat(envFile); !errors.Is(err, os.ErrNotExist) {
+		log.Printf("Loading environment variables from %s", envFile)
 		env.SetupEnv(envFile)
 	}
 
