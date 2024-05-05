@@ -1,4 +1,4 @@
-package services
+package socket
 
 import (
 	"github.com/gofiber/contrib/websocket"

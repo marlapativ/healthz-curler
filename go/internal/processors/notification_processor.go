@@ -1,6 +1,6 @@
 package processors
 
-import executors "github.com/marlpativ/healthz-curler/internal/executors/notification"
+import "github.com/marlpativ/healthz-curler/internal/processors/executors"
 
 type NotificationProcessor interface {
 	Notify(notificationType string, notification interface{}) error

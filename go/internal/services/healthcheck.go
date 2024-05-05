@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/marlpativ/healthz-curler/cmd/server/models"
+	"github.com/marlpativ/healthz-curler/internal/processors"
 	"github.com/marlpativ/healthz-curler/pkg/data"
 )
 
@@ -17,14 +18,16 @@ type HealthCheckService interface {
 }
 
 type healthCheckService struct {
-	dataSource data.DataSource
-	prefix     string
+	prefix               string
+	dataSource           data.DataSource
+	healthCheckProcessor processors.HealthCheckProcessor
 }
 
-func NewHealthCheckService(dataSource data.DataSource) HealthCheckService {
+func NewHealthCheckService(dataSource data.DataSource, healthCheckProcessor processors.HealthCheckProcessor) HealthCheckService {
 	return &healthCheckService{
-		dataSource: dataSource,
-		prefix:     "healthcheck",
+		prefix:               "healthcheck",
+		dataSource:           dataSource,
+		healthCheckProcessor: healthCheckProcessor,
 	}
 }
 

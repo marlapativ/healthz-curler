@@ -3,7 +3,7 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/marlpativ/healthz-curler/cmd/server/container"
-	services "github.com/marlpativ/healthz-curler/internal/services/healthcheck"
+	"github.com/marlpativ/healthz-curler/internal/services"
 )
 
 func getHealthCheckService(c *fiber.Ctx) services.HealthCheckService {

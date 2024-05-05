@@ -1,12 +1,12 @@
 package executors
 
-import services "github.com/marlpativ/healthz-curler/internal/services/socket"
+import "github.com/marlpativ/healthz-curler/internal/socket"
 
 type socketNotificationExecutor struct {
-	publishers []services.SocketPublisher
+	publishers []socket.SocketPublisher
 }
 
-func NewSocketNotificationExecutor(publishers []services.SocketPublisher) NotificationExecutor {
+func NewSocketNotificationExecutor(publishers []socket.SocketPublisher) NotificationExecutor {
 	return &socketNotificationExecutor{
 		publishers: publishers,
 	}
