@@ -1,9 +1,9 @@
-package processor
+package processors
 
 import executors "github.com/marlpativ/healthz-curler/internal/executors/notification"
 
 type NotificationProcessor interface {
-	notify(notificationType string, notification interface{}) error
+	Notify(notificationType string, notification interface{}) error
 }
 
 type notificationProcessor struct {
@@ -11,10 +11,12 @@ type notificationProcessor struct {
 }
 
 func NewNotificationProcessor(notificationExecutors []executors.NotificationExecutor) NotificationProcessor {
-	return &notificationProcessor{notificationExecutors: notificationExecutors}
+	return &notificationProcessor{
+		notificationExecutors: notificationExecutors,
+	}
 }
 
-func (n *notificationProcessor) notify(notificationType string, notification interface{}) error {
+func (n *notificationProcessor) Notify(notificationType string, notification interface{}) error {
 	for _, executor := range n.notificationExecutors {
 		executor.Execute(notificationType, notification)
 	}

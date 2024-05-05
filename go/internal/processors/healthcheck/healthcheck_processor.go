@@ -2,6 +2,7 @@ package processors
 
 import (
 	"github.com/marlpativ/healthz-curler/cmd/server/models"
+	processors "github.com/marlpativ/healthz-curler/internal/processors/notification"
 	"github.com/marlpativ/healthz-curler/pkg/data"
 )
 
@@ -13,16 +14,17 @@ type HealthCheckProcessor interface {
 }
 
 type healthCheckProcessor struct {
-	timeSeriesType       string
-	healthChecks         []models.HealthCheck
-	timeSeriesDataSource data.TimeSeriesDataSource
+	timeSeriesType        string
+	healthChecks          []models.HealthCheck
+	timeSeriesDataSource  data.TimeSeriesDataSource
+	notificationProcessor processors.NotificationProcessor
 }
 
-// TODO: Notification Processor
-func NewHealthCheckProcessor(timeSeriesDataSource data.TimeSeriesDataSource) HealthCheckProcessor {
+func NewHealthCheckProcessor(timeSeriesDataSource data.TimeSeriesDataSource, notificationProcessor processors.NotificationProcessor) HealthCheckProcessor {
 	return &healthCheckProcessor{
-		timeSeriesType:       "HealthCheck",
-		timeSeriesDataSource: timeSeriesDataSource,
+		timeSeriesType:        "HealthCheck",
+		timeSeriesDataSource:  timeSeriesDataSource,
+		notificationProcessor: notificationProcessor,
 	}
 }
 
