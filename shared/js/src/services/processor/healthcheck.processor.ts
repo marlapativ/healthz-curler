@@ -30,7 +30,7 @@ export class HealthCheckProcessor implements IHealthCheckProcessor {
   }
 
   async update(healthCheck: HealthCheck): Promise<void> {
-    this.delete(healthCheck)
+    await this.delete(healthCheck)
     return this.add(healthCheck)
   }
 
