@@ -1,11 +1,18 @@
-localhost {
+{$DOMAIN:localhost} {
+    vars {
+        bun           {$BUN_SERVER:`localhost:4205`}
+        bun_socketio  {$BUN_SOCKETIO_SERVER:`localhost:4206`}
+        node          {$NODE_SERVER:`localhost:4215`}
+        node_socketio {$NODE_SOCKETIO_SERVER:`localhost:4216`}
+        go            {$GO_SERVER:`localhost:4225`}
+    }
     map {http.request.header.Server} {backend} {
-        "bun"            "localhost:4205"
-        "bun-socket.io"  "localhost:4206"
-        "node"           "localhost:4215"
-        "node-socket.io" "localhost:4216"
-        "go"             "localhost:4225"
-        default          "localhost:4225"
+        "bun"            {vars.bun}
+        "bun-socket.io"  {vars.bun_socketio}
+        "node"           {vars.node}
+        "node-socket.io" {vars.node_socketio}
+        "go"             {vars.go}
+        default          {vars.go}
     }
 
     reverse_proxy {backend}
