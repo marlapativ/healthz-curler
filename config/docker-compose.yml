@@ -41,8 +41,15 @@ services:
     ports:
       - '80:80'
       - '443:443'
+    environment:
+      DOMAIN: localhost
+      BUN_SERVER: bun:4205
+      BUN_SOCKETIO_SERVER: bun:4206
+      NODE_SERVER: node:4215
+      NODE_SOCKETIO_SERVER: node:4216
+      GO_SERVER: go:4225
     volumes:
-      - ../gateway/caddy/Caddyfile:/Caddyfile
+      - ../gateway/caddy/Caddyfile:/etc/caddy/Caddyfile
 
   node:
     build:
