@@ -3,18 +3,18 @@ package data
 import "time"
 
 type TimeSeriesData struct {
-	Id         string
-	Name       string
-	Type       string
-	Timestamp  time.Time
-	Properties map[string]interface{}
+	Id         string                 `json:"id"`
+	Name       string                 `json:"name"`
+	Type       string                 `json:"type"`
+	Timestamp  time.Time              `json:"timestamp"`
+	Properties map[string]interface{} `json:"properties"`
 }
 
 type QueryableTimeParams struct {
-	StartTime time.Time
-	EndTime   time.Time
-	PageSize  int
-	Page      int
+	StartTime time.Time `json:"startTime"`
+	EndTime   time.Time `json:"endTime"`
+	PageSize  int       `json:"pageSize"`
+	Page      int       `json:"page"`
 }
 
 type QueryableTimeSeriesData struct {
@@ -23,6 +23,6 @@ type QueryableTimeSeriesData struct {
 }
 
 type TimeSeriesDataSource interface {
-	WritePoint(point TimeSeriesData) error
+	WritePoint(point TimeSeriesData)
 	QueryData(query QueryableTimeSeriesData) ([]any, error)
 }
