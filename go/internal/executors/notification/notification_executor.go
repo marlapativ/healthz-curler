@@ -1,5 +1,5 @@
 package executors
 
 type NotificationExecutor interface {
-	Execute(noticiationType string, notification interface{})
+	Execute(notificationType string, notification interface{})
 }
