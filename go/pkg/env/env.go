@@ -2,17 +2,15 @@ package env
 
 import (
 	"log"
-	"os"
 
 	"github.com/spf13/viper"
 )
 
 func GetOrDefault(key string, defaultValue string) string {
-	value := os.Getenv(key)
-	if value == "" {
-		return defaultValue
+	if viper.IsSet(key) {
+		return viper.GetString(key)
 	}
-	return value
+	return defaultValue
 }
 
 func SetupEnv(configFile string) {

@@ -18,17 +18,17 @@ type SocketService interface {
 	SocketMessageHandler
 }
 
-type websocketPublisher struct {
+type websocketService struct {
 	rooms map[string]map[*websocket.Conn]bool
 }
 
 func NewWebSocketService() SocketService {
-	return &websocketPublisher{
+	return &websocketService{
 		rooms: make(map[string]map[*websocket.Conn]bool),
 	}
 }
 
-func (w *websocketPublisher) getRoom(channel string) map[*websocket.Conn]bool {
+func (w *websocketService) getRoom(channel string) map[*websocket.Conn]bool {
 	if w.rooms[channel] == nil {
 		w.rooms[channel] = make(map[*websocket.Conn]bool)
 	}
@@ -36,7 +36,7 @@ func (w *websocketPublisher) getRoom(channel string) map[*websocket.Conn]bool {
 	return w.rooms[channel]
 }
 
-func (w *websocketPublisher) Publish(channel string, message interface{}) error {
+func (w *websocketService) Publish(channel string, message interface{}) error {
 	subscribers := w.getRoom(channel)
 	for conn := range subscribers {
 		err := conn.WriteJSON(message)
@@ -47,11 +47,25 @@ func (w *websocketPublisher) Publish(channel string, message interface{}) error 
 	return nil
 }
 
-func (w *websocketPublisher) HandleMessage(ws websocket.Conn, message models.WebSocketMessage) {
+func (w *websocketService) HandleMessage(ws websocket.Conn, message models.WebSocketMessage) {
 	switch message.Type {
 	case models.Subscribe:
-		w.getRoom(message.Channel)[&ws] = true
+		w.subscribe(message.Channel, &ws)
 	case models.Unsubscribe:
-		delete(w.getRoom(message.Channel), &ws)
+		w.unsubscribe(message.Channel, &ws)
 	}
+}
+
+func (webSocketService *websocketService) subscribe(channel string, c *websocket.Conn) {
+	if webSocketService.rooms[channel] == nil {
+		webSocketService.rooms[channel] = make(map[*websocket.Conn]bool)
+	}
+	webSocketService.rooms[channel][c] = true
+}
+
+func (webSocketService *websocketService) unsubscribe(channel string, c *websocket.Conn) {
+	if webSocketService.rooms[channel] == nil {
+		return
+	}
+	delete(webSocketService.rooms[channel], c)
 }

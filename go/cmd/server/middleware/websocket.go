@@ -7,10 +7,10 @@ import (
 	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
 	"github.com/marlpativ/healthz-curler/cmd/server/models"
-	"github.com/marlpativ/healthz-curler/internal/handlers"
+	"github.com/marlpativ/healthz-curler/internal/socket"
 )
 
-func SetupWebsocket(app *fiber.App, webSocketHandler handlers.WebSocketHandler) {
+func SetupWebsocket(app *fiber.App, webSocketHandler socket.SocketMessageHandler) {
 	app.Use("/ws", websocket.New(func(c *websocket.Conn) {
 		for {
 			_, msg, err := c.ReadMessage()
@@ -26,12 +26,7 @@ func SetupWebsocket(app *fiber.App, webSocketHandler handlers.WebSocketHandler) 
 				break
 			}
 
-			switch message.Type {
-			case models.Subscribe:
-				webSocketHandler.Subscribe(message.Channel, c)
-			case models.Unsubscribe:
-				webSocketHandler.Unsubscribe(message.Channel, c)
-			}
+			webSocketHandler.HandleMessage(*c, message)
 		}
 	}))
 }
