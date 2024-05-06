@@ -2,7 +2,7 @@ package socket
 
 import (
 	"github.com/gofiber/contrib/websocket"
-	"github.com/marlpativ/healthz-curler/cmd/server/models"
+	"github.com/marlpativ/healthz-curler/internal/models"
 )
 
 type SocketPublisher interface {

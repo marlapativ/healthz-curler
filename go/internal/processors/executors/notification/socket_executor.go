@@ -1,6 +1,7 @@
 package executors
 
 import (
+	"github.com/marlpativ/healthz-curler/internal/models"
 	"github.com/marlpativ/healthz-curler/internal/processors/executors"
 	"github.com/marlpativ/healthz-curler/internal/socket"
 )
@@ -15,7 +16,7 @@ func NewSocketNotificationExecutor(publishers []socket.SocketPublisher) executor
 	}
 }
 
-func (s *socketNotificationExecutor) Execute(notificationType string, notification interface{}) {
+func (s *socketNotificationExecutor) Execute(notificationType string, notification models.Notification) {
 	for _, publisher := range s.publishers {
 		publisher.Publish(notificationType, notification)
 	}

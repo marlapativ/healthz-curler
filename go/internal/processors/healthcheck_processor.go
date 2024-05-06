@@ -1,10 +1,11 @@
 package processors
 
 import (
+	"fmt"
 	"log"
 	"time"
 
-	"github.com/marlpativ/healthz-curler/cmd/server/models"
+	"github.com/marlpativ/healthz-curler/internal/models"
 	"github.com/marlpativ/healthz-curler/pkg/data"
 	"github.com/marlpativ/healthz-curler/pkg/util"
 )
@@ -43,6 +44,11 @@ func (p *healthCheckProcessor) Add(healthCheck models.HealthCheck) {
 	p.timeouts[healthCheck.Id] = util.SetInterval(func() {
 		log.Printf("Executing HealthCheckProcessor: %s", healthCheck.Id)
 		// const executionResult = await executor.execute()
+		var notification models.Notification = models.Notification{
+			Id:      healthCheck.Id,
+			Message: healthCheck,
+		}
+		p.notificationProcessor.Notify(fmt.Sprintf("HealthCheckProcessor: %s", healthCheck.Id), notification)
 		log.Printf("Execution complete HealthCheckProcessor: %s", healthCheck.Id)
 	}, time.Duration(healthCheck.Interval*int(time.Millisecond)))
 }

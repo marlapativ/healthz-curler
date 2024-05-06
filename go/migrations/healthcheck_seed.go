@@ -3,7 +3,7 @@ package seed
 import (
 	"encoding/json"
 
-	"github.com/marlpativ/healthz-curler/cmd/server/models"
+	"github.com/marlpativ/healthz-curler/internal/models"
 	"github.com/marlpativ/healthz-curler/pkg/data"
 )
 
