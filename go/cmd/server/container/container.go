@@ -3,6 +3,7 @@ package container
 import (
 	"github.com/marlpativ/healthz-curler/internal/processors"
 	"github.com/marlpativ/healthz-curler/internal/processors/executors"
+	notificationExecutors "github.com/marlpativ/healthz-curler/internal/processors/executors/notification"
 	"github.com/marlpativ/healthz-curler/internal/services"
 	"github.com/marlpativ/healthz-curler/internal/socket"
 	"github.com/marlpativ/healthz-curler/pkg/data"
@@ -23,7 +24,7 @@ func NewContainer() *Container {
 	socketService := socket.NewWebSocketService()
 	publishers := []socket.SocketPublisher{socketService}
 
-	socketNotificationExecutor := executors.NewSocketNotificationExecutor(publishers)
+	socketNotificationExecutor := notificationExecutors.NewSocketNotificationExecutor(publishers)
 	notificationExecutors := []executors.NotificationExecutor{socketNotificationExecutor}
 
 	notificationProcessor := processors.NewNotificationProcessor(notificationExecutors)
