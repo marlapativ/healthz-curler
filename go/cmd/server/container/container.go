@@ -17,8 +17,13 @@ type Container struct {
 	HealthCheckService services.HealthCheckService
 }
 
-func NewContainer() *Container {
-	dataSource := datasource.NewInMemoryDataSource()
+func NewDataSource() data.DataSource {
+	ds := datasource.NewInMemoryDataSource()
+	return ds
+}
+
+func NewContainer(dataSource data.DataSource) *Container {
+
 	timeSeriesDataSource := timeseriesdatasource.NewInfluxDataSource()
 
 	socketService := socket.NewWebSocketService()
@@ -37,4 +42,8 @@ func NewContainer() *Container {
 		WebSocketHandler:   socketService,
 		HealthCheckService: healthCheckService,
 	}
+}
+
+func (c *Container) Init() {
+	c.HealthCheckService.Init()
 }

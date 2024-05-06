@@ -35,7 +35,14 @@ func (s *healthCheckService) getKeyName(name string) string {
 	return s.prefix + ":" + name
 }
 
-func (s *healthCheckService) Init() {}
+func (s *healthCheckService) Init() {
+	healthChecks, err := s.GetAll()
+	if err != nil {
+		return
+	}
+
+	s.healthCheckProcessor.Init(healthChecks)
+}
 
 func (s *healthCheckService) GetAll() ([]models.HealthCheck, error) {
 	values, err := s.dataSource.GetAll(s.prefix)

@@ -14,7 +14,7 @@ func Seed(dataSource data.DataSource) {
 		Description: "Webapp Fetch Health Check",
 		URL:         "http://localhost:8080/healthz",
 		Executor:    models.FETCH,
-		Interval:    60000,
+		Interval:    10000,
 	}
 
 	healthCheck2 := models.HealthCheck{
@@ -23,7 +23,7 @@ func Seed(dataSource data.DataSource) {
 		Description: "Webapp Curl Health Check",
 		URL:         "http://localhost:8080/healthz",
 		Executor:    models.CURL,
-		Interval:    60000,
+		Interval:    10000,
 	}
 
 	// Seed the database

@@ -31,11 +31,15 @@ func Run(envFile string) {
 	appName := env.GetOrDefault("APP_NAME", "Healthz-curler Go")
 	fiberConfig := fiber.Config{AppName: appName}
 
-	// Setup Container
-	container := container.NewContainer()
+	// Setup database
+	dataSource := container.NewDataSource()
 
 	// Seed the database
-	seed.Seed(container.DataSource)
+	seed.Seed(dataSource)
+
+	// Setup Container
+	container := container.NewContainer(dataSource)
+	container.Init()
 
 	// Create a new Fiber instance
 	app := fiber.New(fiberConfig)
