@@ -37,4 +37,5 @@ func SetupRoutes(a *fiber.App, container *container.Container) {
 	apiRoute := a.Group("/api/v1")
 	controllers.SetupConfigRoute(apiRoute)
 	controllers.SetupHealthCheckRoute(apiRoute)
+	controllers.SetupHealthGraphRoute(apiRoute)
 }

@@ -11,10 +11,10 @@ type TimeSeriesData struct {
 }
 
 type QueryableTimeParams struct {
-	StartTime time.Time `json:"startTime"`
-	EndTime   time.Time `json:"endTime"`
-	PageSize  int       `json:"pageSize"`
-	Page      int       `json:"page"`
+	StartTime time.Time `json:"startTime" query:"startTime"`
+	EndTime   time.Time `json:"endTime" query:"endTime"`
+	PageSize  int       `json:"pageSize" query:"pageSize"`
+	Page      int       `json:"page" query:"page"`
 }
 
 type QueryableTimeSeriesData struct {

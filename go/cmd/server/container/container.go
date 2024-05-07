@@ -14,6 +14,7 @@ type Container struct {
 	DataSource         data.DataSource
 	WebSocketHandler   socket.SocketMessageHandler
 	HealthCheckService services.HealthCheckService
+	HealthGraphService services.HealthGraphService
 }
 
 func NewDataSource() data.DataSource {
@@ -22,7 +23,6 @@ func NewDataSource() data.DataSource {
 }
 
 func NewContainer(dataSource data.DataSource) *Container {
-
 	timeSeriesDataSource := timeseriesdatasource.NewInfluxDataSource()
 
 	socketService := socket.NewWebSocketService()
@@ -35,11 +35,13 @@ func NewContainer(dataSource data.DataSource) *Container {
 
 	healthCheckProcessor := processors.NewHealthCheckProcessor(timeSeriesDataSource, notificationProcessor)
 	healthCheckService := services.NewHealthCheckService(dataSource, healthCheckProcessor)
+	healthGraphService := services.NewHealthGraphService(timeSeriesDataSource, healthCheckService)
 
 	return &Container{
 		DataSource:         dataSource,
 		WebSocketHandler:   socketService,
 		HealthCheckService: healthCheckService,
+		HealthGraphService: healthGraphService,
 	}
 }
 
