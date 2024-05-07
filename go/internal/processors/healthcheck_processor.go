@@ -1,7 +1,6 @@
 package processors
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -18,7 +17,7 @@ type HealthCheckProcessor interface {
 }
 
 type healthCheckProcessor struct {
-	timeSeriesType        string
+	notificationType      string
 	timeouts              map[string]chan<- bool
 	timeSeriesDataSource  data.TimeSeriesDataSource
 	notificationProcessor NotificationProcessor
@@ -26,7 +25,7 @@ type healthCheckProcessor struct {
 
 func NewHealthCheckProcessor(timeSeriesDataSource data.TimeSeriesDataSource, notificationProcessor NotificationProcessor) HealthCheckProcessor {
 	return &healthCheckProcessor{
-		timeSeriesType:        "HealthCheck",
+		notificationType:      "HealthCheck",
 		timeouts:              make(map[string]chan<- bool),
 		timeSeriesDataSource:  timeSeriesDataSource,
 		notificationProcessor: notificationProcessor,
@@ -48,7 +47,7 @@ func (p *healthCheckProcessor) Add(healthCheck models.HealthCheck) {
 			Id:      healthCheck.Id,
 			Message: healthCheck,
 		}
-		p.notificationProcessor.Notify(fmt.Sprintf("HealthCheckProcessor: %s", healthCheck.Id), notification)
+		p.notificationProcessor.Notify(p.notificationType, notification)
 		log.Printf("Execution complete HealthCheckProcessor: %s", healthCheck.Id)
 	}, time.Duration(healthCheck.Interval*int(time.Millisecond)))
 }

@@ -53,6 +53,8 @@ func (w *websocketService) HandleMessage(ws websocket.Conn, message models.WebSo
 		w.subscribe(message.Channel, &ws)
 	case models.Unsubscribe:
 		w.unsubscribe(message.Channel, &ws)
+	case models.Disconnect:
+		w.disconnect(&ws)
 	}
 }
 
@@ -68,4 +70,10 @@ func (webSocketService *websocketService) unsubscribe(channel string, c *websock
 		return
 	}
 	delete(webSocketService.rooms[channel], c)
+}
+
+func (webSocketService *websocketService) disconnect(c *websocket.Conn) {
+	for _, room := range webSocketService.rooms {
+		delete(room, c)
+	}
 }

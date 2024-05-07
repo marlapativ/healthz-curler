@@ -17,7 +17,8 @@ func NewSocketNotificationExecutor(publishers []socket.SocketPublisher) executor
 }
 
 func (s *socketNotificationExecutor) Execute(notificationType string, notification models.Notification) {
+	channel := notificationType + ":" + notification.Id
 	for _, publisher := range s.publishers {
-		publisher.Publish(notificationType, notification)
+		publisher.Publish(channel, notification)
 	}
 }

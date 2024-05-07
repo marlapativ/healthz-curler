@@ -15,7 +15,16 @@ func SetupWebsocket(app *fiber.App, webSocketHandler socket.SocketMessageHandler
 		for {
 			_, msg, err := c.ReadMessage()
 			if err != nil {
-				log.Println("Error reading message:", err)
+				if websocket.IsCloseError(err, websocket.CloseNormalClosure, websocket.CloseGoingAway) {
+					log.Println("Connection closed by client")
+					unsub := models.WebSocketMessage{
+						Type:    models.Disconnect,
+						Channel: "",
+					}
+					webSocketHandler.HandleMessage(*c, unsub)
+				} else {
+					log.Println("Error reading message:", err)
+				}
 				break
 			}
 
