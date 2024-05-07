@@ -3,9 +3,8 @@ package models
 type HealthCheckExecutorType string
 
 const (
-	DEFAULT HealthCheckExecutorType = "default"
 	CURL    HealthCheckExecutorType = "curl"
-	FETCH   HealthCheckExecutorType = "fetch"
+	DEFAULT HealthCheckExecutorType = "default"
 )
 
 type HealthCheck struct {

@@ -13,7 +13,7 @@ func Seed(dataSource data.DataSource) {
 		Name:        "webapp-fetch",
 		Description: "Webapp Fetch Health Check",
 		URL:         "http://localhost:8080/healthz",
-		Executor:    models.FETCH,
+		Executor:    models.DEFAULT,
 		Interval:    10000,
 	}
 

@@ -4,6 +4,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/marlpativ/healthz-curler/internal/executors"
 	"github.com/marlpativ/healthz-curler/internal/models"
 	"github.com/marlpativ/healthz-curler/pkg/data"
 	"github.com/marlpativ/healthz-curler/pkg/util"
@@ -39,13 +40,32 @@ func (p *healthCheckProcessor) Init(healthChecks []models.HealthCheck) {
 }
 
 func (p *healthCheckProcessor) Add(healthCheck models.HealthCheck) {
-	// TODO: Implement executor logic
 	p.timeouts[healthCheck.Id] = util.SetInterval(func() {
 		log.Printf("Executing HealthCheckProcessor: %s", healthCheck.Id)
-		// const executionResult = await executor.execute()
+		executor := executors.NewHealthCheckExecutor(healthCheck.Executor)
+		result, err := executor.Execute()
+
+		if err != nil {
+			result = executors.HealthCheckExecutionResult{
+				Result:       false,
+				ErrorMessage: err.Error(),
+				Timestamp:    time.Now(),
+			}
+		}
+
+		point := data.TimeSeriesData{
+			Id:         healthCheck.Id,
+			Name:       healthCheck.Name,
+			Type:       p.notificationType,
+			Timestamp:  result.Timestamp,
+			Properties: result.ToMap(),
+		}
+
+		p.timeSeriesDataSource.WritePoint(point)
+
 		var notification models.Notification = models.Notification{
 			Id:      healthCheck.Id,
-			Message: healthCheck,
+			Message: result,
 		}
 		p.notificationProcessor.Notify(p.notificationType, notification)
 		log.Printf("Execution complete HealthCheckProcessor: %s", healthCheck.Id)
