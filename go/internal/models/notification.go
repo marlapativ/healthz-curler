@@ -1,6 +1,6 @@
 package models
 
 type Notification struct {
-	Id      string
-	Message interface{}
+	Id      string      `json:"id"`
+	Message interface{} `json:"message"`
 }

@@ -2,6 +2,7 @@ package services
 
 import (
 	"encoding/json"
+	"errors"
 
 	"github.com/marlpativ/healthz-curler/internal/models"
 	"github.com/marlpativ/healthz-curler/internal/processors"
@@ -44,6 +45,31 @@ func (s *healthCheckService) Init() {
 	s.healthCheckProcessor.Init(healthChecks)
 }
 
+func (s *healthCheckService) validate(healthCheck models.HealthCheck, isCreate bool) error {
+	if isCreate {
+		if healthCheck.Id != "" {
+			return errors.New("id is not allowed")
+		}
+	} else {
+		if healthCheck.Id == "" {
+			return errors.New("id is required")
+		}
+	}
+	if healthCheck.Name == "" {
+		return errors.New("name is required")
+	}
+	if healthCheck.URL == "" {
+		return errors.New("url is required")
+	}
+	if healthCheck.Interval == 0 {
+		return errors.New("interval is required")
+	}
+	if healthCheck.Interval < 250 {
+		return errors.New("interval must be at least 250ms")
+	}
+	return nil
+}
+
 func (s *healthCheckService) GetAll() ([]models.HealthCheck, error) {
 	values, err := s.dataSource.GetAll(s.prefix)
 	if err != nil {
@@ -75,6 +101,10 @@ func (s *healthCheckService) Get(id string) (models.HealthCheck, error) {
 }
 
 func (s *healthCheckService) Create(healthCheck models.HealthCheck) (models.HealthCheck, error) {
+	if err := s.validate(healthCheck, true); err != nil {
+		return models.HealthCheck{}, err
+	}
+
 	value, err := json.Marshal(healthCheck)
 	if err != nil {
 		return models.HealthCheck{}, err
@@ -88,6 +118,15 @@ func (s *healthCheckService) Create(healthCheck models.HealthCheck) (models.Heal
 }
 
 func (s *healthCheckService) Update(id string, healthCheck models.HealthCheck) (models.HealthCheck, error) {
+	if err := s.validate(healthCheck, false); err != nil {
+		return models.HealthCheck{}, err
+	}
+
+	_, err := s.dataSource.Has(s.getKeyName(id))
+	if err != nil {
+		return models.HealthCheck{}, err
+	}
+
 	value, err := json.Marshal(healthCheck)
 	if err != nil {
 		return models.HealthCheck{}, err

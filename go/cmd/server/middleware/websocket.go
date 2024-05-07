@@ -17,10 +17,7 @@ func SetupWebsocket(app *fiber.App, webSocketHandler socket.SocketMessageHandler
 			if err != nil {
 				if websocket.IsCloseError(err, websocket.CloseNormalClosure, websocket.CloseGoingAway) {
 					log.Println("Connection closed by client")
-					unsub := models.WebSocketMessage{
-						Type:    models.Disconnect,
-						Channel: "",
-					}
+					unsub := models.WebSocketMessage{Type: models.Disconnect}
 					webSocketHandler.HandleMessage(c, unsub)
 				} else {
 					log.Println("Error reading message:", err)
@@ -32,6 +29,8 @@ func SetupWebsocket(app *fiber.App, webSocketHandler socket.SocketMessageHandler
 			err = json.Unmarshal(msg, &message)
 			if err != nil || message.Type == "" || message.Channel == "" {
 				log.Println("Error unmarshalling/Invalid data passed: ", err)
+				unsub := models.WebSocketMessage{Type: models.Disconnect}
+				webSocketHandler.HandleMessage(c, unsub)
 				break
 			}
 
