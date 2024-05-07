@@ -21,7 +21,7 @@ func SetupWebsocket(app *fiber.App, webSocketHandler socket.SocketMessageHandler
 						Type:    models.Disconnect,
 						Channel: "",
 					}
-					webSocketHandler.HandleMessage(*c, unsub)
+					webSocketHandler.HandleMessage(c, unsub)
 				} else {
 					log.Println("Error reading message:", err)
 				}
@@ -35,7 +35,7 @@ func SetupWebsocket(app *fiber.App, webSocketHandler socket.SocketMessageHandler
 				break
 			}
 
-			webSocketHandler.HandleMessage(*c, message)
+			webSocketHandler.HandleMessage(c, message)
 		}
 	}))
 }

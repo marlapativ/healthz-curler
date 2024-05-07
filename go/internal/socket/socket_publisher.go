@@ -10,7 +10,7 @@ type SocketPublisher interface {
 }
 
 type SocketMessageHandler interface {
-	HandleMessage(ws websocket.Conn, message models.WebSocketMessage)
+	HandleMessage(ws *websocket.Conn, message models.WebSocketMessage)
 }
 
 type SocketService interface {
@@ -47,14 +47,14 @@ func (w *websocketService) Publish(channel string, message interface{}) error {
 	return nil
 }
 
-func (w *websocketService) HandleMessage(ws websocket.Conn, message models.WebSocketMessage) {
+func (w *websocketService) HandleMessage(ws *websocket.Conn, message models.WebSocketMessage) {
 	switch message.Type {
 	case models.Subscribe:
-		w.subscribe(message.Channel, &ws)
+		w.subscribe(message.Channel, ws)
 	case models.Unsubscribe:
-		w.unsubscribe(message.Channel, &ws)
+		w.unsubscribe(message.Channel, ws)
 	case models.Disconnect:
-		w.disconnect(&ws)
+		w.disconnect(ws)
 	}
 }
 
