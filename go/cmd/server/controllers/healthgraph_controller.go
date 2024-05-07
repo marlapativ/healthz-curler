@@ -34,6 +34,6 @@ func GetById(c *fiber.Ctx) error {
 }
 
 func SetupHealthGraphRoute(app fiber.Router) {
-	healthCheckRouter := app.Group("/healthgroup")
+	healthCheckRouter := app.Group("/healthgraph")
 	healthCheckRouter.Get("/:id", GetById)
 }

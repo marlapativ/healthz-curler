@@ -105,7 +105,7 @@ func (r *influxDataSource) QueryData(query data.QueryableTimeSeriesData) ([]any,
 	    |> filter(fn: (r) => r["type"] == "%s")
 	    %s
 	    |> sort(columns: ["_time"], desc: true)
-	    |> limit(n: %d, offset: %d`,
+	    |> limit(n: %d, offset: %d)`,
 		r.bucket,
 		start,
 		end,
@@ -120,6 +120,7 @@ func (r *influxDataSource) QueryData(query data.QueryableTimeSeriesData) ([]any,
 	result, err := r.queryAPI.Query(context.Background(), influxQuery)
 	if err != nil || result.Err() != nil {
 		log.Println("Error querying influxdb: ", err)
+		return nil, err
 	}
 
 	records := []any{}
