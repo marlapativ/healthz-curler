@@ -1,0 +1,906 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Healthz-curler API",
+    "description": "Healthz-curler API Documentation",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "config",
+      "description": "Config API"
+    },
+    {
+      "name": "healthcheck",
+      "description": "Healthcheck API"
+    },
+    {
+      "name": "healthgraph",
+      "description": "Healthgraph API"
+    }
+  ],
+  "paths": {
+    "/healthz": {
+      "get": {
+        "operationId": "getHealthz",
+        "tags": [
+          "healthz"
+        ],
+        "responses": {
+          "200": {
+            "description": "Service availability check"
+          }
+        }
+      }
+    },
+    "/api/v1/config/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Server configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "runtime": {
+                      "type": "string"
+                    },
+                    "apiVersion": {
+                      "type": "string"
+                    },
+                    "server": {
+                      "type": "object",
+                      "properties": {
+                        "port": {
+                          "anyOf": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "framework": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "port",
+                        "framework"
+                      ]
+                    },
+                    "websocket": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "path": {
+                            "type": "string"
+                          },
+                          "port": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "string"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "path",
+                          "port"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "runtime",
+                    "apiVersion",
+                    "server",
+                    "websocket"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "operationId": "getApiV1Config",
+        "tags": [
+          "config"
+        ],
+        "summary": "Get the server configuration",
+        "description": "Get the server configuration"
+      }
+    },
+    "/api/v1/healthcheck/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Health checks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      },
+                      "interval": {
+                        "type": "number"
+                      },
+                      "method": {
+                        "type": "string"
+                      },
+                      "expectedResponseCode": {
+                        "type": "number"
+                      },
+                      "timeout": {
+                        "type": "number"
+                      },
+                      "active": {
+                        "type": "boolean"
+                      },
+                      "auth": {
+                        "type": "object",
+                        "properties": {
+                          "username": {
+                            "type": "string"
+                          },
+                          "password": {
+                            "type": "string"
+                          },
+                          "apiKey": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "username",
+                          "password",
+                          "apiKey"
+                        ]
+                      },
+                      "executor": {
+                        "anyOf": [
+                          {
+                            "const": "default",
+                            "type": "string"
+                          },
+                          {
+                            "const": "curl",
+                            "type": "string"
+                          },
+                          {
+                            "const": "fetch",
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "url",
+                      "interval"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "operationId": "getApiV1Healthcheck",
+        "tags": [
+          "healthcheck"
+        ],
+        "summary": "Get all health checks",
+        "description": "Returns a list of all health checks"
+      },
+      "post": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Health check",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "interval": {
+                      "type": "number"
+                    },
+                    "method": {
+                      "type": "string"
+                    },
+                    "expectedResponseCode": {
+                      "type": "number"
+                    },
+                    "timeout": {
+                      "type": "number"
+                    },
+                    "active": {
+                      "type": "boolean"
+                    },
+                    "auth": {
+                      "type": "object",
+                      "properties": {
+                        "username": {
+                          "type": "string"
+                        },
+                        "password": {
+                          "type": "string"
+                        },
+                        "apiKey": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "username",
+                        "password",
+                        "apiKey"
+                      ]
+                    },
+                    "executor": {
+                      "anyOf": [
+                        {
+                          "const": "default",
+                          "type": "string"
+                        },
+                        {
+                          "const": "curl",
+                          "type": "string"
+                        },
+                        {
+                          "const": "fetch",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "url",
+                    "interval"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "operationId": "postApiV1Healthcheck",
+        "tags": [
+          "healthcheck"
+        ],
+        "summary": "Create a health check",
+        "description": "Creates a new health check",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/healthCheck"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/healthcheck/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Health check",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "interval": {
+                      "type": "number"
+                    },
+                    "method": {
+                      "type": "string"
+                    },
+                    "expectedResponseCode": {
+                      "type": "number"
+                    },
+                    "timeout": {
+                      "type": "number"
+                    },
+                    "active": {
+                      "type": "boolean"
+                    },
+                    "auth": {
+                      "type": "object",
+                      "properties": {
+                        "username": {
+                          "type": "string"
+                        },
+                        "password": {
+                          "type": "string"
+                        },
+                        "apiKey": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "username",
+                        "password",
+                        "apiKey"
+                      ]
+                    },
+                    "executor": {
+                      "anyOf": [
+                        {
+                          "const": "default",
+                          "type": "string"
+                        },
+                        {
+                          "const": "curl",
+                          "type": "string"
+                        },
+                        {
+                          "const": "fetch",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "url",
+                    "interval"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "operationId": "getApiV1HealthcheckById",
+        "tags": [
+          "healthcheck"
+        ],
+        "summary": "Get a health check by id",
+        "description": "Returns a health check by id"
+      },
+      "put": {
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Health check",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "interval": {
+                      "type": "number"
+                    },
+                    "method": {
+                      "type": "string"
+                    },
+                    "expectedResponseCode": {
+                      "type": "number"
+                    },
+                    "timeout": {
+                      "type": "number"
+                    },
+                    "active": {
+                      "type": "boolean"
+                    },
+                    "auth": {
+                      "type": "object",
+                      "properties": {
+                        "username": {
+                          "type": "string"
+                        },
+                        "password": {
+                          "type": "string"
+                        },
+                        "apiKey": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "username",
+                        "password",
+                        "apiKey"
+                      ]
+                    },
+                    "executor": {
+                      "anyOf": [
+                        {
+                          "const": "default",
+                          "type": "string"
+                        },
+                        {
+                          "const": "curl",
+                          "type": "string"
+                        },
+                        {
+                          "const": "fetch",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "url",
+                    "interval"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "operationId": "putApiV1HealthcheckById",
+        "tags": [
+          "healthcheck"
+        ],
+        "summary": "Update a health check by id",
+        "description": "Updates a health check by id",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/healthCheck"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Health check",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "interval": {
+                      "type": "number"
+                    },
+                    "method": {
+                      "type": "string"
+                    },
+                    "expectedResponseCode": {
+                      "type": "number"
+                    },
+                    "timeout": {
+                      "type": "number"
+                    },
+                    "active": {
+                      "type": "boolean"
+                    },
+                    "auth": {
+                      "type": "object",
+                      "properties": {
+                        "username": {
+                          "type": "string"
+                        },
+                        "password": {
+                          "type": "string"
+                        },
+                        "apiKey": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "username",
+                        "password",
+                        "apiKey"
+                      ]
+                    },
+                    "executor": {
+                      "anyOf": [
+                        {
+                          "const": "default",
+                          "type": "string"
+                        },
+                        {
+                          "const": "curl",
+                          "type": "string"
+                        },
+                        {
+                          "const": "fetch",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "url",
+                    "interval"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "operationId": "deleteApiV1HealthcheckById",
+        "tags": [
+          "healthcheck"
+        ],
+        "summary": "Delete a health check by id",
+        "description": "Deletes a health check by id"
+      }
+    },
+    "/api/v1/healthgraph/{id}": {
+      "get": {
+        "operationId": "getApiV1HealthgraphById",
+        "tags": [
+          "healthgraph"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {}
+        }
+      }
+    },
+    "/ws": {
+      "$internalws": {
+        "operationId": "$internalwsWs",
+        "responses": {
+          "200": {}
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "config": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "runtime": {
+            "type": "string"
+          },
+          "apiVersion": {
+            "type": "string"
+          },
+          "server": {
+            "type": "object",
+            "properties": {
+              "port": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              },
+              "framework": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "port",
+              "framework"
+            ]
+          },
+          "websocket": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "port": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "path",
+                "port"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "runtime",
+          "apiVersion",
+          "server",
+          "websocket"
+        ]
+      },
+      "healthCheck": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "interval": {
+            "type": "number"
+          },
+          "method": {
+            "type": "string"
+          },
+          "expectedResponseCode": {
+            "type": "number"
+          },
+          "timeout": {
+            "type": "number"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "auth": {
+            "type": "object",
+            "properties": {
+              "username": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "apiKey": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "username",
+              "password",
+              "apiKey"
+            ]
+          },
+          "executor": {
+            "anyOf": [
+              {
+                "const": "default",
+                "type": "string"
+              },
+              {
+                "const": "curl",
+                "type": "string"
+              },
+              {
+                "const": "fetch",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "url",
+          "interval"
+        ]
+      },
+      "healthChecks": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "interval": {
+              "type": "number"
+            },
+            "method": {
+              "type": "string"
+            },
+            "expectedResponseCode": {
+              "type": "number"
+            },
+            "timeout": {
+              "type": "number"
+            },
+            "active": {
+              "type": "boolean"
+            },
+            "auth": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "apiKey": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "username",
+                "password",
+                "apiKey"
+              ]
+            },
+            "executor": {
+              "anyOf": [
+                {
+                  "const": "default",
+                  "type": "string"
+                },
+                {
+                  "const": "curl",
+                  "type": "string"
+                },
+                {
+                  "const": "fetch",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "url",
+            "interval"
+          ]
+        }
+      }
+    }
+  }
+}
