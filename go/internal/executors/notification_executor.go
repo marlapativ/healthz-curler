@@ -2,15 +2,18 @@ package executors
 
 import (
 	"github.com/marlpativ/healthz-curler/internal/models"
-	"github.com/marlpativ/healthz-curler/internal/processors/executors"
 	"github.com/marlpativ/healthz-curler/internal/socket"
 )
+
+type NotificationExecutor interface {
+	Execute(notificationType string, notification models.Notification)
+}
 
 type socketNotificationExecutor struct {
 	publishers []socket.SocketPublisher
 }
 
-func NewSocketNotificationExecutor(publishers []socket.SocketPublisher) executors.NotificationExecutor {
+func NewSocketNotificationExecutor(publishers []socket.SocketPublisher) NotificationExecutor {
 	return &socketNotificationExecutor{
 		publishers: publishers,
 	}

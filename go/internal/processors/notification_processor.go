@@ -1,8 +1,8 @@
 package processors
 
 import (
+	"github.com/marlpativ/healthz-curler/internal/executors"
 	"github.com/marlpativ/healthz-curler/internal/models"
-	"github.com/marlpativ/healthz-curler/internal/processors/executors"
 )
 
 type NotificationProcessor interface {
