@@ -20,15 +20,6 @@ func setContext(a *fiber.App, container *container.Container) {
 }
 
 func SetupRoutes(a *fiber.App, container *container.Container) {
-	a.Get("/swagger.json", func(c *fiber.Ctx) error {
-		err := filesystem.SendFile(c, http.Dir("."), "public/swagger.json")
-		if err != nil {
-			return c.Status(fiber.StatusNotFound).SendString("File not found")
-		}
-
-		return nil
-	})
-	a.Get("/swagger/*", swagger.New(swagger.Config{URL: "/swagger.json"}))
 	a.Get("/healthz", controllers.GetHealthz)
 
 	// Set container in context
@@ -38,4 +29,21 @@ func SetupRoutes(a *fiber.App, container *container.Container) {
 	controllers.SetupConfigRoute(apiRoute)
 	controllers.SetupHealthCheckRoute(apiRoute)
 	controllers.SetupHealthGraphRoute(apiRoute)
+
+	// Swagger
+	a.Get("/swagger.json", handleSwagger)
+	a.Get("/swagger/*", swagger.New(swagger.Config{URL: "/swagger.json"}))
+	a.Get("/", handleSwaggerRedirect)
+}
+
+func handleSwagger(c *fiber.Ctx) error {
+	err := filesystem.SendFile(c, http.Dir("."), "public/swagger.json")
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).SendString("File not found")
+	}
+	return nil
+}
+
+func handleSwaggerRedirect(c *fiber.Ctx) error {
+	return c.Redirect("/swagger/")
 }

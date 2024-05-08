@@ -49,8 +49,8 @@ const startServer = () => {
       })
     )
     .state('container', container)
-    .use(router())
     .use(apiRouter())
+    .use(router())
     .ws('/ws', {
       message: (ws, msg) => {
         const websocket = ws as unknown as ServerWebSocket

@@ -9,6 +9,7 @@ const routes = (server: Application) => {
   server.use('/api/v1/healthcheck', healthCheckRouter)
   server.use('/api/v1/healthgraph', healthGraphRouter)
   server.use('/api/v1/config', configRouter)
+  server.use('/', (_, res) => res.redirect('/swagger/'))
   return server
 }
 

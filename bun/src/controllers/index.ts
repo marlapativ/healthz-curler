@@ -6,7 +6,7 @@ import { HttpStatusError } from 'healthz-curler-shared-js'
 import { healthzRouter } from './healthz.controller'
 
 const router = () => {
-  return new Elysia().use(healthzRouter())
+  return new Elysia().use(healthzRouter()).get('/', ({ set }) => (set.redirect = '/swagger'))
 }
 
 const apiRouter = () => {
