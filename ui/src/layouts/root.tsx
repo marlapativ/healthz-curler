@@ -1,11 +1,13 @@
 import React from 'react'
-import { PageHeader } from '../components/page-header'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 
-export function RootLayout({ children }: React.PropsWithChildren<object>) {
+export function AppLayout({ children }: React.PropsWithChildren<object>) {
   return (
     <div>
-      <PageHeader />
-      {children}
+      <Header />
+      <main className="flex-1">{children}</main>
+      <Footer />
     </div>
   )
 }

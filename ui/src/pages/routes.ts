@@ -1,10 +1,13 @@
 import { NavItem } from '../types/nav'
 
-const routes: NavItem[] = [
-  {
+const config: Record<string, NavItem> = {
+  github: {
     title: 'GitHub',
     href: 'https://github.com/marlapativ/healthz-curler'
   }
-]
+}
 
-export default routes
+const navItems: NavItem[] = Object.values(config)
+
+export { config }
+export { navItems }

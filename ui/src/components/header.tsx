@@ -1,7 +1,7 @@
 import { NavItem } from '@/types/nav'
 import { cn } from '@/lib/utils'
 import { ModeToggle } from '@/components/mode-toggle'
-import routes from '@/pages/routes'
+import { navItems } from '@/pages/routes'
 
 interface NavBarProps {
   items?: NavItem[]
@@ -36,11 +36,11 @@ function NavBar({ items }: NavBarProps) {
   )
 }
 
-export function PageHeader() {
+export function Header() {
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
-        <NavBar items={routes} />
+        <NavBar items={navItems} />
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-1">
             <ModeToggle />
