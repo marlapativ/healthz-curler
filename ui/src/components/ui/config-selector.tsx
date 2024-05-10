@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
-import { fetchApi } from '../lib/env-utils'
-import { Config } from '../types/config'
+import { fetchApi } from '../../lib/env-utils'
+import { Config } from '../../types/config'
 import {
   Select,
   SelectContent,
@@ -10,8 +10,8 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
-import { ConfigContext } from '../context/context'
-import { Flyout } from '../components/flyout'
+import { ConfigContext } from '../../context/context'
+import { Flyout } from '../flyout'
 
 export function ConfigSelector() {
   const [apiConfigurations, setApiConfigurations] = useState<Config[]>([])

@@ -1,6 +1,7 @@
 import { ModeToggle } from '@/components/mode-toggle'
 import { NavBar } from '@/components/ui/navbar'
 import { navItems } from '@/pages/routes'
+import { Config } from './config'
 
 export function Header() {
   return (
@@ -8,7 +9,8 @@ export function Header() {
       <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
         <NavBar items={navItems} />
         <div className="flex flex-1 items-center justify-end space-x-4">
-          <nav className="flex items-center space-x-1">
+          <nav className="flex items-center gap-4">
+            <Config />
             <ModeToggle />
           </nav>
         </div>
