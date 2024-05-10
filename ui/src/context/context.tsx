@@ -2,11 +2,13 @@ import { createContext } from 'react'
 import { Config } from '../types/config'
 
 export type ConfigContextType = {
-  config: Config | null
+  activeConfig: Config | null
+  configurations: Config[]
   setConfig: (config: Config) => void
 }
 
 export const ConfigContext = createContext<ConfigContextType>({
-  config: null,
+  activeConfig: null,
+  configurations: [],
   setConfig: () => {}
 })
