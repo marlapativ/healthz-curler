@@ -1,9 +1,10 @@
 import { useContext, useState } from 'react'
-import { AlertCircle } from 'lucide-react'
+import { AlertCircle, Check, Edit } from 'lucide-react'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { ConfigContext } from '../context/context'
 import { Button } from './ui/button'
 import { ConfigSelector } from './config-selector'
+import { Badge } from './ui/badge'
 
 export function NavConfig() {
   const { activeConfig } = useContext(ConfigContext)
@@ -12,15 +13,16 @@ export function NavConfig() {
 
   return (
     <>
-      <ConfigSelector open={configOpen} onClose={() => setConfigOpen(false)} />
+      <ConfigSelector open={configOpen} onOpenChange={setConfigOpen} />
       <HoverCard openDelay={0} closeDelay={400} open={hoverOpen} onOpenChange={setHoverOpen}>
         <HoverCardTrigger asChild>
           {activeConfig ? (
-            <div className="h-10 flex items-center text-sm font-medium text-muted-foreground">
-              Current Configuration:
-              <span className="pl-1">
-                <b>{activeConfig.runtime?.toUpperCase()}</b>
-              </span>
+            <div className="h-10 flex items-center text-sm font-medium text-muted-foreground gap-1">
+              Configuration:
+              <Badge variant={'outlineActive'}>
+                <Check className="h-4 w-4 mr-1"></Check>
+                ACTIVE
+              </Badge>
             </div>
           ) : (
             <div className="flex items-center text-sm font-medium text-destructive gap-1">
@@ -56,6 +58,9 @@ export function NavConfig() {
           </div>
         </HoverCardContent>
       </HoverCard>
+      <Button size={'xs'} variant={'ghost'} onClick={() => setConfigOpen(true)}>
+        <Edit className="h-4 w-4"></Edit>
+      </Button>
     </>
   )
 }

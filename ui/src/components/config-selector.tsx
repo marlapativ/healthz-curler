@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import {
   Select,
   SelectContent,
@@ -23,22 +23,16 @@ import {
 type ConfigSelectionProps = {
   children?: React.ReactNode
   open?: boolean
-  onClose?: () => void
+  onOpenChange?: (open: boolean) => void
 }
 
-export function ConfigSelector({ children, open, onClose }: ConfigSelectionProps) {
+export function ConfigSelector({ children, open, onOpenChange }: ConfigSelectionProps) {
   const { activeConfig, configurations, setConfig } = useContext(ConfigContext)
   const [selectedConfig, setSelectedConfig] = React.useState<string>(activeConfig?.id || '')
-  const [openDialog, setOpenDialog] = React.useState<boolean>(open || false)
 
-  useEffect(() => {
-    setOpenDialog(open || false)
-  }, [open])
-
-  function save(): void {
+  function save() {
     const updatedConfig = configurations.find((config) => config.id === selectedConfig)
-    setOpenDialog(false)
-    onClose && onClose()
+    onOpenChange?.(false)
     if (updatedConfig && updatedConfig.id !== activeConfig?.id) {
       setConfig(updatedConfig)
     }
@@ -46,7 +40,7 @@ export function ConfigSelector({ children, open, onClose }: ConfigSelectionProps
 
   return (
     <div>
-      <Dialog modal open={openDialog} onOpenChange={setOpenDialog}>
+      <Dialog modal open={open} onOpenChange={onOpenChange}>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent
           onInteractOutside={(e) => {
