@@ -8,15 +8,18 @@ import { ConfigSelector } from './config-selector'
 export function NavConfig() {
   const { activeConfig } = useContext(ConfigContext)
   const [hoverOpen, setHoverOpen] = useState<boolean>(false)
+  const [configOpen, setConfigOpen] = useState<boolean>(false)
+
   return (
     <>
-      <HoverCard openDelay={0} closeDelay={0} open={hoverOpen} onOpenChange={setHoverOpen}>
+      <ConfigSelector open={configOpen} onClose={() => setConfigOpen(false)} />
+      <HoverCard openDelay={0} closeDelay={400} open={hoverOpen} onOpenChange={setHoverOpen}>
         <HoverCardTrigger asChild>
           {activeConfig ? (
-            <div className="flex items-center text-sm font-medium text-muted-foreground">
+            <div className="h-10 flex items-center text-sm font-medium text-muted-foreground">
               Current Configuration:
               <span className="pl-1">
-                <b>{activeConfig.runtime}</b>
+                <b>{activeConfig.runtime?.toUpperCase()}</b>
               </span>
             </div>
           ) : (
@@ -46,11 +49,9 @@ export function NavConfig() {
                   </span>
                 )}
               </div>
-              <ConfigSelector>
-                <Button size="xs" className="text-xs">
-                  {activeConfig ? 'Update Configuration' : 'Select Configuration'}
-                </Button>
-              </ConfigSelector>
+              <Button size="xs" className="text-xs" onClick={() => setConfigOpen(true)}>
+                {activeConfig ? 'Update Configuration' : 'Select Configuration'}
+              </Button>
             </div>
           </div>
         </HoverCardContent>

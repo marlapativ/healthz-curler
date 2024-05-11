@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import {
   Select,
   SelectContent,
@@ -21,19 +21,24 @@ import {
 } from '@/components/ui/dialog'
 
 type ConfigSelectionProps = {
-  children: React.ReactNode
-  onClose?(): void
+  children?: React.ReactNode
+  open?: boolean
+  onClose?: () => void
 }
 
-export function ConfigSelector({ children, onClose }: ConfigSelectionProps) {
+export function ConfigSelector({ children, open, onClose }: ConfigSelectionProps) {
   const { activeConfig, configurations, setConfig } = useContext(ConfigContext)
   const [selectedConfig, setSelectedConfig] = React.useState<string>(activeConfig?.id || '')
-  const [open, setOpen] = React.useState<boolean>(false)
+  const [openDialog, setOpenDialog] = React.useState<boolean>(open || false)
+
+  useEffect(() => {
+    setOpenDialog(open || false)
+  }, [open])
 
   function save(): void {
     const updatedConfig = configurations.find((config) => config.id === selectedConfig)
-    setOpen(false)
-    onClose?.()
+    setOpenDialog(false)
+    onClose && onClose()
     if (updatedConfig && updatedConfig.id !== activeConfig?.id) {
       setConfig(updatedConfig)
     }
@@ -41,7 +46,7 @@ export function ConfigSelector({ children, onClose }: ConfigSelectionProps) {
 
   return (
     <div>
-      <Dialog modal open={open} onOpenChange={setOpen}>
+      <Dialog modal open={openDialog} onOpenChange={setOpenDialog}>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent
           onInteractOutside={(e) => {
