@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from '@/components/theme-provider'
 import { AppLayout } from '@/layouts/root'
 import { Home } from '@/pages/home'
@@ -24,7 +24,7 @@ function App() {
         <ConfigContext.Provider value={{ activeConfig, configurations, setConfig }}>
           <AppLayout>
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route index path="/" element={activeConfig ? <Home /> : <Navigate to={'/config-selector'}></Navigate>} />
               <Route path="/config-selector" element={<ConfigSelector />} />
             </Routes>
           </AppLayout>

@@ -38,7 +38,9 @@ function NoConfig() {
     <>
       <AlertTriangle className="w-20 h-20 text-destructive dark:border-destructive [&>svg]:text-destructive" />
       <p className="text-center text-3xl text-destructive font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1]">
-        Configuration not set!
+        Uh-oh!
+        <br />
+        Configuration: Inactive.
       </p>
       <p className="max-w-[750px] text-center text-md font-bold text-foreground">
         Please select a configuration to proceed ahead.
