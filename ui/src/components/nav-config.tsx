@@ -3,7 +3,7 @@ import { AlertCircle, Check, Edit } from 'lucide-react'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { ConfigContext } from '@/context/context'
 import { Button } from '@/components/ui/button'
-import { ConfigSelector } from '@/components/config-selector-flyout'
+import { ConfigSelectorFlyout } from '@/components/config-selector-flyout'
 import { Badge } from '@/components/ui/badge'
 import { Config } from '../types/config'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
@@ -15,7 +15,7 @@ export function NavConfig() {
 
   return (
     <>
-      <ConfigSelector open={configOpen} onOpenChange={setConfigOpen} />
+      <ConfigSelectorFlyout open={configOpen} onOpenChange={setConfigOpen} />
       <HoverCard openDelay={0} closeDelay={400} open={hoverOpen} onOpenChange={setHoverOpen}>
         <HoverCardTrigger asChild>
           {activeConfig ? (

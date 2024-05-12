@@ -26,7 +26,7 @@ type ConfigSelectionProps = {
   onOpenChange?: (open: boolean) => void
 }
 
-export function ConfigSelector({ children, open, onOpenChange }: ConfigSelectionProps) {
+export function ConfigSelectorFlyout({ children, open, onOpenChange }: ConfigSelectionProps) {
   const { activeConfig, configurations, setConfig } = useContext(ConfigContext)
   const [selectedConfig, setSelectedConfig] = React.useState<string>(activeConfig?.id || '')
 

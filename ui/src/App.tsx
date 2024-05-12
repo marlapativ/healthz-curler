@@ -6,6 +6,7 @@ import { Home } from '@/pages/home'
 import { ConfigContext } from '@/context/context'
 import { Config } from '@/types/config'
 import { fetchApi } from './lib/env-utils'
+import { ConfigSelector } from './pages/config-selector'
 
 function App() {
   const [activeConfig, setConfig] = useState<Config | null>(null)
@@ -24,6 +25,7 @@ function App() {
           <AppLayout>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/config-selector" element={<ConfigSelector />} />
             </Routes>
           </AppLayout>
         </ConfigContext.Provider>
