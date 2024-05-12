@@ -23,7 +23,7 @@ export function ConfigSelector() {
         <Link to="/" className="text-center text-lg font-bold text-foreground">
           <Button
             variant="outline"
-            className="h-20 w-80 text-xl rounded-md px-8 mt-5 border-green-500 text-green-500 hover:bg-green-700"
+            className="h-20 w-80 text-xl rounded-md px-8 mt-5 border-green-500 text-green-500 hover:bg-green-500 dark:hover:bg-green-700 hover:text-primary-foreground"
           >
             Proceed to Home
           </Button>
