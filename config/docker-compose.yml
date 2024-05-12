@@ -31,7 +31,7 @@ services:
       interval: 60s
       timeout: 10s
       retries: 5
-      start_period: 20s
+      start_period: 5s
 
   caddy:
     image: caddy:latest
@@ -48,6 +48,7 @@ services:
       NODE_SERVER: node:4215
       NODE_SOCKETIO_SERVER: node:4216
       GO_SERVER: go:4225
+      UI_SERVER: ui:4200
     volumes:
       - ../gateway/caddy/Caddyfile:/etc/caddy/Caddyfile
 
@@ -98,6 +99,14 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+
+  ui:
+    build:
+      context: ../ui
+      dockerfile: Dockerfile
+    hostname: ui
+    networks:
+      - private
 
 networks:
   private:
