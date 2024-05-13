@@ -1,6 +1,10 @@
 import { NavItem } from '../types/nav'
 
 const config: Record<string, NavItem> = {
+  healthCheck: {
+    title: 'Health Checks',
+    href: '/health-check'
+  },
   configSelector: {
     title: 'Configuration Selector',
     href: '/config-selector'

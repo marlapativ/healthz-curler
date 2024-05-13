@@ -7,6 +7,7 @@ import { ConfigContext } from '@/context/context'
 import { Config } from '@/types/config'
 import { fetchApi } from './lib/env-utils'
 import { ConfigSelector } from './pages/config-selector'
+import { HealthCheck } from './pages/health-check'
 
 function App() {
   const [activeConfig, setConfig] = useState<Config | null>(null)
@@ -26,6 +27,7 @@ function App() {
             <Routes>
               <Route index path="/" element={activeConfig ? <Home /> : <Navigate to={'/config-selector'}></Navigate>} />
               <Route path="/config-selector" element={<ConfigSelector />} />
+              <Route path="/health-check" element={<HealthCheck />} />
             </Routes>
           </AppLayout>
         </ConfigContext.Provider>
