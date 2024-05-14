@@ -15,11 +15,11 @@ export function Loader({ state, errorMessage, children }: LoaderProps) {
   return (
     <>
       {state === LoaderState.LOADING ? (
-        <div className="flex items-center justify-center h-screen">
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        <div className="flex items-center justify-center min-h-80 h-full">
+          <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       ) : state === LoaderState.ERROR ? (
-        <div className="flex items-center justify-center h-screen">
+        <div className="flex items-center justify-center h-full">
           <p className="text-red-500">{errorMessage ?? 'Error!'}</p>
         </div>
       ) : (
