@@ -4,11 +4,16 @@ import { HealthCheck } from '../types/healthcheck'
 import { Loader, LoaderState } from '../components/loader'
 import { fetchApi } from '../lib/env-utils'
 import { Badge } from '../components/ui/badge'
-import { Check, X } from 'lucide-react'
+import { Check, Plus, X } from 'lucide-react'
+import { HealthCheckFlyout } from '../components/healthcheck-flyout'
+import { Button } from '../components/ui/button'
 
 export function HealthCheckList() {
   const [loader, setLoader] = useState(LoaderState.LOADING)
   const [healthChecks, setHealthChecks] = useState<HealthCheck[]>([])
+
+  const [flyoutOpen, setFlyoutOpen] = useState(false)
+  const [selectedHealthCheck, setSelectedHealthCheck] = useState<HealthCheck | undefined>(undefined)
 
   useEffect(() => {
     fetchApi('/api/v1/healthcheck')
@@ -19,20 +24,35 @@ export function HealthCheckList() {
       })
       .catch(() => setLoader(LoaderState.ERROR))
   }, [])
+
+  const showFlyout = (healthCheck?: HealthCheck) => {
+    setSelectedHealthCheck(healthCheck)
+    setFlyoutOpen(true)
+  }
+
   return (
     <section className="mx-auto flex max-w-[980px] flex-col items-center gap-2 md:pb-8 lg:py-2 lg:pb-20">
       <p className="text-center text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1]">
         Health Checks
       </p>
-      <p className="max-w-[750px] text-center text-lg font-light text-foreground"></p>
-
+      <HealthCheckFlyout
+        open={flyoutOpen}
+        onOpenChange={setFlyoutOpen}
+        healthcheck={selectedHealthCheck}
+      ></HealthCheckFlyout>
       <Loader state={loader} errorMessage="Unable to fetch healthchecks!">
+        <div className="flex justify-end w-full">
+          <Button variant={'outline'} className="border-green" onClick={() => showFlyout()}>
+            <Plus className="h-4 w-4 mr-1"></Plus>
+            <p className="text-md font-bold">Add Health Check</p>
+          </Button>
+        </div>
         {healthChecks.map((healthCheck, i) => (
           <Card key={i} className="w-full">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 p-0 px-6 py-2 pb-1 pt-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">{healthCheck.id}</CardTitle>
             </CardHeader>
-            <CardContent className="flex p-0 px-6 pb-2 justify-between	">
+            <CardContent className="flex p-0 px-6 pb-2 justify-between" onClick={() => showFlyout(healthCheck)}>
               <div>
                 <div className="text-2xl font-bold">{healthCheck.name}</div>
                 <p className="text-sm text-muted-foreground">{healthCheck.description}</p>
