@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { HealthCheck } from '../types/healthcheck'
 import { Loader, LoaderState } from '../components/loader'
 import { fetchApi } from '../lib/env-utils'
+import { Badge } from '../components/ui/badge'
+import { Check, X } from 'lucide-react'
 
 export function HealthCheckList() {
   const [loader, setLoader] = useState(LoaderState.LOADING)
@@ -26,13 +28,28 @@ export function HealthCheckList() {
 
       <Loader state={loader} errorMessage="Unable to fetch healthchecks!">
         {healthChecks.map((healthCheck, i) => (
-          <Card key={i}>
+          <Card key={i} className="w-full">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 p-0 px-6 py-2 pb-1 pt-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Backend</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{healthCheck.id}</CardTitle>
             </CardHeader>
-            <CardContent className="p-0 px-6 pb-2">
-              <div className="text-xl font-bold">{healthCheck.id}</div>
-              <p className="text-xs text-muted-foreground">Name: {healthCheck.name}</p>
+            <CardContent className="flex p-0 px-6 pb-2 justify-between	">
+              <div>
+                <div className="text-2xl font-bold">{healthCheck.name}</div>
+                <p className="text-sm text-muted-foreground">{healthCheck.description}</p>
+              </div>
+              <div>
+                {healthCheck.active ? (
+                  <Badge variant={'outlineActive'}>
+                    <Check className="h-4 w-4 mr-1"></Check>
+                    ACTIVE
+                  </Badge>
+                ) : (
+                  <Badge variant={'outlineInactive'}>
+                    <X className="h-4 w-4 mr-1"></X>
+                    INACTIVE
+                  </Badge>
+                )}
+              </div>
             </CardContent>
           </Card>
         ))}

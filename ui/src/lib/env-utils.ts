@@ -70,14 +70,16 @@ const fakeResponse: Record<string, unknown> = {
       name: 'Backend',
       description: 'Backend health check',
       url: '/api/v1/health',
-      interval: 5000
+      interval: 5000,
+      active: true
     },
     {
       id: '2',
       name: 'Frontend',
       description: 'Frontend health check',
       url: '/api/v2/health',
-      interval: 5000
+      interval: 5000,
+      active: false
     }
   ]
 }
@@ -86,7 +88,7 @@ export function fetchApi(path?: string, init?: RequestInit): Promise<Response> {
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     if (path) {
       return new Promise((resolve) => {
-        setTimeout(() => resolve(new Response(JSON.stringify(fakeResponse[path]))), 1000000)
+        setTimeout(() => resolve(new Response(JSON.stringify(fakeResponse[path]))), 1000)
       })
     }
     return Promise.resolve(new Response())

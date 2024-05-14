@@ -7,7 +7,7 @@ import { ConfigContext } from '@/context/context'
 import { Config } from '@/types/config'
 import { fetchApi } from './lib/env-utils'
 import { ConfigSelector } from './pages/config-selector'
-import { HealthCheckList } from './pages/health-check'
+import { HealthCheckList } from './pages/health-check-list'
 
 function App() {
   const [activeConfig, setConfig] = useState<Config | null>(null)
