@@ -63,13 +63,31 @@ const fakeResponse: Record<string, unknown> = {
         }
       ]
     }
+  ],
+  '/api/v1/healthcheck': [
+    {
+      id: '1',
+      name: 'Backend',
+      description: 'Backend health check',
+      url: '/api/v1/health',
+      interval: 5000
+    },
+    {
+      id: '2',
+      name: 'Frontend',
+      description: 'Frontend health check',
+      url: '/api/v2/health',
+      interval: 5000
+    }
   ]
 }
 
 export function fetchApi(path?: string, init?: RequestInit): Promise<Response> {
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     if (path) {
-      return Promise.resolve(new Response(JSON.stringify(fakeResponse[path])))
+      return new Promise((resolve) => {
+        setTimeout(() => resolve(new Response(JSON.stringify(fakeResponse[path]))), 1000000)
+      })
     }
     return Promise.resolve(new Response())
   } else {
