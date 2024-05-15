@@ -28,7 +28,9 @@ export function HealthCheckFlyout({ children, open, onOpenChange, healthcheck }:
     mode: 'onChange'
   })
 
-  function save() {
+  function save(data: HealthCheck) {
+    data.active = Boolean(data.active)
+    console.log(data)
     onOpenChange?.(false)
   }
 
@@ -47,9 +49,9 @@ export function HealthCheckFlyout({ children, open, onOpenChange, healthcheck }:
               {healthcheck ? 'Update ' : 'Add '} health check with your config. Click save when you're done.
             </DialogDescription>
           </DialogHeader>
-          <div className="py-2 flex items-center justify-center">
+          <div className="py-2 flex">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(save)} className="space-y-8">
+              <form onSubmit={form.handleSubmit(save)} className="space-y-8 w-full">
                 <FormField
                   control={form.control}
                   name="name"
@@ -59,7 +61,6 @@ export function HealthCheckFlyout({ children, open, onOpenChange, healthcheck }:
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
-                      <FormDescription>Health check name</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -69,23 +70,60 @@ export function HealthCheckFlyout({ children, open, onOpenChange, healthcheck }:
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Active</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select active status" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="active">Active</SelectItem>
-                          <SelectItem value="inactive">Inactive</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormDescription>Select active status </FormDescription>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+                <div className="flex gap-6">
+                  <FormField
+                    control={form.control}
+                    name="active"
+                    render={({ field }) => (
+                      <FormItem className="w-[50%]">
+                        <FormLabel>Active</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value ? 'true' : 'false'}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select active status" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="true">Active</SelectItem>
+                            <SelectItem value="false">Inactive</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormDescription>Select active status</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="active"
+                    render={({ field }) => (
+                      <FormItem className="w-[50%]">
+                        <FormLabel>Active</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value ? 'true' : 'false'}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select active status" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="true">Active</SelectItem>
+                            <SelectItem value="false">Inactive</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormDescription>Select active status</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 <DialogFooter>
                   <Button type="submit">Save changes</Button>
                 </DialogFooter>

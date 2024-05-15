@@ -48,11 +48,11 @@ export function HealthCheckList() {
           </Button>
         </div>
         {healthChecks.map((healthCheck, i) => (
-          <Card key={i} className="w-full">
+          <Card key={i} className="w-full" onClick={() => showFlyout(healthCheck)}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 p-0 px-6 py-2 pb-1 pt-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">{healthCheck.id}</CardTitle>
             </CardHeader>
-            <CardContent className="flex p-0 px-6 pb-2 justify-between" onClick={() => showFlyout(healthCheck)}>
+            <CardContent className="flex p-0 px-6 pb-2 justify-between">
               <div>
                 <div className="text-2xl font-bold">{healthCheck.name}</div>
                 <p className="text-sm text-muted-foreground">{healthCheck.description}</p>
