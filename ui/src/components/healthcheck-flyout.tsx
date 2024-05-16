@@ -59,7 +59,20 @@ export function HealthCheckFlyout({ children, open, onOpenChange, healthcheck }:
                     <FormItem>
                       <FormLabel>Name</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} placeholder="name" required />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>URL</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="URL" required />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -72,7 +85,7 @@ export function HealthCheckFlyout({ children, open, onOpenChange, healthcheck }:
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} placeholder="Description" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -103,23 +116,13 @@ export function HealthCheckFlyout({ children, open, onOpenChange, healthcheck }:
                   />
                   <FormField
                     control={form.control}
-                    name="active"
+                    name="interval"
                     render={({ field }) => (
                       <FormItem className="w-[50%]">
-                        <FormLabel>Active</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value ? 'true' : 'false'}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select active status" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="true">Active</SelectItem>
-                            <SelectItem value="false">Inactive</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormDescription>Select active status</FormDescription>
-                        <FormMessage />
+                        <FormLabel>Interval(ms)</FormLabel>
+                        <FormControl>
+                          <Input {...field} type="number" required />
+                        </FormControl>
                       </FormItem>
                     )}
                   />
