@@ -69,7 +69,7 @@ const fakeResponse: Record<string, unknown> = {
       id: '1',
       name: 'Backend',
       description: 'Backend health check',
-      url: '/api/v1/health',
+      url: 'http://localhost:8080/api/v1/health',
       interval: 5000,
       active: true
     },
@@ -77,7 +77,7 @@ const fakeResponse: Record<string, unknown> = {
       id: '2',
       name: 'Frontend',
       description: 'Frontend health check',
-      url: '/api/v2/health',
+      url: 'http://localhost:8081/api/v2/health',
       interval: 5000,
       active: false
     }

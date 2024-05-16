@@ -21,13 +21,13 @@ export type HealthCheckResponse = {
 export interface HealthCheck extends Model {
   id: string
   name: string
-  description?: string
   url: string
+  description?: string
+  active?: boolean
   interval: number
   method?: string
   expectedResponseCode?: number
   timeout?: number
-  active?: boolean
   auth?: {
     username: string
     password: string
