@@ -30,6 +30,20 @@ export function HealthCheckList() {
     setFlyoutOpen(true)
   }
 
+  const updateHealthCheck = (healthCheck: HealthCheck) => {
+    if (healthCheck.id) {
+      setHealthChecks((healthChecks) => {
+        const index = healthChecks.findIndex((hc) => hc.id === healthCheck.id)
+        if (index !== -1) {
+          healthChecks[index] = healthCheck
+        } else {
+          healthChecks.push(healthCheck)
+        }
+        return [...healthChecks]
+      })
+    }
+  }
+
   return (
     <section className="mx-auto flex max-w-[980px] flex-col items-center gap-2 md:pb-8 lg:py-2 lg:pb-20">
       <p className="text-center text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1]">
@@ -39,6 +53,7 @@ export function HealthCheckList() {
         open={flyoutOpen}
         onOpenChange={setFlyoutOpen}
         healthcheck={selectedHealthCheck}
+        onHealthCheckChange={updateHealthCheck}
       ></HealthCheckFlyout>
       <Loader state={loader} errorMessage="Unable to fetch healthchecks!">
         <div className="flex justify-end w-full">

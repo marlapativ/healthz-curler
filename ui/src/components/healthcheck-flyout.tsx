@@ -17,12 +17,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { ScrollArea } from './ui/scroll-area'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 import { Label } from './ui/label'
+import { fetchApi } from '../lib/env-utils'
 
 type HealthCheckFlyoutProps = {
   healthcheck?: HealthCheck
   children?: React.ReactNode
   open?: boolean
   onOpenChange?: (open: boolean) => void
+  onHealthCheckChange?: (healthcheck: HealthCheck) => void
 }
 
 function FormLabelWrapper({ label, isRequired }: { label: string; isRequired?: boolean }) {
@@ -42,7 +44,13 @@ const getAuthMode = (healthCheck: HealthCheck | undefined) => {
   return apiKey ? 'apikey' : username ? 'username' : 'none'
 }
 
-export function HealthCheckFlyout({ children, open, onOpenChange, healthcheck }: HealthCheckFlyoutProps) {
+export function HealthCheckFlyout({
+  children,
+  open,
+  onOpenChange,
+  healthcheck,
+  onHealthCheckChange
+}: HealthCheckFlyoutProps) {
   const [authMode, setAuthMode] = React.useState(getAuthMode(healthcheck))
   const form = useForm<HealthCheck>({
     mode: 'onChange'
@@ -69,10 +77,31 @@ export function HealthCheckFlyout({ children, open, onOpenChange, healthcheck }:
     setAuthMode(() => getAuthMode(healthcheck))
   }, [healthcheck, form])
 
+  const saveHealthCheck = async (data: HealthCheck) => {
+    const url = healthcheck ? `/api/healthchecks/${healthcheck.id}` : '/api/healthchecks'
+    const method = healthcheck ? 'PUT' : 'POST'
+    const res = await fetchApi(url, {
+      method,
+      body: JSON.stringify(data)
+    })
+    if (res.ok) {
+      const result = await res.json()
+      return result as Promise<HealthCheck>
+    }
+    throw new Error('Failed to save healthcheck')
+  }
+
   function save(data: HealthCheck) {
     data.active = Boolean(data.active)
     console.log(data)
-    onOpenChange?.(false)
+    saveHealthCheck(data)
+      .then((healthCheck) => {
+        onHealthCheckChange?.(healthCheck)
+        onOpenChange?.(false)
+      })
+      .catch((e) => {
+        console.error(e)
+      })
   }
 
   return (
