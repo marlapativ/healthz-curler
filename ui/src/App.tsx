@@ -27,7 +27,10 @@ function App() {
             <Routes>
               <Route index path="/" element={activeConfig ? <Home /> : <Navigate to={'/config-selector'}></Navigate>} />
               <Route path="/config-selector" element={<ConfigSelector />} />
-              <Route path="/health-check" element={<HealthCheckList />} />
+              <Route
+                path="/health-check"
+                element={activeConfig ? <HealthCheckList /> : <Navigate to={'/config-selector'}></Navigate>}
+              />
             </Routes>
           </AppLayout>
         </ConfigContext.Provider>
