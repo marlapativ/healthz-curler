@@ -34,7 +34,16 @@ function FormLabelWrapper({ label, isRequired }: { label: string; isRequired?: b
   )
 }
 
+const getAuthMode = (healthCheck: HealthCheck | undefined) => {
+  const auth = healthCheck?.auth
+  if (!auth) return 'none'
+  const apiKey = auth?.apiKey
+  const username = auth?.username
+  return apiKey ? 'apikey' : username ? 'username' : 'none'
+}
+
 export function HealthCheckFlyout({ children, open, onOpenChange, healthcheck }: HealthCheckFlyoutProps) {
+  const [authMode, setAuthMode] = React.useState(getAuthMode(healthcheck))
   const form = useForm<HealthCheck>({
     mode: 'onChange'
   })
@@ -57,6 +66,7 @@ export function HealthCheckFlyout({ children, open, onOpenChange, healthcheck }:
       }
     }
     form.reset(newHc)
+    setAuthMode(() => getAuthMode(healthcheck))
   }, [healthcheck, form])
 
   function save(data: HealthCheck) {
@@ -98,19 +108,6 @@ export function HealthCheckFlyout({ children, open, onOpenChange, healthcheck }:
                 />
                 <FormField
                   control={form.control}
-                  name="url"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabelWrapper label="URL" isRequired />
-                      <FormControl>
-                        <Input {...field} placeholder="URL" required />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
                   name="description"
                   render={({ field }) => (
                     <FormItem>
@@ -122,13 +119,26 @@ export function HealthCheckFlyout({ children, open, onOpenChange, healthcheck }:
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={form.control}
+                  name="url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabelWrapper label="URL" isRequired />
+                      <FormControl>
+                        <Input {...field} placeholder="URL" required />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <div className="flex gap-6">
                   <FormField
                     control={form.control}
                     name="active"
                     render={({ field }) => (
                       <FormItem className="w-6/12">
-                        <FormLabelWrapper label="Active" />
+                        <FormLabelWrapper label="Active" isRequired />
                         <Select onValueChange={field.onChange} defaultValue={field.value ? 'true' : 'false'}>
                           <FormControl>
                             <SelectTrigger>
@@ -188,7 +198,7 @@ export function HealthCheckFlyout({ children, open, onOpenChange, healthcheck }:
                       <FormItem className="w-4/12">
                         <FormLabelWrapper label="Expected Response code" />
                         <FormControl>
-                          <Input {...field} type="number" required />
+                          <Input {...field} type="number" />
                         </FormControl>
                       </FormItem>
                     )}
@@ -200,40 +210,78 @@ export function HealthCheckFlyout({ children, open, onOpenChange, healthcheck }:
                       <FormItem className="w-4/12">
                         <FormLabelWrapper label="Timeout(ms)" />
                         <FormControl>
-                          <Input {...field} type="number" required />
+                          <Input {...field} type="number" />
                         </FormControl>
                       </FormItem>
                     )}
                   />
                 </div>
-                {healthcheck?.auth ? (
-                  <div className="flex gap-6">
+                <FormItem className="">
+                  <FormLabelWrapper label="Authentication Mode" />
+                  <FormControl>
+                    <RadioGroup
+                      className="flex px-1"
+                      onValueChange={setAuthMode}
+                      value={authMode}
+                      defaultValue={authMode}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="none" id="radio-none" />
+                        <Label htmlFor="radio-none">None</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="username" id="radio-username" />
+                        <Label htmlFor="radio-username">Username</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="apikey" id="radio-apikey" />
+                        <Label htmlFor="radio-apikey">API Key</Label>
+                      </div>
+                    </RadioGroup>
+                  </FormControl>
+                </FormItem>
+                {authMode !== 'none' ? (
+                  authMode === 'apikey' ? (
                     <FormField
                       control={form.control}
-                      name="auth.username"
+                      name="auth.apiKey"
                       render={({ field }) => (
-                        <FormItem className="w-[50%]">
-                          <FormLabelWrapper label="Username" />
-
+                        <FormItem>
+                          <FormLabelWrapper label="API Key" />
                           <FormControl>
                             <Input {...field} />
                           </FormControl>
                         </FormItem>
                       )}
                     />
-                    <FormField
-                      control={form.control}
-                      name="auth.password"
-                      render={({ field }) => (
-                        <FormItem className="w-[50%]">
-                          <FormLabelWrapper label="Password" />
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                  ) : (
+                    <div className="flex gap-6">
+                      <FormField
+                        control={form.control}
+                        name="auth.username"
+                        render={({ field }) => (
+                          <FormItem className="w-[50%]">
+                            <FormLabelWrapper label="Username" />
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="auth.password"
+                        render={({ field }) => (
+                          <FormItem className="w-[50%]">
+                            <FormLabelWrapper label="Password" />
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  )
                 ) : (
                   <></>
                 )}
