@@ -13,13 +13,13 @@ import (
 	"time"
 )
 
+const IS_DEV = false
 const ENV_SERVER_PREFIX = "SERVER_"
 const DEFAULT_TIMEOUT = 10 * time.Second
 
 func main() {
 
-	initEnv(true) // Dev
-	// initEnv(false) // Prod
+	initEnv(IS_DEV)
 
 	http.DefaultClient.Timeout = DEFAULT_TIMEOUT
 	port := os.Getenv("SERVER_PORT")
@@ -31,6 +31,8 @@ func main() {
 	server := &http.Server{
 		Addr: ":" + port,
 	}
+
+	log.Println("Starting server on port: ", port)
 
 	if err := server.ListenAndServe(); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
