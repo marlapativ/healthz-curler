@@ -1,11 +1,11 @@
 {$DOMAIN:localhost} {
     vars {
-        bun           {$BUN_SERVER:`localhost:4205`}
-        bun_socketio  {$BUN_SOCKETIO_SERVER:`localhost:4206`}
-        node          {$NODE_SERVER:`localhost:4215`}
-        node_socketio {$NODE_SOCKETIO_SERVER:`localhost:4216`}
-        go            {$GO_SERVER:`localhost:4225`}
-        ui            {$UI_SERVER:`localhost:4200`}
+        bun           {$SERVER_BUN:`localhost:4205`}
+        bun_socketio  {$WS_SOCKETIO_BUN:`localhost:4206`}
+        node          {$SERVER_NODE:`localhost:4215`}
+        node_socketio {$WS_SOCKETIO_NODE:`localhost:4216`}
+        go            {$SERVER_GO:`localhost:4225`}
+        ui            {$SERVER_UI:`localhost:4200`}
     }
 
     map {http.request.header.Server} {backend} {

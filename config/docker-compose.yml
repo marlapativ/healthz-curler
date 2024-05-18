@@ -43,12 +43,12 @@ services:
       - '443:443'
     environment:
       DOMAIN: localhost
-      BUN_SERVER: bun:4205
-      BUN_SOCKETIO_SERVER: bun:4206
-      NODE_SERVER: node:4215
-      NODE_SOCKETIO_SERVER: node:4216
-      GO_SERVER: go:4225
-      UI_SERVER: ui:4200
+      SERVER_BUN: bun:4205
+      WS_SOCKETIO_BUN: bun:4206
+      SERVER_NODE: node:4215
+      WS_SOCKETIO_NODE: node:4216
+      SERVER_GO: go:4225
+      SERVER_UI: ui:4200
     volumes:
       - ../gateway/caddy/Caddyfile:/etc/caddy/Caddyfile
 
