@@ -5,7 +5,7 @@
         node          {$SERVER_NODE:`localhost:4215`}
         node_socketio {$WS_SOCKETIO_NODE:`localhost:4216`}
         go            {$SERVER_GO:`localhost:4225`}
-        ui            {$SERVER_UI:`localhost:4200`}
+        ui            {$UI_SERVER:`localhost:4200`}
     }
 
     map {http.request.header.Server} {backend} {

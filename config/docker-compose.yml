@@ -34,7 +34,9 @@ services:
       start_period: 5s
 
   caddy:
-    image: caddy:latest
+    build:
+      context: ../gateway
+      dockerfile: Dockerfile
     hostname: caddy
     networks:
       - private
@@ -48,7 +50,7 @@ services:
       SERVER_NODE: node:4215
       WS_SOCKETIO_NODE: node:4216
       SERVER_GO: go:4225
-      SERVER_UI: ui:4200
+      UI_SERVER: ui:4200
     volumes:
       - ../gateway/caddy/Caddyfile:/etc/caddy/Caddyfile
 
