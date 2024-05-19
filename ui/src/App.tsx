@@ -16,6 +16,7 @@ function App() {
   useEffect(() => {
     fetchApi('/api/v1/config/aggregate')
       .then((res) => res.json())
+      .then((data) => Object.values<Config>(data))
       .then((data) => setConfigurations(data))
   }, [])
 

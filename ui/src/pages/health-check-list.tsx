@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { HealthCheck } from '../types/healthcheck'
 import { Loader, LoaderState } from '../components/loader'
@@ -7,8 +7,10 @@ import { Badge } from '../components/ui/badge'
 import { Check, Plus, X } from 'lucide-react'
 import { HealthCheckFlyout } from '../components/healthcheck-flyout'
 import { Button } from '../components/ui/button'
+import { ConfigContext } from '../context/context'
 
 export function HealthCheckList() {
+  const { activeConfig } = useContext(ConfigContext)
   const [loader, setLoader] = useState(LoaderState.LOADING)
   const [healthChecks, setHealthChecks] = useState<HealthCheck[]>([])
 
@@ -16,21 +18,45 @@ export function HealthCheckList() {
   const [selectedHealthCheck, setSelectedHealthCheck] = useState<HealthCheck | undefined>(undefined)
 
   useEffect(() => {
-    fetchApi('/api/v1/healthcheck')
+    fetchApi('/api/v1/healthcheck', {
+      headers: {
+        'Content-Type': 'application/json',
+        server: activeConfig!.runtime
+      }
+    })
       .then((res) => res.json())
       .then((data) => {
         setHealthChecks(data)
         setLoader(LoaderState.SUCCESS)
       })
       .catch(() => setLoader(LoaderState.ERROR))
-  }, [])
+  }, [activeConfig])
 
   const showFlyout = (healthCheck?: HealthCheck) => {
     setSelectedHealthCheck(healthCheck)
     setFlyoutOpen(true)
   }
 
-  const updateHealthCheck = (healthCheck: HealthCheck) => {
+  const saveHealthCheck = async (healthcheck: HealthCheck) => {
+    const url = healthcheck ? `/api/healthchecks/${healthcheck.id}` : '/api/healthchecks'
+    const method = healthcheck ? 'PUT' : 'POST'
+    const res = await fetchApi(url, {
+      method,
+      body: JSON.stringify(healthcheck),
+      headers: {
+        'Content-Type': 'application/json',
+        server: activeConfig!.runtime
+      }
+    })
+    if (res.ok) {
+      const result = await res.json()
+      updateHealthCheckState(result)
+      return result as Promise<HealthCheck>
+    }
+    throw new Error('Failed to save healthcheck')
+  }
+
+  const updateHealthCheckState = (healthCheck: HealthCheck) => {
     if (healthCheck.id) {
       setHealthChecks((healthChecks) => {
         const index = healthChecks.findIndex((hc) => hc.id === healthCheck.id)
@@ -53,7 +79,7 @@ export function HealthCheckList() {
         open={flyoutOpen}
         onOpenChange={setFlyoutOpen}
         healthcheck={selectedHealthCheck}
-        onHealthCheckChange={updateHealthCheck}
+        onHealthCheckSave={saveHealthCheck}
       ></HealthCheckFlyout>
       <Loader state={loader} errorMessage="Unable to fetch healthchecks!">
         <div className="flex justify-end w-full">

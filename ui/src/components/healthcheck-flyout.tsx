@@ -17,14 +17,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { ScrollArea } from './ui/scroll-area'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 import { Label } from './ui/label'
-import { fetchApi } from '../lib/env-utils'
 
 type HealthCheckFlyoutProps = {
   healthcheck?: HealthCheck
   children?: React.ReactNode
   open?: boolean
   onOpenChange?: (open: boolean) => void
-  onHealthCheckChange?: (healthcheck: HealthCheck) => void
+  onHealthCheckSave: (healthcheck: HealthCheck) => Promise<HealthCheck>
 }
 
 function FormLabelWrapper({ label, isRequired }: { label: string; isRequired?: boolean }) {
@@ -49,7 +48,7 @@ export function HealthCheckFlyout({
   open,
   onOpenChange,
   healthcheck,
-  onHealthCheckChange
+  onHealthCheckSave
 }: HealthCheckFlyoutProps) {
   const [authMode, setAuthMode] = React.useState(getAuthMode(healthcheck))
   const form = useForm<HealthCheck>({
@@ -77,30 +76,18 @@ export function HealthCheckFlyout({
     setAuthMode(() => getAuthMode(healthcheck))
   }, [healthcheck, form])
 
-  const saveHealthCheck = async (data: HealthCheck) => {
-    const url = healthcheck ? `/api/healthchecks/${healthcheck.id}` : '/api/healthchecks'
-    const method = healthcheck ? 'PUT' : 'POST'
-    const res = await fetchApi(url, {
-      method,
-      body: JSON.stringify(data)
-    })
-    if (res.ok) {
-      const result = await res.json()
-      return result as Promise<HealthCheck>
-    }
-    throw new Error('Failed to save healthcheck')
-  }
-
   function save(data: HealthCheck) {
+    // Handle data manipulation
     data.active = Boolean(data.active)
-    console.log(data)
-    saveHealthCheck(data)
-      .then((healthCheck) => {
-        onHealthCheckChange?.(healthCheck)
+
+    // Trigger parent save function
+    onHealthCheckSave(data)
+      .then(() => {
         onOpenChange?.(false)
       })
       .catch((e) => {
         console.error(e)
+        // TODO: Show toast
       })
   }
 

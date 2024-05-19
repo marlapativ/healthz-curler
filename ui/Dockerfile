@@ -9,8 +9,8 @@ RUN npm run build
 
 # Host
 FROM node:alpine
-WORKDIR /app
-COPY --from=builder /app/dist .
 RUN npm install -g serve
 EXPOSE 4200
+WORKDIR /app
+COPY --from=builder /app/dist .
 CMD ["serve", "-s", ".", "-l", "4200"]
