@@ -25,6 +25,12 @@ WORKDIR /app
 COPY --from=builder /app/aggregator .
 EXPOSE 2020
 
+## Script
+RUN echo -e "\
+#!/bin/bash \n\
+caddy run --config /etc/caddy/Caddyfile --adapter caddyfile & \n\
+/app/aggregator && fg \
+" > entrypoint.sh
+
 ## Run Caddy and Aggregator
-RUN ["caddy", "start", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
-CMD ["/app/aggregator"]
+CMD ["sh", "entrypoint.sh"]
