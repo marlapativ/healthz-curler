@@ -6,6 +6,7 @@
         node_socketio {$WS_SOCKETIO_NODE:`localhost:4216`}
         go            {$SERVER_GO:`localhost:4225`}
         ui            {$UI_SERVER:`localhost:4200`}
+        aggregate     localhost:2020
     }
 
     map {http.request.header.Server} {backend} {
@@ -15,6 +16,14 @@
         "node-socket.io" {vars.node_socketio}
         "go"             {vars.go}
         default          {vars.ui}
+    }
+
+    @aggregate {
+        path */aggregate
+    }
+
+    handle @aggregate {
+        reverse_proxy {vars.aggregate}
     }
 
     reverse_proxy {backend}
