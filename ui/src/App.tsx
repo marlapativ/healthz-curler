@@ -14,7 +14,7 @@ function App() {
   const [configurations, setConfigurations] = useState<Config[]>([])
 
   useEffect(() => {
-    fetchApi('/api/v1/config')
+    fetchApi('/api/v1/config/aggregate')
       .then((res) => res.json())
       .then((data) => setConfigurations(data))
   }, [])

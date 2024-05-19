@@ -1,6 +1,7 @@
-export const getApiUrl = (path?: string) => {
-  const apiUrl = 'https://localhost:3000/api/v1'
-  return `${apiUrl}${path}`
+const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'https://localhost'
+
+const getApiUrl = (path?: string) => {
+  return `${SERVER_URL}${path}`
 }
 
 const fakeResponse: Record<string, unknown> = {
