@@ -16,13 +16,10 @@ import (
 )
 
 func Run(envFile string) {
-
-	// Setup environment variables
 	if envFile == "" {
-		envFile = "configs/.env"
-	}
-
-	if _, err := os.Stat(envFile); !errors.Is(err, os.ErrNotExist) {
+		log.Printf("No Config Passed. Loading environment variables.")
+		env.SetupEnv("")
+	} else if _, err := os.Stat(envFile); !errors.Is(err, os.ErrNotExist) {
 		log.Printf("Loading environment variables from %s", envFile)
 		env.SetupEnv(envFile)
 	}

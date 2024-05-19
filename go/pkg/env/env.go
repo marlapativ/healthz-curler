@@ -14,11 +14,16 @@ func GetOrDefault(key string, defaultValue string) string {
 }
 
 func SetupEnv(configFile string) {
-	viper.SetConfigFile(configFile)
-	viper.SetConfigType("env")
-	err := viper.ReadInConfig()
-	if err != nil {
-		log.Println(err)
-		log.Fatal("Error loading .env file")
+	if configFile == "" {
+		viper.AutomaticEnv()
+	} else {
+		viper.SetConfigFile(configFile)
+		viper.SetConfigType("env")
+		err := viper.ReadInConfig()
+		if err != nil {
+			log.Println(err)
+			log.Fatal("Error loading .env file")
+		}
 	}
+	log.Print("Environment Variables Loaded")
 }
