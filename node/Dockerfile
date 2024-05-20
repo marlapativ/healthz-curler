@@ -1,6 +1,13 @@
 # Build
 FROM node:alpine AS builder
+
 WORKDIR /app
+
+COPY ./shared/js/package*.json ./shared/js/
+RUN npm install --prefix ./shared/js
+COPY ./node/package*.json ./node/
+RUN npm install --prefix ./node
+
 COPY ./shared ./shared
 COPY ./node ./node
 
