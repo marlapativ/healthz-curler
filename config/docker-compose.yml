@@ -51,11 +51,17 @@ services:
       WS_SOCKETIO_NODE: node:4216
       SERVER_GO: go:4225
       UI_SERVER: ui:4200
+    depends_on:
+      - bun
+      - node
+      - go
+      - ui
 
   node:
     build:
-      context: ../
-      dockerfile: node/Dockerfile
+      context: ../node
+      additional_contexts:
+        sharedjs: ../shared/js
     hostname: node
     networks:
       - private
@@ -70,8 +76,9 @@ services:
 
   bun:
     build:
-      context: ../
-      dockerfile: bun/Dockerfile
+      context: ../bun
+      additional_contexts:
+        sharedjs: ../shared/js
     hostname: bun
     networks:
       - private
