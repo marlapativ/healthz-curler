@@ -1,12 +1,19 @@
 # Build
+FROM sharedjs
+
 FROM oven/bun:alpine AS builder
 WORKDIR /app
-COPY ./shared ./shared
-COPY ./bun ./bun
 
+COPY --from=sharedjs package*.json shared/js/
+RUN bun install --cwd shared/js
+COPY --from=sharedjs . shared/js
+
+COPY package*.json bun/
 WORKDIR /app/bun
 RUN bun run link
 RUN bun install
+
+COPY . .
 RUN bun run build
 
 # Host
