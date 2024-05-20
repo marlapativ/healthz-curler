@@ -1,15 +1,16 @@
 # Build
-FROM node:alpine AS builder
+FROM sharedjs
 
+FROM node:alpine AS builder
 WORKDIR /app
 
-COPY ./shared/js/package*.json ./shared/js/
-RUN npm install --prefix ./shared/js
-COPY ./node/package*.json ./node/
-RUN npm install --prefix ./node
+COPY --from=sharedjs package*.json shared/js/
+RUN npm install --prefix shared/js
+COPY --from=sharedjs . shared/js
 
-COPY ./shared ./shared
-COPY ./node ./node
+COPY package*.json node/
+RUN npm install --prefix node
+COPY . node
 
 WORKDIR /app/node
 RUN npm run link

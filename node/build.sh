@@ -2,5 +2,4 @@
 
 # Build the project
 echo "Building the project..."
-cd ../
-docker build -t healthz-curler-node -f node/Dockerfile .
+docker buildx build -t healthz-curler-node --build-context sharedjs=../shared/js .
