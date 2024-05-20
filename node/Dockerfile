@@ -9,12 +9,11 @@ RUN npm install --prefix shared/js
 COPY --from=sharedjs . shared/js
 
 COPY package*.json node/
-RUN npm install --prefix node
-COPY . node
-
 WORKDIR /app/node
 RUN npm run link
 RUN npm install
+
+COPY . .
 RUN npm run build
 
 # Host
