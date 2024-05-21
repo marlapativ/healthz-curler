@@ -1,6 +1,5 @@
-import random from 'lodash.random'
 import { Ok } from '../../../utils/result.util'
-import { HealthCheck } from '../../healthcheck/healthcheck'
+import { HealthCheck, withDefaults } from '../../healthcheck/healthcheck'
 import { HealthCheckExecutionResult, IHealthCheckExecutor } from './executor'
 import Logger from '../../../config/logger'
 import { Result } from '../../../types/result'
@@ -16,12 +15,29 @@ export class FetchExecutor implements IHealthCheckExecutor {
   async execute(): Promise<Result<HealthCheckExecutionResult, Error>> {
     logger.info(`Executing 'Fetch' executor for ${this.healthCheck.id} - ${this.healthCheck.name}`)
 
-    const isSuccess = random(0, 1) == 0
-    const response: HealthCheckExecutionResult = {
-      result: isSuccess,
-      errorMessage: isSuccess ? undefined : 'Failed to fetch data',
-      timestamp: new Date()
+    const defaultedHealthCheck = withDefaults(this.healthCheck)
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), defaultedHealthCheck.timeout)
+    try {
+      const response = await fetch(defaultedHealthCheck.url, {
+        method: defaultedHealthCheck.method,
+        signal: controller.signal
+      })
+      const result = response.status === defaultedHealthCheck.expectedResponseCode
+      return Ok({
+        result,
+        errorMessage: response.statusText,
+        timestamp: new Date()
+      })
+    } catch (error) {
+      logger.error(`Failed to fetch data for ${this.healthCheck.id} - ${this.healthCheck.name}`, error)
+      return Ok({
+        result: false,
+        errorMessage: 'Failed to fetch data. Error: ' + (error as Error).message,
+        timestamp: new Date()
+      })
+    } finally {
+      clearTimeout(timeoutId)
     }
-    return Ok(response)
   }
 }
