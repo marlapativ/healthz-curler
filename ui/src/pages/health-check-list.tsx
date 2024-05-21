@@ -38,7 +38,7 @@ export function HealthCheckList() {
   }
 
   const saveHealthCheck = async (healthcheck: HealthCheck) => {
-    const url = healthcheck ? `/api/healthchecks/${healthcheck.id}` : '/api/healthchecks'
+    const url = healthcheck ? `/api/v1/healthcheck/${healthcheck.id}` : '/api/v1/healthcheck'
     const method = healthcheck ? 'PUT' : 'POST'
     const res = await fetchApi(url, {
       method,
