@@ -41,6 +41,7 @@ export class HealthCheckProcessor implements IHealthCheckProcessor {
 
   async init(healthChecks: HealthCheck[]): Promise<void> {
     for (const healthCheck of healthChecks) {
+      if (!healthCheck.active) continue
       const executor = HealthCheckExecutorFactory.get(healthCheck)
       this.timeouts[healthCheck.id] = setInterval(async () => {
         logger.debug(`Executing HealthCheckProcessor: ${healthCheck.id}`)
