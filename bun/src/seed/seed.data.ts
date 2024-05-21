@@ -11,7 +11,8 @@ export const healthChecksSeedData: HealthCheck[] = [
     description: 'Webapp Fetch Health Check',
     url: 'http://localhost:8080/healthz',
     executor: HealthCheckExecutorType.FETCH,
-    interval: 30000
+    interval: 30000,
+    active: true
   },
   {
     id: 'cdb63720-9628-5ef6-bbca-2e5ce6094f3c',
@@ -19,7 +20,8 @@ export const healthChecksSeedData: HealthCheck[] = [
     description: 'Webapp Curl Health Check',
     url: 'http://localhost:8080/healthz',
     executor: HealthCheckExecutorType.CURL,
-    interval: 30000
+    interval: 30000,
+    active: true
   }
 ]
 
