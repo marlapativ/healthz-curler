@@ -23,7 +23,7 @@ export interface HealthCheck extends Model {
   method?: string
   expectedResponseCode?: number
   timeout?: number
-  active?: boolean
+  active: boolean
   auth?: {
     username: string
     password: string

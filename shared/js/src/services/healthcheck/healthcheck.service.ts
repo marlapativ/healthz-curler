@@ -50,7 +50,6 @@ export class HealthCheckService implements IHealthCheckService {
 
     const uuid = crypto.randomUUID()
     healthCheck.id = uuid
-    healthCheck.active = true
     const result = await this.dataSource.set<HealthCheck>(`${this.getKey(uuid)}`, healthCheck)
     if (result.ok) this.healthCheckProcessor.add(healthCheck)
     return result
