@@ -177,7 +177,7 @@ export function HealthCheckFlyout({
                       <FormItem className="w-6/12">
                         <FormLabelWrapper label="Interval(ms)" isRequired />
                         <FormControl>
-                          <Input {...field} type="number" required />
+                          <Input {...field} type="number" required defaultValue={'30000'} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -214,7 +214,7 @@ export function HealthCheckFlyout({
                       <FormItem className="w-4/12">
                         <FormLabelWrapper label="Expected Response code" />
                         <FormControl>
-                          <Input {...field} type="number" />
+                          <Input {...field} type="number" defaultValue={'200'} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -226,7 +226,7 @@ export function HealthCheckFlyout({
                       <FormItem className="w-4/12">
                         <FormLabelWrapper label="Timeout(ms)" />
                         <FormControl>
-                          <Input {...field} type="number" />
+                          <Input {...field} type="number" defaultValue={'5000'} />
                         </FormControl>
                       </FormItem>
                     )}

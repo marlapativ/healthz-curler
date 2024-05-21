@@ -85,7 +85,7 @@ const fakeResponse: Record<string, unknown> = {
   ]
 }
 
-export function fetchApi(path?: string, init?: RequestInit): Promise<Response> {
+export function fetchApi(path: string, init?: RequestInit): Promise<Response> {
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     if (path) {
       return new Promise((resolve) => {
