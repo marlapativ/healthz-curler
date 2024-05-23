@@ -1,7 +1,5 @@
 import { Result } from '../../../types/result'
 import { HealthCheck, HealthCheckExecutorType } from '../../healthcheck/healthcheck'
-import { CurlExecutor } from './curl.executor'
-import { FetchExecutor } from './fetch.executor'
 
 export type HealthCheckExecutionResult = {
   result: boolean
@@ -13,16 +11,29 @@ export interface IHealthCheckExecutor {
   execute(): Promise<Result<HealthCheckExecutionResult, Error>>
 }
 
-const HealthCheckExecutorFactory = {
+class HealthCheckExecutorFactoryHandler {
+  private executors: Map<HealthCheckExecutorType, IHealthCheckExecutor> = new Map<
+    HealthCheckExecutorType,
+    IHealthCheckExecutor
+  >()
+
+  register(type: HealthCheckExecutorType, executor: IHealthCheckExecutor) {
+    this.executors.set(type, executor)
+  }
+
   get(healthCheck: HealthCheck): IHealthCheckExecutor {
-    switch (healthCheck.executor) {
-      case HealthCheckExecutorType.CURL:
-        return new CurlExecutor(healthCheck)
-      case HealthCheckExecutorType.FETCH:
-      default:
-        return new FetchExecutor(healthCheck)
+    const executorType = healthCheck.executor ?? 'default'
+    const executor = this.executors.get(executorType)
+    if (!executor) {
+      throw new Error(`Executor not found for type: ${executorType}`)
     }
+    return executor
+  }
+
+  getExecutors(): HealthCheckExecutorType[] {
+    return Array.from(this.executors.keys())
   }
 }
 
+const HealthCheckExecutorFactory = new HealthCheckExecutorFactoryHandler()
 export { HealthCheckExecutorFactory }

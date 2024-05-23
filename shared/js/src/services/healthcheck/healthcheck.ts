@@ -5,11 +5,7 @@ export enum HealthCheckStatus {
   DEGRADED = 'degraded'
 }
 
-export enum HealthCheckExecutorType {
-  DEFAULT = 'default',
-  CURL = 'curl',
-  FETCH = 'fetch'
-}
+export type HealthCheckExecutorType = 'default' | string
 
 export type HealthCheckResponse = {
   status: HealthCheckStatus
@@ -44,6 +40,6 @@ export const withDefaults = (healthCheck: HealthCheck): HealthCheck => {
     expectedResponseCode: healthCheck.expectedResponseCode || 200,
     timeout: healthCheck.timeout || 5000,
     auth: healthCheck.auth,
-    executor: healthCheck.executor || HealthCheckExecutorType.DEFAULT
+    executor: healthCheck.executor || 'default'
   }
 }
