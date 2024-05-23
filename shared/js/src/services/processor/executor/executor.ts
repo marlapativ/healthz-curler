@@ -8,6 +8,7 @@ export type HealthCheckExecutionResult = {
 }
 
 export interface IHealthCheckExecutor {
+  create(healthCheck: HealthCheck): IHealthCheckExecutor
   execute(): Promise<Result<HealthCheckExecutionResult, Error>>
 }
 
@@ -27,7 +28,7 @@ class HealthCheckExecutorFactoryHandler {
     if (!executor) {
       throw new Error(`Executor not found for type: ${executorType}`)
     }
-    return executor
+    return executor.create(healthCheck)
   }
 
   getExecutors(): HealthCheckExecutorType[] {

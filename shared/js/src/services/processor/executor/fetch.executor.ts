@@ -6,10 +6,12 @@ import { Result } from '../../../types/result'
 const logger = Logger(__filename)
 
 export class FetchExecutor implements IHealthCheckExecutor {
-  private healthCheck: HealthCheck
+  private healthCheck!: HealthCheck
 
-  constructor(healthCheck: HealthCheck) {
-    this.healthCheck = healthCheck
+  create(healthCheck: HealthCheck): IHealthCheckExecutor {
+    const executor = new FetchExecutor()
+    executor.healthCheck = healthCheck
+    return executor
   }
 
   async execute(): Promise<Result<HealthCheckExecutionResult, Error>> {
