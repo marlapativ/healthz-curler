@@ -6,10 +6,13 @@ import { HealthCheckProcessor, IHealthCheckProcessor } from 'healthz-curler-shar
 import { ISocketPublisher, ISocketMessageHandler } from 'healthz-curler-shared-js'
 import { INotificationExecutor } from 'healthz-curler-shared-js'
 import { SocketNotificationExecutor } from 'healthz-curler-shared-js'
+import { HealthCheckExecutorFactory } from 'healthz-curler-shared-js'
+import { FetchExecutor } from 'healthz-curler-shared-js'
 import { INotificationProcessor, NotificationProcessor } from 'healthz-curler-shared-js'
 import { SocketIOPublisherService, ISocketIOMessageHandler } from 'healthz-curler-shared-js'
 import { WebSocketPublisherService } from './services/socket/websocket.publisher'
 import { Server, ServerWebSocket } from 'bun'
+import { CurlExecutor } from './services/processor/executor/curl.executor'
 
 class Container implements IContainer {
   private map: Map<string, any> = new Map()
@@ -64,6 +67,9 @@ class Container implements IContainer {
   async initServices() {
     const healthCheckService = this.get<IHealthCheckService>('IHealthCheckService')
     await healthCheckService.init()
+    HealthCheckExecutorFactory.register('default', new FetchExecutor())
+    HealthCheckExecutorFactory.register('fetch', new FetchExecutor())
+    HealthCheckExecutorFactory.register('curl', new CurlExecutor())
   }
 
   private insert<T>(key: string, value: T | T[]) {
