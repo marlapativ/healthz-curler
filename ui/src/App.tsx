@@ -9,6 +9,13 @@ import { fetchApi } from './lib/env-utils'
 import { ConfigSelector } from './pages/config-selector'
 import { HealthCheckList } from './pages/health-check-list'
 
+function ConfiguredRoute({ activeConfig, children }: { children: React.ReactNode; activeConfig: Config | null }) {
+  if (!activeConfig) {
+    return <Navigate to={'/config-selector'}></Navigate>
+  }
+  return <>{children}</>
+}
+
 function App() {
   const [activeConfig, setConfig] = useState<Config | null>(null)
   const [configurations, setConfigurations] = useState<Config[]>([])
@@ -18,6 +25,9 @@ function App() {
       .then((res) => res.json())
       .then((data) => Object.values<Config>(data))
       .then((data) => setConfigurations(data))
+      .catch(() => {
+        // TODO: Show toast
+      })
   }, [])
 
   return (
@@ -26,11 +36,23 @@ function App() {
         <ConfigContext.Provider value={{ activeConfig, configurations, setConfig }}>
           <AppLayout>
             <Routes>
-              <Route index path="/" element={activeConfig ? <Home /> : <Navigate to={'/config-selector'}></Navigate>} />
               <Route path="/config-selector" element={<ConfigSelector />} />
               <Route
+                index
+                path="/"
+                element={
+                  <ConfiguredRoute activeConfig={activeConfig}>
+                    <Home />
+                  </ConfiguredRoute>
+                }
+              />
+              <Route
                 path="/health-check"
-                element={activeConfig ? <HealthCheckList /> : <Navigate to={'/config-selector'}></Navigate>}
+                element={
+                  <ConfiguredRoute activeConfig={activeConfig}>
+                    <HealthCheckList />
+                  </ConfiguredRoute>
+                }
               />
             </Routes>
           </AppLayout>
