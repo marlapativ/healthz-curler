@@ -1,6 +1,5 @@
-const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'https://localhost'
-
 const getApiUrl = (path?: string) => {
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'https://localhost'
   return `${SERVER_URL}${path}`
 }
 

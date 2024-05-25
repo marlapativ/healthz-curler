@@ -8,6 +8,8 @@ import { Config } from '@/types/config'
 import { fetchApi } from './lib/env-utils'
 import { ConfigSelector } from './pages/config-selector'
 import { HealthCheckList } from './pages/health-check-list'
+import { useToast } from './components/ui/use-toast'
+import { Toaster } from './components/ui/toaster'
 
 function ConfiguredRoute({ activeConfig, children }: { children: React.ReactNode; activeConfig: Config | null }) {
   if (!activeConfig) {
@@ -19,6 +21,7 @@ function ConfiguredRoute({ activeConfig, children }: { children: React.ReactNode
 function App() {
   const [activeConfig, setConfig] = useState<Config | null>(null)
   const [configurations, setConfigurations] = useState<Config[]>([])
+  const { toast } = useToast()
 
   useEffect(() => {
     fetchApi('/api/v1/config/aggregate')
@@ -26,15 +29,20 @@ function App() {
       .then((data) => Object.values<Config>(data))
       .then((data) => setConfigurations(data))
       .catch(() => {
-        // TODO: Show toast
+        toast({
+          title: 'Error fetching configurations',
+          description: 'Please refresh to try again',
+          variant: 'destructive'
+        })
       })
-  }, [])
+  }, [toast])
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <BrowserRouter>
         <ConfigContext.Provider value={{ activeConfig, configurations, setConfig }}>
           <AppLayout>
+            <Toaster />
             <Routes>
               <Route path="/config-selector" element={<ConfigSelector />} />
               <Route
