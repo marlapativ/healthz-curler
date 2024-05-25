@@ -20,7 +20,7 @@ const tHealthCheck = t.Object({
   method: t.Optional(t.String()),
   expectedResponseCode: t.Optional(t.Number()),
   timeout: t.Optional(t.Number()),
-  active: t.Optional(t.Boolean()),
+  active: t.Boolean(),
   auth: t.Optional(
     t.Object({
       username: t.String(),
@@ -28,7 +28,7 @@ const tHealthCheck = t.Object({
       apiKey: t.String()
     })
   ),
-  executor: t.String()
+  executor: t.Optional(t.String())
 })
 const tHealthChecks = t.Array(tHealthCheck)
 
