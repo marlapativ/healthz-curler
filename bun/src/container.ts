@@ -65,11 +65,11 @@ class Container implements IContainer {
   }
 
   async initServices() {
-    const healthCheckService = this.get<IHealthCheckService>('IHealthCheckService')
-    await healthCheckService.init()
     HealthCheckExecutorFactory.register('default', new FetchExecutor())
     HealthCheckExecutorFactory.register('fetch', new FetchExecutor())
     HealthCheckExecutorFactory.register('curl', new CurlExecutor())
+    const healthCheckService = this.get<IHealthCheckService>('IHealthCheckService')
+    await healthCheckService.init()
   }
 
   private insert<T>(key: string, value: T | T[]) {

@@ -1,7 +1,6 @@
 import Elysia, { Static, t } from 'elysia'
 import { HttpStatusError, Ok, Result } from 'healthz-curler-shared-js'
 import { IHealthCheckService } from 'healthz-curler-shared-js'
-import { HealthCheckExecutorType } from 'healthz-curler-shared-js'
 
 type HealthCheckIdRequest = {
   params: { id: string }
@@ -29,7 +28,7 @@ const tHealthCheck = t.Object({
       apiKey: t.String()
     })
   ),
-  executor: t.Optional(t.Enum(HealthCheckExecutorType))
+  executor: t.String()
 })
 const tHealthChecks = t.Array(tHealthCheck)
 
