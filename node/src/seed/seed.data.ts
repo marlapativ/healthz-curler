@@ -1,5 +1,5 @@
 import { IDataSource } from 'healthz-curler-shared-js'
-import { HealthCheck, HealthCheckExecutorType } from 'healthz-curler-shared-js'
+import { HealthCheck } from 'healthz-curler-shared-js'
 import { Model } from 'healthz-curler-shared-js'
 import { Logger } from 'healthz-curler-shared-js'
 const logger = Logger(__filename)
@@ -10,7 +10,7 @@ export const healthChecksSeedData: HealthCheck[] = [
     name: 'node-webapp-fetch',
     description: 'Webapp Fetch Health Check',
     url: 'http://localhost:8080/healthz',
-    executor: HealthCheckExecutorType.FETCH,
+    executor: 'fetch',
     interval: 30000,
     active: true
   },
@@ -19,7 +19,7 @@ export const healthChecksSeedData: HealthCheck[] = [
     name: 'node-webapp-curl',
     description: 'Webapp Curl Health Check',
     url: 'http://localhost:8080/healthz',
-    executor: HealthCheckExecutorType.CURL,
+    executor: 'curl',
     interval: 30000,
     active: true
   }
