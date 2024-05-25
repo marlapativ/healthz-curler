@@ -32,7 +32,7 @@ export class FetchExecutor implements IHealthCheckExecutor {
         timestamp: new Date()
       })
     } catch (error) {
-      logger.error(`Failed to fetch data for ${this.healthCheck.id} - ${this.healthCheck.name}`, error)
+      logger.info(`Failed to fetch data for ${this.healthCheck.id} - ${this.healthCheck.name}`, error)
       return Ok({
         result: false,
         errorMessage: 'Failed to fetch data. Error: ' + (error as Error).message,
