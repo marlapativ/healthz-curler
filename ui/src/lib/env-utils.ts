@@ -4,7 +4,7 @@ const getApiUrl = (path?: string) => {
 }
 
 const fakeResponse: Record<string, unknown> = {
-  '/api/v1/config': [
+  '/api/v1/config/aggregate': [
     {
       id: 'bun-elysia',
       runtime: 'bun',
@@ -81,7 +81,8 @@ const fakeResponse: Record<string, unknown> = {
       interval: 5000,
       active: false
     }
-  ]
+  ],
+  '/api/v1/healthgraph': {}
 }
 
 export function fetchApi(path: string, init?: RequestInit): Promise<Response> {

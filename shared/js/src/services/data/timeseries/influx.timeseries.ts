@@ -1,6 +1,8 @@
 import { InfluxDB, Point, QueryApi, WriteApi } from '@influxdata/influxdb-client'
 import env from '../../../utils/env.util'
 import { IQueryableTimeSeriesData, ITimeSeriesData, ITimeSeriesDataSource } from './timeseries.datasource'
+import Logger from '../../../config/logger'
+const logger = Logger(__filename)
 
 export class InfluxDBDataSource implements ITimeSeriesDataSource {
   private bucket: string
@@ -26,6 +28,7 @@ export class InfluxDBDataSource implements ITimeSeriesDataSource {
   }
 
   async writePoint(point: ITimeSeriesData): Promise<void> {
+    logger.info(`Writing point to InfluxDB: ${point.id}`)
     const timestamp = point.timestamp ? point.timestamp : new Date()
     let pointToWrite = new Point(point.name).timestamp(timestamp).tag('id', point.id).tag('type', point.type)
     for (const [key, value] of Object.entries(point.properties)) {
@@ -42,8 +45,10 @@ export class InfluxDBDataSource implements ITimeSeriesDataSource {
     const queryProperties = Object.keys(request.properties).map(
       (key) => `|> filter(fn: (r) => r["_field"] == "${key}")`
     )
+    const startTime = Math.floor(request.startTime!.getTime() / 1000)
+    const endTime = Math.ceil(request.endTime!.getTime() / 1000)
     const query = `from(bucket: "${this.bucket}")
-      |> range(start: ${request.startTime!.getTime()}, stop: ${request.endTime!.getTime()})
+      |> range(start: ${startTime}, stop: ${endTime})
       |> filter(fn: (r) => r["implementation"] == "${this.implementation}")
       |> filter(fn: (r) => r["language"] == "js")
       |> filter(fn: (r) => r["_measurement"] == "${request.name}")
