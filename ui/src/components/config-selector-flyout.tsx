@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
-import { ConfigContext } from '../context/context'
+import { ConfigContext } from '../context'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,

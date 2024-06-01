@@ -7,7 +7,7 @@ import { Badge } from '../components/ui/badge'
 import { Check, Plus, X } from 'lucide-react'
 import { HealthCheckFlyout } from '../components/healthcheck-flyout'
 import { Button } from '../components/ui/button'
-import { ConfigContext } from '../context/context'
+import { ConfigContext } from '../context'
 
 export function HealthCheckList() {
   const { activeConfig } = useContext(ConfigContext)

@@ -2,7 +2,7 @@ import { AlertTriangle, Check } from 'lucide-react'
 import { ConfigSelectorFlyout } from '../components/config-selector-flyout'
 import { Button } from '../components/ui/button'
 import { useContext, useState } from 'react'
-import { ConfigContext } from '../context/context'
+import { ConfigContext } from '../context'
 import { Config } from '../types/config'
 import { Link } from 'react-router-dom'
 
