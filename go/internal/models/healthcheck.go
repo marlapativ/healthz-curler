@@ -13,10 +13,10 @@ type HealthCheck struct {
 	Description          string                  `json:"description,omitempty"`
 	URL                  string                  `json:"url"`
 	Interval             int                     `json:"interval"`
+	Active               bool                    `json:"active"`
 	Method               string                  `json:"method,omitempty"`
 	ExpectedResponseCode int                     `json:"expectedResponseCode,omitempty"`
 	Timeout              int                     `json:"timeout,omitempty"`
-	Active               bool                    `json:"active,omitempty"`
 	Executor             HealthCheckExecutorType `json:"executor,omitempty"`
 	Auth                 *struct {
 		Username string `json:"username,omitempty"`

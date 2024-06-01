@@ -11,7 +11,7 @@ RUN go build -o server
 
 
 # Host
-FROM golang:alpine
+FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/server .
 EXPOSE 4225
