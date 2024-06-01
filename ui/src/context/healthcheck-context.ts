@@ -3,7 +3,7 @@ import { HealthCheck } from '../types/healthcheck'
 
 export type HealthCheckContextType = {
   healthChecks: HealthCheck[]
-  setHealthChecks: (healthCheck: HealthCheck[]) => void
+  setHealthChecks: (healthChecks: HealthCheck[]) => void
 }
 
 export const HealthCheckContext = createContext<HealthCheckContextType>({

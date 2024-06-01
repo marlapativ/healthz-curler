@@ -3,13 +3,14 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from '@/components/theme-provider'
 import { AppLayout } from '@/layouts/root'
 import { Home } from '@/pages/home'
-import { ConfigContext } from '@/context/context'
 import { Config } from '@/types/config'
 import { fetchApi } from './lib/env-utils'
 import { ConfigSelector } from './pages/config-selector'
 import { HealthCheckList } from './pages/health-check-list'
 import { useToast } from './components/ui/use-toast'
 import { Toaster } from './components/ui/toaster'
+import { ConfigContext, HealthCheckContext } from './context'
+import { HealthCheck } from './types/healthcheck'
 
 function ConfiguredRoute({ activeConfig, children }: { children: React.ReactNode; activeConfig: Config | null }) {
   if (!activeConfig) {
@@ -21,6 +22,7 @@ function ConfiguredRoute({ activeConfig, children }: { children: React.ReactNode
 function App() {
   const [activeConfig, setConfig] = useState<Config | null>(null)
   const [configurations, setConfigurations] = useState<Config[]>([])
+  const [healthChecks, setHealthChecks] = useState<HealthCheck[]>([])
   const { toast } = useToast()
 
   useEffect(() => {
@@ -37,33 +39,55 @@ function App() {
       })
   }, [toast])
 
+  useEffect(() => {
+    if (activeConfig) {
+      fetchApi('/api/v1/healthcheck', {
+        headers: {
+          'Content-Type': 'application/json',
+          server: activeConfig!.runtime
+        }
+      })
+        .then((res) => res.json())
+        .then((data) => setHealthChecks(data))
+        .catch(() => {
+          toast({
+            title: 'Error fetching healthchecks',
+            description: 'Please refresh to try again',
+            variant: 'destructive'
+          })
+        })
+    }
+  }, [activeConfig, toast])
+
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <BrowserRouter>
         <ConfigContext.Provider value={{ activeConfig, configurations, setConfig }}>
-          <AppLayout>
-            <Toaster />
-            <Routes>
-              <Route path="/config-selector" element={<ConfigSelector />} />
-              <Route
-                index
-                path="/"
-                element={
-                  <ConfiguredRoute activeConfig={activeConfig}>
-                    <Home />
-                  </ConfiguredRoute>
-                }
-              />
-              <Route
-                path="/health-check"
-                element={
-                  <ConfiguredRoute activeConfig={activeConfig}>
-                    <HealthCheckList />
-                  </ConfiguredRoute>
-                }
-              />
-            </Routes>
-          </AppLayout>
+          <HealthCheckContext.Provider value={{ healthChecks, setHealthChecks }}>
+            <AppLayout>
+              <Toaster />
+              <Routes>
+                <Route path="/config-selector" element={<ConfigSelector />} />
+                <Route
+                  index
+                  path="/"
+                  element={
+                    <ConfiguredRoute activeConfig={activeConfig}>
+                      <Home />
+                    </ConfiguredRoute>
+                  }
+                />
+                <Route
+                  path="/health-check"
+                  element={
+                    <ConfiguredRoute activeConfig={activeConfig}>
+                      <HealthCheckList />
+                    </ConfiguredRoute>
+                  }
+                />
+              </Routes>
+            </AppLayout>
+          </HealthCheckContext.Provider>
         </ConfigContext.Provider>
       </BrowserRouter>
     </ThemeProvider>

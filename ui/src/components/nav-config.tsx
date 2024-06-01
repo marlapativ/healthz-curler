@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react'
 import { AlertCircle, Check, Edit } from 'lucide-react'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
-import { ConfigContext } from '@/context/context'
+import { ConfigContext } from '@/context'
 import { Button } from '@/components/ui/button'
 import { ConfigSelectorFlyout } from '@/components/config-selector-flyout'
 import { Badge } from '@/components/ui/badge'
