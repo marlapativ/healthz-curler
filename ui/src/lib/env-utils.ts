@@ -31,12 +31,12 @@ const fakeResponse: Record<string, unknown> = {
 
 export function fetchApi(path: string, init?: RequestInit): Promise<Response> {
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    if (path && fakeResponse[path]) {
-      return new Promise((resolve) => {
-        setTimeout(() => resolve(new Response(JSON.stringify(fakeResponse[path]))), 1000)
-      })
-    }
-    return fetch(`http://localhost:4205${path}`, init)
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(null), 1000)
+    }).then(() => {
+      if (path && fakeResponse[path]) return new Response(JSON.stringify(fakeResponse[path]))
+      return fetch(`http://localhost:4205${path}`, init)
+    })
   } else {
     return fetch(getApiUrl(path), init)
   }
