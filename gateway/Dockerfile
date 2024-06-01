@@ -23,7 +23,6 @@ EXPOSE 80 443
 ## Aggregator Copy
 WORKDIR /app
 COPY --from=builder /app/aggregator .
-EXPOSE 2020
 
 ## Script
 RUN echo -e "\
