@@ -65,36 +65,14 @@ func (r *influxDataSource) WritePoint(point data.TimeSeriesData) {
 }
 
 func (r *influxDataSource) QueryData(query data.QueryableTimeSeriesData) ([]any, error) {
-	// const page = request.page ? request.page : 1
-	//   const pageSize = request.pageSize ? request.pageSize : 100
-	//   const queryProperties = Object.keys(request.properties).map(
-	//     (key) => `|> filter(fn: (r) => r["_field"] == "${key}")`
-	//   )
-	//   const query = `from(bucket: "${this.bucket}")
-	//     |> range(start: ${request.startTime!.getTime()}, stop: ${request.endTime!.getTime()})
-	//     |> filter(fn: (r) => r["implementation"] == "${this.implementation}")
-	//     |> filter(fn: (r) => r["language"] == "js")
-	//     |> filter(fn: (r) => r["_measurement"] == "${request.name}")
-	//     |> filter(fn: (r) => r["id"] == "${request.id}")
-	//     |> filter(fn: (r) => r["type"] == "${request.type}")
-	//     ${queryProperties}
-	//     |> sort(columns: ["_time"], desc: true)
-	//     |> limit(n: ${pageSize}, offset: ${(page - 1) * pageSize})`
-	//   const result = []
-	//   for await (const { values, tableMeta } of this.queryApi.iterateRows(query)) {
-	//     const record = tableMeta.toObject(values) as T
-	//     result.push(record)
-	//   }
-	//   return result
-
-	setDefaults(query)
+	setDefaults(&query)
 	var propsQB strings.Builder
 	for key := range query.Properties {
 		propsQB.WriteString("|> filter(fn: (r) => r[\"_field\"] == \"" + key + "\")")
 	}
 
-	start := query.StartTime.UnixMilli()
-	end := query.EndTime.UnixMilli()
+	start := query.StartTime.Unix()
+	end := query.EndTime.Unix()
 
 	influxQuery := fmt.Sprintf(`from(bucket: "%s")
 	    |> range(start: %d, stop: %d)
@@ -131,7 +109,7 @@ func (r *influxDataSource) QueryData(query data.QueryableTimeSeriesData) ([]any,
 	return records, nil
 }
 
-func setDefaults(query data.QueryableTimeSeriesData) {
+func setDefaults(query *data.QueryableTimeSeriesData) {
 	if query.Page == 0 {
 		query.Page = 1
 	}
