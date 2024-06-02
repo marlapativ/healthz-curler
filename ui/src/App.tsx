@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from '@/components/theme-provider'
 import { AppLayout } from '@/layouts/root'
-import { Home } from '@/pages/home'
 import { Config } from '@/types/config'
 import { fetchApi } from './lib/env-utils'
 import { ConfigSelector } from './pages/config-selector'
@@ -11,6 +10,7 @@ import { useToast } from './components/ui/use-toast'
 import { Toaster } from './components/ui/toaster'
 import { ConfigContext, HealthCheckContext } from './context'
 import { HealthCheck } from './types/healthcheck'
+import { HealthGraphList } from './pages/health-graph-list'
 
 function ConfiguredRoute({ activeConfig, children }: { children: React.ReactNode; activeConfig: Config | null }) {
   if (!activeConfig) {
@@ -67,16 +67,16 @@ function App() {
             <AppLayout>
               <Toaster />
               <Routes>
-                <Route path="/config-selector" element={<ConfigSelector />} />
                 <Route
                   index
                   path="/"
                   element={
                     <ConfiguredRoute activeConfig={activeConfig}>
-                      <Home />
+                      <HealthGraphList />
                     </ConfiguredRoute>
                   }
                 />
+                <Route path="/config-selector" element={<ConfigSelector />} />
                 <Route
                   path="/health-check"
                   element={
