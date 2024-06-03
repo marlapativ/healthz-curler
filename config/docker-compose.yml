@@ -4,7 +4,7 @@ services:
   influxdb:
     image: influxdb:latest
     hostname: influxdb
-    networks:
+    networks:asdsa
       - private
     environment:
       DOCKER_INFLUXDB_INIT_MODE: setup
