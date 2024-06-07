@@ -25,6 +25,7 @@ This application leverages the power of webSockets for real-time updates, all re
 
 ```text
 /healthz-curler
+|-- /shared         # JS - Shared code and utilities(for Bun & Node runtimes)
 |-- /bun            # JS - Bun runtime implementation
 |-- /node           # JS - Node runtime implementation
 |-- /go             # Go runtime implementation
