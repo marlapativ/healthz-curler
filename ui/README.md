@@ -25,6 +25,14 @@ npm install
 npm run build
 ```
 
+## Lint
+
+To lint the project, run the following command:
+
+```bash
+npm run lint
+```
+
 ## Docker Image
 
 Build the docker image using the following command:
