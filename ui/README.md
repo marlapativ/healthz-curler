@@ -1,7 +1,7 @@
 # Healthz Curler UI
 
 This is a UI to show the health checks, status and graphs of the health checks of the services.
-This is built using React.js and shadcn UI components.
+This is built using React.js and shadcn UI components
 
 ## Pre-requisites
 
