@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/marlapativ/healthz-curler/compare/v1.0.3...v1.0.4) (2024-06-09)
+
+
+### Bug Fixes
+
+* **ui:** build instructions update ([9ef446e](https://github.com/marlapativ/healthz-curler/commit/9ef446ee8d239f56c1c7c6aad1314b86d3a60c58))
+
 ## [1.0.3](https://github.com/marlapativ/healthz-curler/compare/v1.0.2...v1.0.3) (2024-06-09)
 
 
